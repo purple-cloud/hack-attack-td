@@ -2,15 +2,11 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemSlot : MonoBehaviour {
+public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler {
 	private GameObject clone;
-	private bool isDragging;
+	private bool isDragging = false;
 	private Color itemBorderColor = new Color(0, 0, 1f);
 	private Color itemBorderColorDefault = new Color(1f, 1f, 1f);
-
-	void Start() {
-		isDragging = false;
-	}
 
 	void Update() {
 		// Check if escape or right mouse is clicked and if the clone is on the display
@@ -36,27 +32,6 @@ public class ItemSlot : MonoBehaviour {
 
 			SetItemBorderColor(itemBorderColor);
 			clone.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
-		}
-	}
-
-	// Drag item or place item when clicking
-	void OnMouseUp() {
-		if (isDragging) {
-			//PlaceStructure();
-		} else {
-			isDragging = true;
-		}
-	}
-
-	// Set border color when mouse pointer is on the object
-	void OnMouseOver() {
-		SetItemBorderColor(itemBorderColor);
-	}
-
-	// Remove border color when mouse pointer hovers away from object
-	void OnMouseExit() {
-		if (!isDragging) {
-			SetItemBorderColor(itemBorderColorDefault);
 		}
 	}
 
@@ -86,11 +61,32 @@ public class ItemSlot : MonoBehaviour {
 		// Name the object to see it in the hierarchy
 		clone.name = gameObject.name + " Clone (Snapped)";
 
-		// Get child image (named ItemImage in the hierarchy) and assign this objects sprite
+		// Get child image (named ItemImage in the hierarchy) and assign this object's sprite
 		Image cloneItemImage = clone.transform.GetChild(0).GetComponent<Image>();
 		cloneItemImage.sprite = itemSprite;
 
 		// Assign "clone" as a child of ActionBar so it shows on screen
 		clone.transform.SetParent(GameObject.Find("Canvas").transform);
+	}
+
+	// Set border color when mouse pointer is on the object
+	public void OnPointerEnter(PointerEventData eventData) {
+		SetItemBorderColor(itemBorderColor);
+	}
+
+	// Drag item or place item when clicking
+	public void OnPointerUp(PointerEventData eventData) {
+		if (isDragging) {
+			PlaceStructure();
+		} else {
+			isDragging = true;
+		}
+	}
+
+	// Remove border color when mouse pointer hovers away from object
+	public void OnPointerExit(PointerEventData eventData) {
+		if (!isDragging) {
+			SetItemBorderColor(itemBorderColorDefault);
+		}
 	}
 }
