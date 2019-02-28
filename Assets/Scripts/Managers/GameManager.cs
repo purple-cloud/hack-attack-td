@@ -15,7 +15,7 @@ public class GameManager : Singleton<GameManager> {
     #region EVENTS
 
     // Event is triggered when currency changes
-    public event CurrencyChanged changed;
+    public event CurrencyChanged Changed;
         
     #endregion
 
@@ -34,6 +34,10 @@ public class GameManager : Singleton<GameManager> {
     [SerializeField]
     private Sprite[] componentSprites;
 
+    // A reference to the currency text
+    [SerializeField]
+    private Text currencyText;
+
     #region VARIABLES
 
     // The current selected component
@@ -47,8 +51,39 @@ public class GameManager : Singleton<GameManager> {
 
     #endregion
 
+    #region PROPERTIES
+
+    /// <summary>
+    /// Returns the current currency
+    /// </summary>
+    /// <returns>Returns the current currency</returns>
+    public int GetCurrency() {
+        return this.currency;
+    }
+
+    /// <summary>
+    /// Sets the currency and activates event
+    /// </summary>
+    public void SetCurrency(int value) {
+        this.currency = value;
+        this.currencyText.text = "<color=#FDFF00>Resources: " + value.ToString() + "</color>";
+        OnCurrencyChanged();
+    }
+
+    #endregion
+
     private void Start() {
-        this.currency = 50;
+        // Sets the starting currency to 50
+        SetCurrency(50);
+    }
+
+    /// <summary>
+    /// When the currency changes
+    /// </summary>
+    public void OnCurrencyChanged() {
+        if (Changed != null) {
+            Changed();
+        }
     }
 
     /* Following Section is panel related */

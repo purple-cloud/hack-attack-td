@@ -251,7 +251,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.021893919, g: 0.7735849, b: 0.036418032, a: 1}
+    m_NormalColor: {r: 0.7607844, g: 0.7607844, b: 0.7607844, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -270,7 +270,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 33440200}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1643065333}
+        m_MethodName: Upgrade
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &33440200
@@ -3692,7 +3703,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Currency\x1A\x1A: 1000"
+  m_Text: 'Resources:'
 --- !u!222 &557805335
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5211,6 +5222,7 @@ MonoBehaviour:
   panelStatus: {fileID: 1290102012}
   componentSprites:
   - {fileID: 21300000, guid: 9cf6eba6186716fcbb1f504b158d8afd, type: 3}
+  currencyText: {fileID: 557805334}
 --- !u!1001 &1224524845
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5288,7 +5300,18 @@ PrefabInstance:
       propertyPath: panelName
       value: 
       objectReference: {fileID: 457197187}
-    m_RemovedComponents: []
+    - target: {fileID: 8639210070294893410, guid: 3560e466a85a5ec4db0e7d144b031cb2,
+        type: 3}
+      propertyPath: txtPrice
+      value: 
+      objectReference: {fileID: 727200990}
+    - target: {fileID: 8639210070294893410, guid: 3560e466a85a5ec4db0e7d144b031cb2,
+        type: 3}
+      propertyPath: upgradeButton
+      value: 
+      objectReference: {fileID: 33440199}
+    m_RemovedComponents:
+    - {fileID: 4702204668479499604, guid: 3560e466a85a5ec4db0e7d144b031cb2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3560e466a85a5ec4db0e7d144b031cb2, type: 3}
 --- !u!4 &1224524846 stripped
 Transform:
@@ -5919,7 +5942,7 @@ PrefabInstance:
     - target: {fileID: 9137473958989017961, guid: 9da44d5d1fbb41b47b5139286af4d336,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 30.6
+      value: 30.599976
       objectReference: {fileID: 0}
     - target: {fileID: 9137473958989017961, guid: 9da44d5d1fbb41b47b5139286af4d336,
         type: 3}
@@ -6181,7 +6204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1479254842
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6904,6 +6927,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608833581}
   m_CullTransparentMesh: 0
+--- !u!114 &1643065333 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8639210070294893410, guid: 3560e466a85a5ec4db0e7d144b031cb2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1224524845}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c2bf09099aad2688a754662b78f60b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1664492241
 GameObject:
   m_ObjectHideFlags: 0
