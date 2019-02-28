@@ -13,6 +13,7 @@ public class ItemSlot : MonoBehaviour {
 	}
 
 	void Update() {
+        //Debug.Log("Action item clicked!");
 		// Check if escape or right mouse is clicked and if the clone is on the display
 		if (clone != null) {
 			if (Input.GetMouseButtonUp(1) || Input.GetButtonDown("Cancel")) {
@@ -40,7 +41,8 @@ public class ItemSlot : MonoBehaviour {
 	}
 
 	// Drag item or place item when clicking
-	void OnMouseUp() {
+	void OnMouseDown() {
+        Debug.Log("Clicked!"); 
 		if (isDragging) {
 			//PlaceStructure();
 		} else {
@@ -62,6 +64,7 @@ public class ItemSlot : MonoBehaviour {
 
 	//Pseudo-code for placing the structure on the canvas.
 	private void PlaceStructure() {
+        Debug.Log("Place Structure Clicked");
 		isDragging = false;
 		EventSystem.current.SetSelectedGameObject(null);
 		SetItemBorderColor(itemBorderColorDefault);
@@ -91,6 +94,6 @@ public class ItemSlot : MonoBehaviour {
 		cloneItemImage.sprite = itemSprite;
 
 		// Assign "clone" as a child of ActionBar so it shows on screen
-		clone.transform.SetParent(GameObject.Find("Canvas").transform);
+		clone.transform.SetParent(GameObject.Find("Actionbar").transform);
 	}
 }
