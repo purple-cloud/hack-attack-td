@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public class Component : MonoBehaviour {
 
-public class Computer : MonoBehaviour {
-
-    #region
+    // TODO Extract all panel related info for component
+    // into own Panel class??
 
     // a reference to the panel popup for the computer
     [SerializeField]
@@ -19,12 +19,12 @@ public class Computer : MonoBehaviour {
     // A reference to the component image on panel
     [SerializeField] // This is unused until array of sprites are implemented
     private Image panelImage;
-    
+
     [SerializeField]
     private Button upgradeButton;
 
     // A reference to the text price
-    [SerializeField] 
+    [SerializeField]
     private Text txtPrice;
 
     // The computers upgrade price
@@ -33,11 +33,11 @@ public class Computer : MonoBehaviour {
     // A reference to the computer status text on panel
     private bool panelStatus;
 
-    #endregion
+    // X coordinate of the component
+    private int X { get; set; }
 
-    // Contains the sprites for the different upgrades
-    [SerializeField]
-    private Sprite[] computerSprites;
+    // Y coordinate of the component
+    public int Y { get; set; }
 
     // List containing all the specific upgrades for desired component
     public ComponentUpgrade[] Upgrades { get; protected set; }
@@ -46,23 +46,13 @@ public class Computer : MonoBehaviour {
 
     public int Price { get; set; }
 
-    // Initialization
     private void Start() {
-        // This is specific for this class (Computer)
-        Upgrades = new ComponentUpgrade[] {
-            new ComponentUpgrade("Modern Laptop", 100, computerSprites[1], 500),
-            new ComponentUpgrade("Gaming Laptop", 500, computerSprites[2], 1000)
-        };
-
-        // TODO Extract most into Component class when Panel class is created
-
-        this.panelName.text = "Lvl 1: Old Computer";
-
         // Assign the value to the upgrade button
-        GetTxtPriceReference().text = "Upgrade (Cost: " + this.NextUpgrade.Price + ")";
+        GetTxtPriceReference().text = "Upgrade (Cost: " + this.upgradePrice + ")";
+
         // Assign the PriceCheck function to the changed event on the GameManager
         GameManager.Instance.Changed += new CurrencyChanged(PriceCheck);
-        
+
         PriceCheck();
     }
 
@@ -72,31 +62,23 @@ public class Computer : MonoBehaviour {
 
     public ComponentUpgrade NextUpgrade {
         get {
-            if (Upgrades.Length > ComponentLevel - 1) {
-                return Upgrades[ComponentLevel - 1]; 
-            } else {
-                return null;
+            if (this.Upgrades.Length > this.ComponentLevel - 1) {
+                return this.Upgrades[this.ComponentLevel - 1];
             }
+            return null;
         }
     }
 
     public void Upgrade() {
         GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - NextUpgrade.Price);
-
-        Price = NextUpgrade.Price;
-        // Assign the value to the upgrade button
-        GetTxtPriceReference().text = "Upgrade (Cost: " + this.Price + ")";
-
-        Debug.Log("this.Price: " + Price);
-        Debug.Log("this.NextUpgrade.Price" + NextUpgrade.Price);
-
-        ComponentLevel++;
-        this.panelName.text = "Lvl " + this.ComponentLevel + ": " + this.NextUpgrade.Name;
+        this.Price += NextUpgrade.Price;
+        this.panelName.text = "Lvl " + this.ComponentLevel + ": " + NextUpgrade.Name;
+        this.ComponentLevel++;
     }
-
 
     /// <summary>
     /// Checks if we have enough money 
+    /// TODO Maybe change this to only being able via upgrade button (Own class maybe)
     /// </summary>
     private void PriceCheck() {
         if (this.upgradePrice <= GameManager.Instance.GetCurrency()) {
@@ -111,29 +93,18 @@ public class Computer : MonoBehaviour {
     }
 
     /// <summary>
-    /// Sets the different panel parameters and
-    /// shows the dynamic computer panel
-    /// </summary>
-    private void OnMouseDown () {
-        this.panel.SetActive (!panel.activeSelf);
-        // TODO Change this to take in name array instead
-        this.panelName.text = "Computer";
-        this.panelStatus = true;
-    }
-
-    /// <summary>
     /// Takes in the status boolean and returns a text
     /// depending on if boolean is true or false
     /// </summary>
     /// <returns>
     /// Return either "Active" or "Disabled" depending on status boolean
     /// </returns>
-    private string GetStatus () {
+    private string GetStatus() {
         string status = "";
         if (this.panelStatus) {
-            status = string.Format ("<color=#00FF00>Active</color>");
+            status = string.Format("<color=#00FF00>Active</color>");
         } else {
-            status = string.Format ("<color=#FF0000>Disabled</color>");
+            status = string.Format("<color=#FF0000>Disabled</color>");
         }
         return status;
     }
@@ -162,6 +133,6 @@ public class Computer : MonoBehaviour {
         return this.txtPrice;
     }
 
-
-
+    // TODO Create functions for automatically displaying data on panel
+    // TODO Also make the panel popup over the clicked component
 }

@@ -3272,7 +3272,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 10
+    m_FontSize: 8
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -5292,6 +5292,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8639210070294893410, guid: 3560e466a85a5ec4db0e7d144b031cb2,
         type: 3}
+      propertyPath: computerSprites.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8639210070294893410, guid: 3560e466a85a5ec4db0e7d144b031cb2,
+        type: 3}
       propertyPath: panel
       value: 
       objectReference: {fileID: 1479254841}
@@ -5310,6 +5315,29 @@ PrefabInstance:
       propertyPath: upgradeButton
       value: 
       objectReference: {fileID: 33440199}
+    - target: {fileID: 8639210070294893410, guid: 3560e466a85a5ec4db0e7d144b031cb2,
+        type: 3}
+      propertyPath: computerSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 9cf6eba6186716fcbb1f504b158d8afd,
+        type: 3}
+    - target: {fileID: 8639210070294893410, guid: 3560e466a85a5ec4db0e7d144b031cb2,
+        type: 3}
+      propertyPath: computerSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: cd81ba4d51a01474fbe60bea521a6c48,
+        type: 3}
+    - target: {fileID: 8639210070294893410, guid: 3560e466a85a5ec4db0e7d144b031cb2,
+        type: 3}
+      propertyPath: computerSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 6edb8a11abf572f4b9718c60b634230c,
+        type: 3}
+    - target: {fileID: 8639210070294893410, guid: 3560e466a85a5ec4db0e7d144b031cb2,
+        type: 3}
+      propertyPath: panelImage
+      value: 
+      objectReference: {fileID: 1419940950}
     m_RemovedComponents:
     - {fileID: 4702204668479499604, guid: 3560e466a85a5ec4db0e7d144b031cb2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3560e466a85a5ec4db0e7d144b031cb2, type: 3}
@@ -5989,12 +6017,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 9137473959889953434, guid: 9da44d5d1fbb41b47b5139286af4d336,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 2d72896faffa58994ab61b45d61acafa,
-        type: 3}
     - target: {fileID: 9137473958989017959, guid: 9da44d5d1fbb41b47b5139286af4d336,
         type: 3}
       propertyPath: m_Size.x
@@ -6025,6 +6047,12 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 35
       objectReference: {fileID: 0}
+    - target: {fileID: 9137473959889953434, guid: 9da44d5d1fbb41b47b5139286af4d336,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2d72896faffa58994ab61b45d61acafa,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 9137473958989017954, guid: 9da44d5d1fbb41b47b5139286af4d336, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9da44d5d1fbb41b47b5139286af4d336, type: 3}
