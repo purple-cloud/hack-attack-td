@@ -9,6 +9,9 @@ public class Computer : MonoBehaviour{
 
     #region
 
+    [SerializeField]
+    private Image canvasSprite;
+
     // a reference to the panel popup for the computer
     [SerializeField]
     private GameObject panel;
@@ -74,6 +77,7 @@ public class Computer : MonoBehaviour{
         this.upgradePrice = NextUpgrade.Price;
         this.durability = 250f;
         this.sprite = computerSprites[0];
+        this.canvasSprite.sprite = computerSprites[0];
         this.name = "Old Computer";
         // TODO Extract most into Component class when Panel class is created
 
@@ -137,6 +141,7 @@ public class Computer : MonoBehaviour{
             GetTxtPriceReference().color = Color.black;
             GetTxtPriceReference().text = "Max Upgraded";
         }
+        this.canvasSprite.sprite = this.sprite;
         this.panelImage.sprite = this.sprite;
     }
 
