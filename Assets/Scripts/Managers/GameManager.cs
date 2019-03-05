@@ -7,9 +7,6 @@ using UnityEngine.UI;
 // Delegate for the currency changed event
 public delegate void CurrencyChanged();
 
-/*
-    Class documentation 
-*/
 public class GameManager : Singleton<GameManager> {
 
     #region EVENTS
@@ -19,29 +16,45 @@ public class GameManager : Singleton<GameManager> {
         
     #endregion
 
-    [SerializeField] // Panel containing the stats of the component / module
+    [SerializeField] // A reference to the panel object
     private GameObject statsPanel;
 
-    [SerializeField] // Panel's sprite
-    private Image panelSprite;
+    [SerializeField] // A reference to the panel image
+    private Image panelImage;
 
-    [SerializeField] // Panel's name
+    [SerializeField] // A reference to the panel name
     private Text panelName;
 
-    [SerializeField] // Panel's status
+    [SerializeField] // A reference to panel status
     private Text panelStatus;
 
-    [SerializeField]
-    private Sprite[] componentSprites;
-
-    // A reference to the currency text
-    [SerializeField]
+    [SerializeField] // A reference to the upgrade button
+    private Button upgradeButton;
+    
+    [SerializeField] // A reference to the text price
+    private Text txtPrice;
+    
+    [SerializeField] // A reference to the currency text
     private Text currencyText;
 
     #region VARIABLES
 
     // The current selected component
-    private ComponentScript selectedComponent;
+    private Component selectedComponent;
+
+    /// <summary>
+    /// if there is a current selected component,
+    /// return it, and if not return null
+    /// </summary>
+    public Component GetSelectedComponent {
+        get {
+            if (this.selectedComponent != null) {
+                return this.selectedComponent;
+            } else {
+                return null;
+            }
+        }
+    }
 
     // The player's currency
     private int currency;
@@ -72,42 +85,95 @@ public class GameManager : Singleton<GameManager> {
 
     #endregion
 
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before 
+    /// any of the Update methods is called the first time.
+    /// </summary>
     private void Start() {
-        // Sets the starting currency to 50
-        SetCurrency(1000);
+        // Sets the initial currency
+        SetCurrency(700);
     }
 
     /// <summary>
     /// When the currency changes
     /// </summary>
     public void OnCurrencyChanged() {
-        if (Changed != null) {
-            Changed();
+        Changed?.Invoke();
+    }
+
+    /// <summary>
+    /// Selects a component by clicking it
+    /// </summary>
+    /// <param name="component">The clicked component</param>
+    public void SelectComponent(Component component) {
+        if (this.selectedComponent != null) {
+            // Sets the selectedComponent to the clicked component
+            this.selectedComponent = component;            
+        }
+        this.selectedComponent = component;
+        UpdateComputerPanel();
+        ShowStats(true);
+    }
+
+    /// <summary>
+    /// Called when the selectedComponent is clicked again
+    /// and sets the selectedComponent to null and hides the stats panel
+    /// </summary>
+    public void DeselectComponent() {
+        if (this.selectedComponent != null) {
+            this.selectedComponent = null;
+            ShowStats(false);
         }
     }
 
-    /* Following Section is panel related */
+    /// <summary>
+    /// Updates the stats panel information and styling 
+    /// depending on what component was clicked and if the 
+    /// user have enough currency to buy/upgrade etc..
+    /// </summary>
+    public void UpdateComputerPanel() {
+        this.panelName.text = "Lvl " + this.selectedComponent.ComponentLevel + ": " + this.selectedComponent.Name;
+        if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price <= GetCurrency()) {
+            this.upgradeButton.interactable = true;
+            this.upgradeButton.GetComponent<Image>().color = Color.green;
+            this.txtPrice.color = Color.white;
+            this.txtPrice.text = "Upgrade (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+        } else if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price > GetCurrency()) {
+            this.upgradeButton.interactable = false;
+            this.upgradeButton.GetComponent<Image>().color = Color.grey;
+            this.txtPrice.color = Color.black;
+            this.txtPrice.text = "Upgrade (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+        } else {
+            this.upgradeButton.interactable = false;
+            this.upgradeButton.GetComponent<Image>().color = Color.grey;
+            this.txtPrice.color = Color.black;
+            this.txtPrice.text = "Max Upgraded";
+        }
+        this.panelImage.GetComponent<Image>().sprite = this.selectedComponent.Sprite;
+        this.selectedComponent.SetCanvasSprite(this.selectedComponent.Sprite);
+    }
 
     /// <summary>
-    /// Responsible for both opening and closing
-    /// the Stats Panel
+    /// Calls the selected components upgrade function
+    /// if there are any upgrades left and if the user has enouch currency
     /// </summary>
-    public void ShowStats() {
-        this.statsPanel.SetActive(!statsPanel.activeSelf);
+    public void UpgradeComponent() {
+        if (this.selectedComponent != null) {
+            if (this.selectedComponent.ComponentLevel <= this.selectedComponent.Upgrades.Length && GetCurrency() >= this.selectedComponent.NextUpgrade.Price) {
+                this.selectedComponent.Upgrade();
+                UpdateComputerPanel();
+            }
+        }
     }
 
-    public void SetPanelName(string name) {
-        this.panelName.text = name;
+    /// <summary>
+    /// Shows or hides the stats panel
+    /// depending on the input param. true for showing
+    /// and false for hiding
+    /// </summary>
+    /// <param name="active">either true or false</param>
+    public void ShowStats(bool active) {
+        this.statsPanel.SetActive(active);
     }
-
-    public void SetPanelSprite(Sprite sprite) {
-        this.panelSprite.sprite = sprite;
-    }
-
-    public void SetPanelStatus(string status) {
-        this.panelStatus.text = status;
-    }
-
-    /* End of panel related section */
 
 }
