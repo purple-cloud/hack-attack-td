@@ -74,7 +74,7 @@ public class GameManager : Singleton<GameManager> {
 
     private void Start() {
         // Sets the starting currency to 50
-        SetCurrency(10000);
+        SetCurrency(1000);
     }
 
     /// <summary>

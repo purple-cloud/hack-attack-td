@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ComponentUpgrade : MonoBehaviour {
+public class ComponentUpgrade {
 
     /// <summary>
     /// Generates getter and private setter for upgrade name
