@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// Class representing the computer component
+/// Class representing the firewall component
 /// </summary>
-public class Computer : Component, IPointerClickHandler {
+public class Firewall : Component, IPointerClickHandler {
 
     [SerializeField] // Contains the sprites for the different upgrades
-    private Sprite[] computerSprites;
+    private Sprite[] firewallSprites;
 
-    // Initialization
     private void Start() {
         Upgrades = new ComponentUpgrade[] {
-            new ComponentUpgrade("Modern Laptop", 100, computerSprites[1], 500),
-            new ComponentUpgrade("Gaming Laptop", 500, computerSprites[2], 1000),
+            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1])
         };
-        Name = "Old Computer";
+        Name = "Shitty Firewall";
         Status = true;
         Price = NextUpgrade.Price;
-        Durability = 250f;
-        Sprite = computerSprites[0];
+        Sprite = firewallSprites[0];
     }
 
     /// <summary>
@@ -39,5 +35,4 @@ public class Computer : Component, IPointerClickHandler {
             GameManager.Instance.UpdateComputerPanel();
         }
     }
-
 }
