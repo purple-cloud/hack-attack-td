@@ -43,7 +43,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 		cloneItemImage.sprite = itemSprite;
 
 		// Assign "clone" as a child of ActionBar so it shows on screen
-		clone.transform.SetParent(Controller.Instance.canvas.transform);
+		clone.transform.SetParent(CompController.Instance.canvas.transform);
 	}
 
 	/// <summary>
@@ -59,8 +59,8 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerUp(PointerEventData eventData) {
-		if (Controller.Instance.isPlacingStructure == true) {
-			Controller.Instance.NullifyPlacementObejcts();
+		if (CompController.Instance.IsPlacingStructure == true) {
+			CompController.Instance.NullifyPlacementObejcts();
 		}
 		CreateClone();
 		SetItemBorderColor(itemBorderColorActive);

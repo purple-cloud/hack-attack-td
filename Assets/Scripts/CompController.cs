@@ -8,27 +8,26 @@ namespace Defenses {
 	/// <summary>
 	/// Global class for managing structures and action bar items.
 	/// </summary>
-	public class Controller : MonoBehaviour {
+	public class CompController : MonoBehaviour {
 		// The structures the new structure is being placed between
 		private GameObject targetStructureObj1;
 		private GameObject targetStructureObj2;
 
-		
 		private GameObject newStructure;        // New structure that is being placed
 		private GameObject clone;				// A reference to the current clone (created from the item slot)
 
 		// Contains the component of the target structures
-		private BaseStructure targetStructureObj1Comp;
-		private BaseStructure targetStructureObj2Comp;
+		private Component targetStructureObj1Comp;
+		private Component targetStructureObj2Comp;
 		
-		public bool isPlacingStructure = false;
+		public bool IsPlacingStructure { get; set; }
 
 		[SerializeField]
 		private string canvasName;
 
 		public GameObject canvas { get; private set; }
 
-		public static Controller Instance { get; private set; }
+		public static CompController Instance { get; private set; }
 
 		private void Awake() {
 			if (Instance == null) {
@@ -41,6 +40,7 @@ namespace Defenses {
 
 		void Start() {
 			canvas = GameObject.Find(canvasName);
+			IsPlacingStructure = false;		
 			DrawStructurePaths();
 		}
 
@@ -50,7 +50,7 @@ namespace Defenses {
 		private void DrawStructurePaths() {
 			foreach (Transform child in canvas.transform) {
 				GameObject obj = child.gameObject;
-				BaseStructure bs = obj.GetComponent(typeof(BaseStructure)) as BaseStructure;
+				Component bs = obj.GetComponent(typeof(Component)) as Component;
 
 				if (bs != null) {
 					if (bs.output != null) {
@@ -66,13 +66,13 @@ namespace Defenses {
 		/// </summary>
 		/// <param name="obj">The reporting object.</param>
 		public void OnStructureClickEvent(GameObject obj) {
-			if (isPlacingStructure) {
+			if (IsPlacingStructure) {
 				// Checks if it is a new or on-going placement
 				if (targetStructureObj1 == null && targetStructureObj2 == null) {
-					// Find the script derived from BaseStructure and assign it to a variable
-					BaseStructure comp = obj.GetComponent(typeof(BaseStructure)) as BaseStructure;
+					// Find the script derived from Component and assign it to a variable
+					Component comp = obj.GetComponent(typeof(Component)) as Component;
 
-					if (comp.GetType().IsSubclassOf(typeof(BaseStructure))) {
+					if (comp.GetType().IsSubclassOf(typeof(Component))) {
 						targetStructureObj1 = obj;
 						targetStructureObj1Comp = comp;
 					}
@@ -81,10 +81,10 @@ namespace Defenses {
 						EnableCloneDragging();
 					}
 				} else if (targetStructureObj2 == null) {
-					// Find the script derived from BaseStructure and assign it to a variable for the 2nd object
-					BaseStructure comp = obj.GetComponent(typeof(BaseStructure)) as BaseStructure;
+					// Find the script derived from Component and assign it to a variable for the 2nd object
+					Component comp = obj.GetComponent(typeof(Component)) as Component;
 
-					if (comp.GetType().IsSubclassOf(typeof(BaseStructure))) {
+					if (comp.GetType().IsSubclassOf(typeof(Component))) {
 						targetStructureObj2 = obj;
 						targetStructureObj2Comp = comp;
 					}
@@ -97,7 +97,7 @@ namespace Defenses {
 							Clone c;
 							if ((c = child.gameObject.GetComponent<Clone>()) != null) {
 								Destroy(child.gameObject);
-								isPlacingStructure = false;
+								IsPlacingStructure = false;
 							}
 						}
 						NullifyPlacementObejcts();
@@ -121,7 +121,7 @@ namespace Defenses {
 		/// <param name="clone"></param>
 		public void InitClone(GameObject clone) {
 			this.clone = clone;
-			isPlacingStructure = true;
+			IsPlacingStructure = true;
 			HighlightAllStructures(true);
 		}
 
@@ -131,7 +131,13 @@ namespace Defenses {
 		public void FinishPlacement() {
 			newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
 			newStructure.transform.position = clone.transform.position;
+
+			//TODO Unity is on some serious drugs. Please make sure that the child component in the defense prefab automatically instantaites the child (Image) object.
+			GameObject img = Instantiate(clone.GetComponent<Clone>().defensePrefab.transform.GetChild(0).gameObject) as GameObject;
+			img.transform.position = clone.transform.position;
+			img.transform.SetParent(newStructure.transform);
 			newStructure.transform.SetParent(canvas.transform);
+			// End maniac code
 
 			SwapInputOutput();
 			Destroy(clone);
@@ -176,8 +182,8 @@ namespace Defenses {
 		/// <param name="input"></param>
 		/// <param name="output"></param>
 		public void SetInputOutput(GameObject input, GameObject output) {
-			BaseStructure inputCore = input.GetComponent(typeof(BaseStructure)) as BaseStructure;
-			BaseStructure outputCore = output.GetComponent(typeof(BaseStructure)) as BaseStructure;
+			Component inputCore = input.GetComponent(typeof(Component)) as Component;
+			Component outputCore = output.GetComponent(typeof(Component)) as Component;
 
 			inputCore.output = output;
 			outputCore.input = input;
@@ -189,8 +195,8 @@ namespace Defenses {
 		/// <param name="state"></param>
 		public void HighlightAllStructures(bool state) {
 			foreach (Transform child in canvas.transform) {
-				BaseStructure bs;
-				if ((bs = child.gameObject.GetComponent(typeof(BaseStructure)) as BaseStructure) != null) {
+				Component bs;
+				if ((bs = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
 					bs.ShowHighlight(state);
 				}
 			}
@@ -219,7 +225,7 @@ namespace Defenses {
 			targetStructureObj2Comp = null;
 			newStructure = null;
 			
-			isPlacingStructure = false;
+			IsPlacingStructure = false;
 			HighlightAllStructures(false);
 		}
 
@@ -231,7 +237,7 @@ namespace Defenses {
 			// Removes button highlight on the item when dropping it
 			EventSystem.current.SetSelectedGameObject(null);
 
-			isPlacingStructure = false;
+			IsPlacingStructure = false;
 			HighlightAllStructures(false);
 			DestroyAllClones();
 			Destroy(clone);
