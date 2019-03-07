@@ -12,7 +12,7 @@ public class Clone : MonoBehaviour, IPointerClickHandler {
 	/// Alert the controller when this game object is created.
 	/// </summary>
 	void Start() {
-		Controller.Instance.InitClone(gameObject);
+		CompController.Instance.InitClone(gameObject);
 	}
 
 	/// <summary>
@@ -20,13 +20,13 @@ public class Clone : MonoBehaviour, IPointerClickHandler {
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerClick(PointerEventData eventData) {
-		Controller.Instance.FinishPlacement();
+		CompController.Instance.FinishPlacement();
 	}
 
 	void Update() {
 		// Check if escape or right mouse is clicked and if the clone is on the display
 		if (Input.GetMouseButtonUp(1) || Input.GetButtonDown("Cancel")) {
-			Controller.Instance.CancelPlacement(gameObject);
+			CompController.Instance.CancelPlacement(gameObject);
 		}
 
 		if (isDragging) {
