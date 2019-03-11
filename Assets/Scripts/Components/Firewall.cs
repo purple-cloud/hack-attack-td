@@ -14,10 +14,11 @@ public class Firewall : Component, IPointerClickHandler {
 
     private void Start() {
         Upgrades = new ComponentUpgrade[] {
-            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1])
+            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100)
         };
         Name = "Shitty Firewall";
-        Status = true;
+        Status = false;
+        RepairPrice = 50;
         Price = NextUpgrade.Price;
         Sprite = firewallSprites[0];
     }
