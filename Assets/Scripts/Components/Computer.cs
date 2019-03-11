@@ -16,12 +16,13 @@ public class Computer : Component, IPointerClickHandler {
     // Initialization
     private void Start() {
         Upgrades = new ComponentUpgrade[] {
-            new ComponentUpgrade("Modern Laptop", 100, computerSprites[1], 500),
-            new ComponentUpgrade("Gaming Laptop", 500, computerSprites[2], 1000),
+            new ComponentUpgrade("Modern Laptop", 100, computerSprites[1], 100, 500),
+            new ComponentUpgrade("Gaming Laptop", 500, computerSprites[2], 200, 1000),
         };
         Name = "Old Computer";
         Status = true;
         Price = NextUpgrade.Price;
+        RepairPrice = 50;
         Durability = 250f;
         Sprite = computerSprites[0];
     }

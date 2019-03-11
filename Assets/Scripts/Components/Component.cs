@@ -34,6 +34,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     // Getter & setter for the component status
     public bool Status { get; set; }
 
+    // Getter & setter for the component repair price
+    public int RepairPrice { get; set; }
+
     // Getter & setter for the component sprite
     public Sprite Sprite { get; set; }
 
@@ -66,6 +69,19 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     }
 
     /// <summary>
+    /// Is called by the GameManager when pressing Repair on the stats panel
+    /// after selecting a component
+    /// </summary>
+    public void Repair() {
+        try {
+            GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - RepairPrice);
+            this.Status = true;
+        } catch (NullReferenceException nre) {
+            Debug.LogException(nre);
+        }
+    }
+
+    /// <summary>
     /// Is called by the GameManager when pressing Upgrade on the stats panel
     /// after selecting a component. 
     /// </summary>
@@ -76,6 +92,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                 GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - NextUpgrade.Price);
                 this.Sprite = NextUpgrade.Sprite;
                 this.Name = NextUpgrade.Name;
+                this.RepairPrice = NextUpgrade.RepairPrice;
 
                 // Assign the value to the upgrade button
                 Debug.Log("this.Price: " + Price);
@@ -102,7 +119,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// <returns>
     /// Return either "Active" or "Disabled" depending on status boolean
     /// </returns>
-    private string GetStatus() {
+    public string GetStatus() {
         string status = "";
         if (this.Status) {
             status = string.Format("<color=#00FF00>Active</color>");

@@ -13,11 +13,23 @@ public class GameManager : Singleton<GameManager> {
 
     // Event is triggered when currency changes
     public event CurrencyChanged Changed;
-        
+
     #endregion
 
-    [SerializeField] // A reference to the panel object
+    #region STATS_PANEL
+
+    [SerializeField]
     private GameObject statsPanel;
+
+    [SerializeField]
+    private Text statsTitle;
+
+    #endregion
+
+    #region MODULE_PANEL
+
+    [SerializeField] // A reference to the panel object
+    private GameObject modulePanel;
 
     [SerializeField] // A reference to the panel image
     private Image panelImage;
@@ -28,14 +40,22 @@ public class GameManager : Singleton<GameManager> {
     [SerializeField] // A reference to panel status
     private Text panelStatus;
 
+    [SerializeField] // A reference to the repair button
+    private Button repairButton;
+
+    [SerializeField] // A reference to the repair text price
+    private Text repairText;
+
     [SerializeField] // A reference to the upgrade button
     private Button upgradeButton;
     
-    [SerializeField] // A reference to the text price
+    [SerializeField] // A reference to the upgrade text price
     private Text txtPrice;
     
     [SerializeField] // A reference to the currency text
     private Text currencyText;
+
+    #endregion
 
     #region VARIABLES
 
@@ -133,22 +153,47 @@ public class GameManager : Singleton<GameManager> {
     /// </summary>
     public void UpdateComputerPanel() {
         this.panelName.text = "Lvl " + this.selectedComponent.ComponentLevel + ": " + this.selectedComponent.Name;
+        this.panelStatus.text = this.selectedComponent.GetStatus();
+
+        // Write something here
         if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price <= GetCurrency()) {
             this.upgradeButton.interactable = true;
             this.upgradeButton.GetComponent<Image>().color = Color.green;
             this.txtPrice.color = Color.white;
             this.txtPrice.text = "Upgrade (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+            // Comment here
         } else if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price > GetCurrency()) {
             this.upgradeButton.interactable = false;
             this.upgradeButton.GetComponent<Image>().color = Color.grey;
             this.txtPrice.color = Color.black;
             this.txtPrice.text = "Upgrade (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+            // Comment here
         } else {
             this.upgradeButton.interactable = false;
             this.upgradeButton.GetComponent<Image>().color = Color.grey;
             this.txtPrice.color = Color.black;
             this.txtPrice.text = "Max Upgraded";
         }
+        
+        // Write something here
+        if (this.selectedComponent.RepairPrice <= GetCurrency() && this.selectedComponent.Status == false) {
+            this.repairButton.interactable = true;
+            this.repairButton.GetComponent<Image>().color = Color.green;
+            this.repairText.color = Color.white;
+            this.repairText.text = "Repair (Cost: " + this.selectedComponent.RepairPrice + ")";
+            // Comment here
+        } else if (this.selectedComponent.RepairPrice > GetCurrency() && this.selectedComponent.Status == true) {
+            this.repairButton.interactable = false;
+            this.repairButton.GetComponent<Image>().color = Color.grey;
+            this.repairText.color = Color.black;
+            this.repairText.text = "Repair (Cost: " + this.selectedComponent.RepairPrice + ")";
+        } else {
+            this.repairButton.interactable = false;
+            this.repairButton.GetComponent<Image>().color = Color.grey;
+            this.repairText.color = Color.black;
+            this.repairText.text = "Component is Active!";
+        }
+
         this.panelImage.GetComponent<Image>().sprite = this.selectedComponent.Sprite;
         this.selectedComponent.SetCanvasSprite(this.selectedComponent.Sprite);
     }
@@ -161,6 +206,18 @@ public class GameManager : Singleton<GameManager> {
         if (this.selectedComponent != null) {
             if (this.selectedComponent.ComponentLevel <= this.selectedComponent.Upgrades.Length && GetCurrency() >= this.selectedComponent.NextUpgrade.Price) {
                 this.selectedComponent.Upgrade();
+                UpdateComputerPanel();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Repairs the selected component if its status is disabled
+    /// </summary>
+    public void RepairComponent() {
+        if (this.selectedComponent != null) {
+            if (this.selectedComponent.RepairPrice < GetCurrency() && this.selectedComponent.Status == false) {
+                this.selectedComponent.Repair();
                 UpdateComputerPanel();
             }
         }
