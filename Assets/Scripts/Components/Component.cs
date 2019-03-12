@@ -37,6 +37,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     // Getter & setter for the component repair price
     public int RepairPrice { get; set; }
 
+    // Getter & setter for the component sell price
+    public int SellValue { get; set; }
+
     // Getter & setter for the component sprite
     public Sprite Sprite { get; set; }
 
@@ -162,6 +165,22 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// <param name="sprite">the sprite to set to the canvas image</param>
 	public void SetCanvasSprite(Sprite sprite) {
         this.canvasImage.sprite = sprite;
+    }
+
+    /// <summary>
+    /// Currently this method needs to be called for each component
+    /// 
+    /// When the component is clicked it checks if the GameManagers selected component = this component,
+    /// and if so closes the information panel. If not it updates the information panel with
+    /// the specified information from the clicked component and opens up the panel if its not open
+    /// </summary>
+    public void OnPointerClick(PointerEventData eventData) {
+        if (GameManager.Instance.GetSelectedGameObjext == this) {
+            GameManager.Instance.DeselectGameObject();
+        } else {
+            GameManager.Instance.SelectGameObjext(gameObject);
+            GameManager.Instance.UpdateComputerPanel();
+        }
     }
 
 }
