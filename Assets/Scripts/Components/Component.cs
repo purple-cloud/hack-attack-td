@@ -19,7 +19,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	[SerializeField]
 	private string outputObjectName;
 
+	[HideInInspector]
 	public GameObject input;
+	[HideInInspector]
 	public GameObject output;
 
 	// List containing all the specific upgrades for desired component
@@ -146,16 +148,18 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// </summary>
 	/// <param name="state">Controls if the game object will create or remove border.</param>
 	public void ShowHighlight(bool state) {
+		GameObject borderGO;
 		if (state == true) {
 			// Instantiates new game object under this game object and gives it a color
-			GameObject borderGO = Instantiate<GameObject>(Resources.Load("Prefabs/HighlightBorder") as GameObject);
-			borderGO.GetComponent<Image>().color = new Color(0, 255, 0);    // Green
+			borderGO = Instantiate<GameObject>(Resources.Load("Prefabs/HighlightBorder") as GameObject);
+			borderGO.name = "HighlightBorder";
+			borderGO.GetComponent<Image>().color = Color.green;
 			borderGO.transform.position = gameObject.transform.position;
 			borderGO.transform.SetParent(gameObject.transform);
 		} else {
-			// Removes the border
-			if (gameObject.transform.childCount > 0) {
-				Destroy(gameObject.transform.GetChild(0).gameObject);
+			// Removes the border if it exists
+			if (gameObject.transform.Find("HighlightBorder") != null) {
+				Destroy(gameObject.transform.Find("HighlightBorder").gameObject);
 			}
 		}
 	}

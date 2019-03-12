@@ -43,7 +43,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 		cloneItemImage.sprite = itemSprite;
 
 		// Assign "clone" as a child of ActionBar so it shows on screen
-		clone.transform.SetParent(CompController.Instance.canvas.transform);
+		clone.transform.SetParent(CompController.Instance.structureCanvas.transform);
 	}
 
 	/// <summary>
