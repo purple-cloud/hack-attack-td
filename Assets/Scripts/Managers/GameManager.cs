@@ -177,7 +177,7 @@ public class GameManager : Singleton<GameManager> {
         this.panelName.text = "Lvl " + this.selectedComponent.ComponentLevel + ": " + this.selectedComponent.Name;
         this.panelStatus.text = this.selectedComponent.GetStatus();
 
-        // Write something here
+        // Controls the styling of upgrade button
         if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price <= GetCurrency()) {
             this.upgradeButton.interactable = true;
             this.upgradeButton.GetComponent<Image>().color = Color.green;
@@ -197,7 +197,7 @@ public class GameManager : Singleton<GameManager> {
             this.txtPrice.text = "Max Upgraded";
         }
         
-        // Write something here
+        // Controls the styling of repair button
         if (this.selectedComponent.RepairPrice <= GetCurrency() && this.selectedComponent.Status == false) {
             this.repairButton.interactable = true;
             this.repairButton.GetComponent<Image>().color = Color.green;
@@ -216,7 +216,19 @@ public class GameManager : Singleton<GameManager> {
             this.repairText.text = "Component is Active!";
         }
 
-        this.sellText.text = "Sell (" + this.selectedComponent.SellValue + ")";
+        // Controls the styling of sell button
+        if (this.selectedComponent.Sellable == false) {
+            this.sellButton.interactable = false;
+            this.sellButton.GetComponent<Image>().color = Color.grey;
+            this.sellText.color = Color.black;
+            this.sellText.text = "Can't be sold";
+        } else {
+            this.sellButton.interactable = true;
+            this.sellButton.GetComponent<Image>().color = Color.red;
+            this.sellText.color = Color.white;
+            this.sellText.text = "Sell (" + this.selectedComponent.SellValue + ")";
+        }
+
         this.panelImage.GetComponent<Image>().sprite = this.selectedComponent.Sprite;
         this.selectedComponent.SetCanvasSprite(this.selectedComponent.Sprite);
     }
@@ -250,7 +262,7 @@ public class GameManager : Singleton<GameManager> {
     /// Sells the selected component and removes it from canvas
     /// </summary>
     public void SellComponent() {
-        if (this.selectedComponent != null) {
+        if (this.selectedComponent != null && this.selectedComponent.Sellable == true) {
             Destroy(this.selectedGameObject);
             // Add the sell value of the component to the global currency
             SetCurrency(GetCurrency() + this.selectedComponent.SellValue);

@@ -18,6 +18,7 @@ public class Firewall : Component, IPointerClickHandler {
         };
         Name = "Shitty Firewall";
         Status = false;
+        Sellable = true;
         RepairPrice = 50;
         SellValue = 50;
         Price = NextUpgrade.Price;

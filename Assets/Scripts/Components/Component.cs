@@ -51,6 +51,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     // Getter & setter for the component durability
     public float Durability { get; set; }
 
+    // Getter & setter for sellable
+    public bool Sellable { get; set; }
+
     // Awake is called after all objects are initialized
     private void Awake() {
 		// Sets input and output extracted from Unity editor for predefined levels
