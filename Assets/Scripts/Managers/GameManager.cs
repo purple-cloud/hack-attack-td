@@ -216,6 +216,7 @@ public class GameManager : Singleton<GameManager> {
             this.repairText.text = "Component is Active!";
         }
 
+        this.sellText.text = "Sell (" + this.selectedComponent.SellValue + ")";
         this.panelImage.GetComponent<Image>().sprite = this.selectedComponent.Sprite;
         this.selectedComponent.SetCanvasSprite(this.selectedComponent.Sprite);
     }
@@ -250,9 +251,10 @@ public class GameManager : Singleton<GameManager> {
     /// </summary>
     public void SellComponent() {
         if (this.selectedComponent != null) {
-            // TODO Delete GameObject from canvas
-            // TODO add onClick() function to the sell button
             Destroy(this.selectedGameObject);
+            // Add the sell value of the component to the global currency
+            SetCurrency(GetCurrency() + this.selectedComponent.SellValue);
+            // Close information panels
             ShowStats(false);
             ShowModulePanel(false);
         }

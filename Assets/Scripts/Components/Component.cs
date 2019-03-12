@@ -98,6 +98,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                 this.Sprite = NextUpgrade.Sprite;
                 this.Name = NextUpgrade.Name;
                 this.RepairPrice = NextUpgrade.RepairPrice;
+                this.SellValue = NextUpgrade.SellValue;
 
                 // Assign the value to the upgrade button
                 Debug.Log("this.Price: " + Price);
