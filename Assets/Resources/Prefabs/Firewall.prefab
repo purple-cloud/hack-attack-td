@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasImage: {fileID: 2285183361605292912}
-  inputObjectName: Computer
+  inputObjectName: 
   outputObjectName: 
   input: {fileID: 0}
   output: {fileID: 0}
