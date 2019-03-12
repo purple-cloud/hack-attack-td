@@ -23,9 +23,9 @@ namespace Defenses {
 		public bool IsPlacingStructure { get; set; }
 
 		[SerializeField]
-		private string canvasName;
+		private string structureCanvasName;
 
-		public GameObject canvas { get; private set; }
+		public GameObject structureCanvas { get; private set; }
 
 		public static CompController Instance { get; private set; }
 
@@ -39,7 +39,12 @@ namespace Defenses {
 		}
 
 		void Start() {
-			canvas = GameObject.Find(canvasName);
+			structureCanvas = GameObject.Find(structureCanvasName);
+
+			if (structureCanvas == null) {
+				throw new System.SystemException("CompController has invalid reference to structure canvas. Please check the serialized fields.");
+			}
+
 			IsPlacingStructure = false;		
 			DrawStructurePaths();
 		}
@@ -48,12 +53,18 @@ namespace Defenses {
 		/// Draws a path between all connected structures.
 		/// </summary>
 		private void DrawStructurePaths() {
-			foreach (Transform child in canvas.transform) {
+			foreach (Transform child in structureCanvas.transform) {
 				GameObject obj = child.gameObject;
 				Component bs = obj.GetComponent(typeof(Component)) as Component;
 
 				if (bs != null) {
 					if (bs.output != null) {
+						// If the component does not have a line renderer, add the component
+						if (obj.GetComponent<LineRenderer>() == null) {
+							obj.AddComponent<LineRenderer>();
+						}
+
+						// Draw line between this object and its output component
 						obj.GetComponent<LineRenderer>().SetPosition(0, obj.transform.position);
 						obj.GetComponent<LineRenderer>().SetPosition(1, bs.output.transform.position);
 					}
@@ -93,7 +104,7 @@ namespace Defenses {
 					if ((targetStructureObj1Comp.output != targetStructureObj2 || targetStructureObj2Comp.input != targetStructureObj1) &&
 						(targetStructureObj2Comp.output != targetStructureObj1 || targetStructureObj1Comp.input != targetStructureObj2)) {
 						Debug.Log("Defenses must be adjecent.");
-						foreach (Transform child in canvas.transform) {
+						foreach (Transform child in structureCanvas.transform) {
 							Clone c;
 							if ((c = child.gameObject.GetComponent<Clone>()) != null) {
 								Destroy(child.gameObject);
@@ -136,7 +147,7 @@ namespace Defenses {
 			GameObject img = Instantiate(clone.GetComponent<Clone>().defensePrefab.transform.GetChild(0).gameObject) as GameObject;
 			img.transform.position = clone.transform.position;
 			img.transform.SetParent(newStructure.transform);
-			newStructure.transform.SetParent(canvas.transform);
+			newStructure.transform.SetParent(structureCanvas.transform);
 			// End maniac code
 
 			SwapInputOutput();
@@ -194,10 +205,10 @@ namespace Defenses {
 		/// </summary>
 		/// <param name="state"></param>
 		public void HighlightAllStructures(bool state) {
-			foreach (Transform child in canvas.transform) {
-				Component bs;
-				if ((bs = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
-					bs.ShowHighlight(state);
+			foreach (Transform child in structureCanvas.transform) {
+				Component comp;
+				if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
+					comp.ShowHighlight(state);
 				}
 			}
 		}
@@ -206,7 +217,7 @@ namespace Defenses {
 		/// Finds and destroys all visible clones.
 		/// </summary>
 		private void DestroyAllClones() {
-			foreach (Transform child in canvas.transform) {
+			foreach (Transform child in structureCanvas.transform) {
 				Clone c;
 				if ((c = child.gameObject.GetComponent<Clone>()) != null) {
 					Destroy(child.gameObject);
