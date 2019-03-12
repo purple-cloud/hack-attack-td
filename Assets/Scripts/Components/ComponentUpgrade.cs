@@ -25,6 +25,11 @@ public class ComponentUpgrade {
     public int RepairPrice { get; private set; }
 
     /// <summary>
+    /// Generates getter and private setter for sell value
+    /// </summary>
+    public int SellValue { get; private set; }
+
+    /// <summary>
     /// Generates getter and private setter for upgrade sprite
     /// </summary>
     public Sprite Sprite { get; private set; }
@@ -34,11 +39,12 @@ public class ComponentUpgrade {
     /// </summary>
     /// <param name="price">price of the new component upgrade</param>
     /// <param name="sprite">sprite of the new component upgrade</param>
-    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice) {
+    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal) {
         this.Name = name;
         this.Price = price;
         this.Sprite = sprite;
         this.RepairPrice = repairPrice;
+        this.SellValue = sellVal;
     }
 
     /// <summary>
@@ -47,11 +53,12 @@ public class ComponentUpgrade {
     /// <param name="price">price of the new computer upgrade</param>
     /// <param name="durability">durability of the new computer upgrade</param>
     /// <param name="sprite">sprite of the new computer upgrade</param>
-    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, float durability) {
+    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal, float durability) {
         this.Name = name;
         this.Price = price;
         this.Sprite = sprite;
         this.RepairPrice = repairPrice;
+        this.SellValue = sellVal;
         this.Durability = durability;
     }
 

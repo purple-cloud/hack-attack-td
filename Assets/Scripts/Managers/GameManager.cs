@@ -51,6 +51,12 @@ public class GameManager : Singleton<GameManager> {
     
     [SerializeField] // A reference to the upgrade text price
     private Text txtPrice;
+
+    [SerializeField]
+    private Button sellButton;
+
+    [SerializeField]
+    private Text sellText;
     
     [SerializeField] // A reference to the currency text
     private Text currencyText;
@@ -62,6 +68,9 @@ public class GameManager : Singleton<GameManager> {
     // The current selected component
     private Component selectedComponent;
 
+    // Fix this
+    private GameObject selectedGameObject;
+
     /// <summary>
     /// if there is a current selected component,
     /// return it, and if not return null
@@ -70,6 +79,16 @@ public class GameManager : Singleton<GameManager> {
         get {
             if (this.selectedComponent != null) {
                 return this.selectedComponent;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public GameObject GetSelectedGameObjext {
+        get {
+            if (this.selectedGameObject != null) {
+                return this.selectedGameObject;
             } else {
                 return null;
             }
@@ -122,27 +141,30 @@ public class GameManager : Singleton<GameManager> {
     }
 
     /// <summary>
-    /// Selects a component by clicking it
+    /// Selects a GameObjext by clicking it
     /// </summary>
-    /// <param name="component">The clicked component</param>
-    public void SelectComponent(Component component) {
-        if (this.selectedComponent != null) {
-            // Sets the selectedComponent to the clicked component
-            this.selectedComponent = component;            
+    /// <param name="gameObject">The clicked gameObject</param>
+    public void SelectGameObjext(GameObject gameObject) {
+        if (this.selectedGameObject != null) {
+            this.selectedGameObject = gameObject;
+            this.selectedComponent = (Component) this.selectedGameObject.GetComponent(typeof(Component));
+        } else {
+            this.selectedGameObject = gameObject;
+            this.selectedComponent = (Component) this.selectedGameObject.GetComponent(typeof(Component));
+            UpdateComputerPanel();
+            ShowModulePanel(true);
         }
-        this.selectedComponent = component;
-        UpdateComputerPanel();
-        ShowStats(true);
     }
 
     /// <summary>
     /// Called when the selectedComponent is clicked again
     /// and sets the selectedComponent to null and hides the stats panel
     /// </summary>
-    public void DeselectComponent() {
-        if (this.selectedComponent != null) {
+    public void DeselectGameObject() {
+        if (this.selectedGameObject != null) {
+            this.selectedGameObject = null;
             this.selectedComponent = null;
-            ShowStats(false);
+            ShowModulePanel(false);
         }
     }
 
@@ -224,6 +246,19 @@ public class GameManager : Singleton<GameManager> {
     }
 
     /// <summary>
+    /// Sells the selected component and removes it from canvas
+    /// </summary>
+    public void SellComponent() {
+        if (this.selectedComponent != null) {
+            // TODO Delete GameObject from canvas
+            // TODO add onClick() function to the sell button
+            Destroy(this.selectedGameObject);
+            ShowStats(false);
+            ShowModulePanel(false);
+        }
+    }
+
+    /// <summary>
     /// Shows or hides the stats panel
     /// depending on the input param. true for showing
     /// and false for hiding
@@ -231,6 +266,16 @@ public class GameManager : Singleton<GameManager> {
     /// <param name="active">either true or false</param>
     public void ShowStats(bool active) {
         this.statsPanel.SetActive(active);
+    }
+
+    /// <summary>
+    /// Shows or hides the module panel
+    /// depending on the input param. true for showing
+    /// and false for hiding
+    /// </summary>
+    /// <param name="active">either true or false</param>
+    public void ShowModulePanel(bool active) {
+        this.modulePanel.SetActive(active);
     }
 
 }
