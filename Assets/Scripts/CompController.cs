@@ -148,9 +148,15 @@ namespace Defenses {
 			img.transform.position = clone.transform.position;
 			img.transform.SetParent(newStructure.transform);
 			newStructure.transform.SetParent(structureCanvas.transform);
-			// End maniac code
+            // End maniac code
 
-			SwapInputOutput();
+            // TODO Fill in more components when added to action-bar
+            if (this.newStructure.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
+                Debug.Log("Component is Firewall: Subtracting 100 from currency");
+                GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
+            }
+
+            SwapInputOutput();
 			Destroy(clone);
 
 			NullifyPlacementObejcts();
