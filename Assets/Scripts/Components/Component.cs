@@ -48,6 +48,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     // Getter & setter for the component price
     public int Price { get; set; }
 
+    // Getter & setter for the component initial price
+    public int InitialPrice { get; set; }
+
     // Getter & setter for the component durability
     public float Durability { get; set; }
 
@@ -61,6 +64,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		output = (outputObjectName != null) ? GameObject.Find(outputObjectName) : null;
 
 		this.ComponentLevel = 1;
+        this.Sellable = false;
     }
 
     /// <summary>
@@ -114,6 +118,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         } else {
             Debug.Log("Currently no Upgrades left");
         }
+    }
+
+    public void Buy() {
+        Debug.Log("Buying " + this.Name + " component...");
+        GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - this.InitialPrice);
     }
 
     /*
