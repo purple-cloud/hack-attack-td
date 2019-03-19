@@ -68,10 +68,10 @@ public class ComponentUpgrade {
     }
 
     /// <summary>
-    /// Constructor for Computer Component upgrade
+    /// Constructor for encryption upgrade
     /// </summary>
     /// <param name="price">price of the new computer upgrade</param>
-    /// <param name="durability">durability of the new computer upgrade</param>
+    /// <param name="encryption">encryption of the new computer upgrade</param>
     /// <param name="sprite">sprite of the new computer upgrade</param>
     public ComponentUpgrade(string name, int price, Sprite sprite, float encryption) {
         this.Name = name;
