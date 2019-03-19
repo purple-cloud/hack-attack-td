@@ -24,37 +24,64 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	[HideInInspector]
 	public GameObject output;
 
-	// List containing all the specific upgrades for desired component
-	public ComponentUpgrade[] Upgrades { get; protected set; }
+    /// <summary>
+    /// List containing all the specific upgrades for desired component
+    /// </summary>
+    public ComponentUpgrade[] Upgrades { get; protected set; }
 
-    // Getter & setter for the component level
+    /// <summary>
+    /// Getter & setter for the component level
+    /// </summary>
     public int ComponentLevel { get; protected set; }
 
-    // Getter & setter for the component name
+    /// <summary>
+    /// Getter & setter for the component name
+    /// </summary>
     public string Name { get; set; }
 
-    // Getter & setter for the component status
+    /// <summary>
+    /// Getter & setter for the component status
+    /// </summary>
     public bool Status { get; set; }
 
-    // Getter & setter for the component repair price
+    /// <summary>
+    /// Getter & setter for the component repair price
+    /// </summary>
     public int RepairPrice { get; set; }
 
-    // Getter & setter for the component sell price
+    /// <summary>
+    /// Getter & setter for the component sell price
+    /// </summary>
     public int SellValue { get; set; }
 
-    // Getter & setter for the component sprite
+    /// <summary>
+    /// Getter & setter for the component sprite
+    /// </summary>
     public Sprite Sprite { get; set; }
 
-    // Getter & setter for the component price
+    /// <summary>
+    /// Getter & setter for the component price
+    /// </summary>
     public int Price { get; set; }
 
-    // Getter & setter for the component durability
+    /// <summary>
+    /// Getter & setter for the component durability
+    /// </summary>
     public float Durability { get; set; }
 
-    // Getter & setter for sellable
+    /// <summary>
+    /// Generates getter and private setter for upgrade encryption
+    /// </summary>
+    public float Encryption { get; set; }
+
+    /// <summary>
+    /// Getter & setter for sellable
+    /// </summary>
     public bool Sellable { get; set; }
 
-    // Awake is called after all objects are initialized
+    /// <summary>
+    /// Awake is called after all objects are initialized
+    /// </summary>
     private void Awake() {
 		// Sets input and output extracted from Unity editor for predefined levels
 		input = (inputObjectName != null) ? GameObject.Find(inputObjectName) : null;
@@ -102,6 +129,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                 this.Name = NextUpgrade.Name;
                 this.RepairPrice = NextUpgrade.RepairPrice;
                 this.SellValue = NextUpgrade.SellValue;
+                this.Encryption = NextUpgrade.Encryption; 
 
                 // Assign the value to the upgrade button
                 Debug.Log("this.Price: " + Price);

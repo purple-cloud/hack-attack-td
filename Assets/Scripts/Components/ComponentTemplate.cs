@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -28,7 +28,7 @@ public class ComponentTemplate : Component, IPointerClickHandler {
         Name = "Name of the starting component"; // Sets the init name of the component
         Status = true; // Sets the status to active
         Price = NextUpgrade.Price; // Sets the init upgrade price for the next upgrade of this component
-        Sprite = listOfSprites[0]; // Sets the init sprite of the component
+        Sprite = listOfSprites[0]; // Sets the init sprite of the componentz
     }
 
 }

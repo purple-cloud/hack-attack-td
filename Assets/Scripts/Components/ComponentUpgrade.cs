@@ -20,6 +20,11 @@ public class ComponentUpgrade {
     public float Durability { get; private set; }
 
     /// <summary>
+    /// Generates getter and private setter for upgrade encryption
+    /// </summary>
+    public float Encryption { get; private set; }
+
+    /// <summary>
     /// Generates getter and private setter for repair price
     /// </summary>
     public int RepairPrice { get; private set; }
@@ -60,6 +65,19 @@ public class ComponentUpgrade {
         this.RepairPrice = repairPrice;
         this.SellValue = sellVal;
         this.Durability = durability;
+    }
+
+    /// <summary>
+    /// Constructor for Computer Component upgrade
+    /// </summary>
+    /// <param name="price">price of the new computer upgrade</param>
+    /// <param name="durability">durability of the new computer upgrade</param>
+    /// <param name="sprite">sprite of the new computer upgrade</param>
+    public ComponentUpgrade(string name, int price, Sprite sprite, float encryption) {
+        this.Name = name;
+        this.Price = price;
+        this.Sprite = sprite;
+        this.Encryption = encryption;
     }
 
 }
