@@ -19,7 +19,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	[SerializeField]
 	private string outputObjectName;
 
+	[HideInInspector]
 	public GameObject input;
+	[HideInInspector]
 	public GameObject output;
 
 	// List containing all the specific upgrades for desired component
@@ -34,6 +36,12 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     // Getter & setter for the component status
     public bool Status { get; set; }
 
+    // Getter & setter for the component repair price
+    public int RepairPrice { get; set; }
+
+    // Getter & setter for the component sell price
+    public int SellValue { get; set; }
+
     // Getter & setter for the component sprite
     public Sprite Sprite { get; set; }
 
@@ -42,6 +50,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 
     // Getter & setter for the component durability
     public float Durability { get; set; }
+
+    // Getter & setter for sellable
+    public bool Sellable { get; set; }
 
     // Awake is called after all objects are initialized
     private void Awake() {
@@ -66,6 +77,19 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     }
 
     /// <summary>
+    /// Is called by the GameManager when pressing Repair on the stats panel
+    /// after selecting a component
+    /// </summary>
+    public void Repair() {
+        try {
+            GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - RepairPrice);
+            this.Status = true;
+        } catch (NullReferenceException nre) {
+            Debug.LogException(nre);
+        }
+    }
+
+    /// <summary>
     /// Is called by the GameManager when pressing Upgrade on the stats panel
     /// after selecting a component. 
     /// </summary>
@@ -76,6 +100,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                 GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - NextUpgrade.Price);
                 this.Sprite = NextUpgrade.Sprite;
                 this.Name = NextUpgrade.Name;
+                this.RepairPrice = NextUpgrade.RepairPrice;
+                this.SellValue = NextUpgrade.SellValue;
 
                 // Assign the value to the upgrade button
                 Debug.Log("this.Price: " + Price);
@@ -102,7 +128,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// <returns>
     /// Return either "Active" or "Disabled" depending on status boolean
     /// </returns>
-    private string GetStatus() {
+    public string GetStatus() {
         string status = "";
         if (this.Status) {
             status = string.Format("<color=#00FF00>Active</color>");
@@ -125,16 +151,18 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// </summary>
 	/// <param name="state">Controls if the game object will create or remove border.</param>
 	public void ShowHighlight(bool state) {
+		GameObject borderGO;
 		if (state == true) {
 			// Instantiates new game object under this game object and gives it a color
-			GameObject borderGO = Instantiate<GameObject>(Resources.Load("Prefabs/HighlightBorder") as GameObject);
-			borderGO.GetComponent<Image>().color = new Color(0, 255, 0);    // Green
+			borderGO = Instantiate<GameObject>(Resources.Load("Prefabs/HighlightBorder") as GameObject);
+			borderGO.name = "HighlightBorder";
+			borderGO.GetComponent<Image>().color = Color.green;
 			borderGO.transform.position = gameObject.transform.position;
 			borderGO.transform.SetParent(gameObject.transform);
 		} else {
-			// Removes the border
-			if (gameObject.transform.childCount > 0) {
-				Destroy(gameObject.transform.GetChild(0).gameObject);
+			// Removes the border if it exists
+			if (gameObject.transform.Find("HighlightBorder") != null) {
+				Destroy(gameObject.transform.Find("HighlightBorder").gameObject);
 			}
 		}
 	}
@@ -145,6 +173,22 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// <param name="sprite">the sprite to set to the canvas image</param>
 	public void SetCanvasSprite(Sprite sprite) {
         this.canvasImage.sprite = sprite;
+    }
+
+    /// <summary>
+    /// Currently this method needs to be called for each component
+    /// 
+    /// When the component is clicked it checks if the GameManagers selected component = this component,
+    /// and if so closes the information panel. If not it updates the information panel with
+    /// the specified information from the clicked component and opens up the panel if its not open
+    /// </summary>
+    public void OnPointerClick(PointerEventData eventData) {
+        if (GameManager.Instance.GetSelectedGameObjext == this) {
+            GameManager.Instance.DeselectGameObject();
+        } else {
+            GameManager.Instance.SelectGameObjext(gameObject);
+            GameManager.Instance.UpdateComputerPanel();
+        }
     }
 
 }

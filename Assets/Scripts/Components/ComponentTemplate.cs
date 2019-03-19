@@ -19,9 +19,9 @@ public class ComponentTemplate : Component, IPointerClickHandler {
         Upgrades = new ComponentUpgrade[] {
 
             // Fill in the appropriate parameters 
-            // (string nameOfTheUpgrade, int priceForTheUpgrade, sprite spriteOfTheUpgradedComponent)
+            // (string nameOfTheUpgrade, int priceForTheUpgrade, sprite spriteOfTheUpgradedComponent, int priceToRepair, int sellValue)
             // Example shown below:
-            new ComponentUpgrade("Nice Upgrade", 1000, this.listOfSprites[0])
+            new ComponentUpgrade("Nice Upgrade", 1000, this.listOfSprites[0], 100, 100)
         };
 
         // You also need to instantiate these fields
@@ -29,22 +29,6 @@ public class ComponentTemplate : Component, IPointerClickHandler {
         Status = true; // Sets the status to active
         Price = NextUpgrade.Price; // Sets the init upgrade price for the next upgrade of this component
         Sprite = listOfSprites[0]; // Sets the init sprite of the component
-    }
-
-    /// <summary>
-    /// Currently this method needs to be called for each component
-    /// 
-    /// When the component is clicked it checks if the GameManagers selected component = this component,
-    /// and if so closes the information panel. If not it updates the information panel with
-    /// the specified information from the clicked component and opens up the panel if its not open
-    /// </summary>
-    public void OnPointerClick(PointerEventData eventData) {
-        if (GameManager.Instance.GetSelectedComponent == this) {
-            GameManager.Instance.DeselectComponent();
-        } else {
-            GameManager.Instance.SelectComponent(this);
-            GameManager.Instance.UpdateComputerPanel();
-        }
     }
 
 }
