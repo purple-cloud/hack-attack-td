@@ -21,6 +21,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 
 	[HideInInspector]
 	public GameObject input;
+
 	[HideInInspector]
 	public GameObject output;
 
@@ -57,6 +58,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     // Getter & setter for sellable
     public bool Sellable { get; set; }
 
+    // Stating if component is immune to virus or not
+    public bool ImmuneToVirus { get; set; }
+
     // Awake is called after all objects are initialized
     private void Awake() {
 		// Sets input and output extracted from Unity editor for predefined levels
@@ -65,6 +69,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 
 		this.ComponentLevel = 1;
         this.Sellable = false;
+        this.InitialPrice = 0;
+        // Sets immune default to false;
+        ImmuneToVirus = false;
     }
 
     /// <summary>
