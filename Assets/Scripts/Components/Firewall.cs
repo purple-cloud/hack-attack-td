@@ -24,6 +24,8 @@ public class Firewall : Component, IPointerClickHandler {
         InitialPrice = 100;
         Price = NextUpgrade.Price;
         Sprite = firewallSprites[0];
+        // Sets virus immune to true
+        ImmuneToVirus = true;
     }
 
 }
