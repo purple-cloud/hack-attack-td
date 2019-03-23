@@ -12,6 +12,8 @@ public class Firewall : Component, IPointerClickHandler {
     [SerializeField] // Contains the sprites for the different upgrades
     private Sprite[] firewallSprites;
 
+    public bool PortStatus { get; set; }
+
     public void Start() {
         Upgrades = new ComponentUpgrade[] {
             new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100)
@@ -26,6 +28,7 @@ public class Firewall : Component, IPointerClickHandler {
         Sprite = firewallSprites[0];
         // Sets virus immune to true
         ImmuneToVirus = true;
+        PortStatus = false;
     }
 
 }

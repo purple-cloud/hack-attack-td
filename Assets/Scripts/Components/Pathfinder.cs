@@ -76,4 +76,8 @@ public class Pathfinder : MonoBehaviour {
         this.SelectedGameObject = gameObject;
         this.SelectedComponent = (Component) this.SelectedGameObject.GetComponent(typeof(Component));
     }
+
+    public GameObject GetAttackObject() {
+        return this.attackGameObject;
+    }
 }

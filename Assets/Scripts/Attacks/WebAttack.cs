@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Timers;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,63 +10,92 @@ public class WebAttack : Pathfinder {
 
     private bool isAttackable = false;
 
-    private void Start() {
-        
+    private Timer timer;
+
+    private int lifeTicks = 5;
+
+    private bool stopScript = false;
+
+    public void Run() {
+        Init();
+        FindAttackableGameObject();
     }
 
     /// <summary>
     /// Finds a game object to attack
     /// </summary>
-    public void FindInfectableGameObject() {
-        while (!this.isAttackable) {
+    private void FindAttackableGameObject() {
+        while (!this.isAttackable && this.stopScript == false) {
             if (ScanComponent(SelectedComponent)) {
                 this.isAttackable = true;
             } else {
                 MoveToNextOutput();
             }
         }
-        AttackGameObject();
+        if (this.stopScript == false) {
+            StartAttackingTimer();
+        }
     }
 
-    public void AttackGameObject() {
-        Debug.Log("Attacking game object: " + SelectedComponent.name);
+    private void StartAttackingTimer() {
+        Debug.Log(SelectedComponent.name + " is under attack!");
+        this.timer = new Timer(2000);
+        this.timer.Elapsed += AttackComponent;
+        this.timer.Start();
     }
 
-    /// <summary>
-    /// Create some sort of check if time has expired. if so, delete attack object
-    /// this to prevent overflow in worst case....
-    /// </summary>
-    public void hasTimerExpired() {
-
-    }
-
-    /// <summary>
-    /// Create some sort of timer that starts when attack object is born
-    /// </summary>
-    /// <param name="newTime"></param>
-    public void NextTimer(int newTime) {
-
+    private void AttackComponent(System.Object source, ElapsedEventArgs e) {
+        if (this.lifeTicks < 1) {
+            this.timer.Stop();
+            this.timer.Dispose();
+            DeleteAttack();
+        } else {
+            // Each attack does 10 dmg to the durability
+            SelectedComponent.Durability -= 10;
+            this.lifeTicks--;
+            Debug.Log("Durability left: " + SelectedComponent.Durability);
+            Debug.Log("Lifeticks: " + this.lifeTicks);
+            // TODO Update Module panel with new Computer Durability Values
+        }
     }
 
     /// <summary>
     /// deletes this attack object
     /// </summary>
     private void DeleteAttack() {
-
+        Debug.Log("Deleting attack..");
+        this.stopScript = true;
+        Destroy(GetAttackObject());
     }
 
     /// <summary>
-    /// Scans the specified component
+    /// Scans the specified component and returns true if computer component
+    /// is found and false if not
     /// </summary>
-    /// <param name="componentToScan">component to scan</param>
-    public bool ScanComponent(Component componentToScan) {
-        if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
-            //TODO Create an if statement checking if the firewall has enabled or disabled access for this attacks port
-
-            return true;
-        } else {
-            return false;
+    /// <param name="componentToScan"></param>
+    /// <returns>true if computer component is found and false if not</returns>
+    private bool ScanComponent(Component componentToScan) {
+        bool computerComponentFound = false;
+        try {
+            if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Computer)) {
+                computerComponentFound = true;
+            } else if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
+                //TODO Change this check to find the status of port in real firewall script (Wait for liban to finish firewall)
+                Firewall firewall = (Firewall) componentToScan.GetComponent(typeof(Component));
+                Debug.Log("Selected component is a firewall, port status: " + firewall.PortStatus);
+                if (!firewall.PortStatus) {
+                    if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Computer)) {
+                        computerComponentFound = true;
+                    }
+                } else {
+                    computerComponentFound = false;
+                    DeleteAttack();
+                }
+            }
+        } catch (NullReferenceException nre) {
+            Debug.LogException(nre);
         }
+        return computerComponentFound;
     }
 
 }
