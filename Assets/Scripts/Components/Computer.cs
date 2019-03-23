@@ -21,7 +21,6 @@ public class Computer : Component, IPointerClickHandler {
         };
         Name = "Old Computer";
         Status = true;
-        Sellable = false;
         Price = NextUpgrade.Price;
         RepairPrice = 50;
         SellValue = 50;

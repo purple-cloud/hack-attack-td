@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public abstract class Component : MonoBehaviour, IPointerUpHandler {
 
 	[SerializeField] // A reference to the image displayed in canvas
-    private Image canvasImage;
+  private Image canvasImage;
 
 	[SerializeField]
 	private string inputObjectName;
@@ -21,6 +21,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 
 	[HideInInspector]
 	public GameObject input;
+
 	[HideInInspector]
 	public GameObject output;
 
@@ -65,6 +66,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     public int Price { get; set; }
 
     /// <summary>
+    /// Getter & setter for the component initial price
+    /// </summary>
+    public int InitialPrice { get; set; }
+  
+    /// <summary>
     /// Getter & setter for the component durability
     /// </summary>
     public float Durability { get; set; }
@@ -80,6 +86,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     public bool Sellable { get; set; }
 
     /// <summary>
+    /// Getter & setter for components immunity for virus
+    /// </summary>
+    public bool ImmuneToVirus { get; set; }
+  
+    /// <summary>
     /// Awake is called after all objects are initialized
     /// </summary>
     private void Awake() {
@@ -88,6 +99,10 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		output = (outputObjectName != null) ? GameObject.Find(outputObjectName) : null;
 
 		this.ComponentLevel = 1;
+        this.Sellable = false;
+        this.InitialPrice = 0;
+        // Sets immune default to false;
+        ImmuneToVirus = false;
     }
 
     /// <summary>
@@ -142,6 +157,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         } else {
             Debug.Log("Currently no Upgrades left");
         }
+    }
+
+    public void Buy() {
+        Debug.Log("Buying " + this.Name + " component...");
+        GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - this.InitialPrice);
     }
 
     /*

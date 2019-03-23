@@ -12,7 +12,7 @@ public class Firewall : Component, IPointerClickHandler {
     [SerializeField] // Contains the sprites for the different upgrades
     private Sprite[] firewallSprites;
 
-    private void Start() {
+    public void Start() {
         Upgrades = new ComponentUpgrade[] {
             new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100)
         };
@@ -21,8 +21,11 @@ public class Firewall : Component, IPointerClickHandler {
         Sellable = true;
         RepairPrice = 50;
         SellValue = 50;
+        InitialPrice = 100;
         Price = NextUpgrade.Price;
         Sprite = firewallSprites[0];
+        // Sets virus immune to true
+        ImmuneToVirus = true;
     }
 
 }
