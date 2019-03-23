@@ -28,8 +28,4 @@ public class Computer : Component, IPointerClickHandler {
         Sprite = computerSprites[0];
     }
 
-    private void Update() {
-        Debug.Log("Something Happened!!");
-    }
-
 }

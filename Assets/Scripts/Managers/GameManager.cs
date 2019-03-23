@@ -241,6 +241,11 @@ public class GameManager : Singleton<GameManager> {
             this.panelDurability.enabled = false;
         }
 
+        // Custom visual settings for document component
+        if (this.selectedComponent.GetComponent(typeof(Component)).GetType() == typeof(Document)) {
+            this.txtPrice.text = "Encryption (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+        }
+
         this.panelImage.GetComponent<Image>().sprite = this.selectedComponent.Sprite;
         this.selectedComponent.SetCanvasSprite(this.selectedComponent.Sprite);
     }
