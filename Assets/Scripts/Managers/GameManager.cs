@@ -243,7 +243,24 @@ public class GameManager : Singleton<GameManager> {
 
         // Custom visual settings for document component
         if (this.selectedComponent.GetComponent(typeof(Component)).GetType() == typeof(Document)) {
-            this.txtPrice.text = "Encryption (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+            if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price <= GetCurrency()) {
+                this.upgradeButton.interactable = true;
+                this.upgradeButton.GetComponent<Image>().color = Color.green;
+                this.txtPrice.color = Color.white;
+                this.txtPrice.text = "Encryption (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+                // Comment here
+            } else if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price > GetCurrency()) {
+                this.upgradeButton.interactable = false;
+                this.upgradeButton.GetComponent<Image>().color = Color.grey;
+                this.txtPrice.color = Color.black;
+                this.txtPrice.text = "Encryption (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+                // Comment here
+            } else {
+                this.upgradeButton.interactable = false;
+                this.upgradeButton.GetComponent<Image>().color = Color.grey;
+                this.txtPrice.color = Color.black;
+                this.txtPrice.text = "Max Encrypted";
+            }
         }
 
         this.panelImage.GetComponent<Image>().sprite = this.selectedComponent.Sprite;

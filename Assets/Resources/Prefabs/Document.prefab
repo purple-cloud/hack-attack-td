@@ -65,7 +65,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 2617cd50b09112546948c6ac88dfc277, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cddcd08fe9ae71944a9f6a7a7cd46b9b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -83,6 +83,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7457158232741604820}
+  - component: {fileID: 3963914074174135470}
   - component: {fileID: 7457158232741604823}
   m_Layer: 5
   m_Name: Document
@@ -111,6 +112,48 @@ RectTransform:
   m_AnchoredPosition: {x: -190.8, y: 13.6}
   m_SizeDelta: {x: 48, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3963914074174135470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7457158232741604821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &7457158232741604823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,12 +166,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 467ea0ed936c6ac41b22b7a32860b709, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasImage: {fileID: 0}
+  canvasImage: {fileID: 7457158232392920743}
   inputObjectName: Computer
   outputObjectName: 
   input: {fileID: 0}
   output: {fileID: 0}
   documentSprites:
-  - {fileID: 21300000, guid: 2617cd50b09112546948c6ac88dfc277, type: 3}
-  - {fileID: 21300000, guid: 2617cd50b09112546948c6ac88dfc277, type: 3}
-  - {fileID: 21300000, guid: 2617cd50b09112546948c6ac88dfc277, type: 3}
+  - {fileID: 21300000, guid: cddcd08fe9ae71944a9f6a7a7cd46b9b, type: 3}
+  - {fileID: 21300000, guid: b00bdbe5a0fb79b4891b792c71ace2f5, type: 3}
+  - {fileID: 21300000, guid: 9697c74867814a34eab9564f8e2dace9, type: 3}
