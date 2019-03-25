@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class WebAttack : Pathfinder {
 
+    private string name;
+
     private int port;
 
     private bool isAttackable = false;
@@ -96,6 +98,14 @@ public class WebAttack : Pathfinder {
             Debug.LogException(nre);
         }
         return computerComponentFound;
+    }
+
+    /// <summary>
+    /// Returns the name of the attack. Could be domain, location etc.
+    /// </summary>
+    /// <returns>Returns the name of the attack</returns>
+    public string GetWebAttackName() {
+        return this.name;
     }
 
 }
