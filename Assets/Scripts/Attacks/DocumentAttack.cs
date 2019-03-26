@@ -7,18 +7,16 @@ using UnityEngine.UI;
 
 public class DocumentAttack : Pathfinder {
 
-    private Timer timer;
-
     private bool foundTarget = false;
 
     private bool stopScript = false;
 
-    public DocumentAttack(Component initialComponent, GameObject attackGameObject) : base(initialComponent, attackGameObject) {
+    public DocumentAttack(Component initialComponent) : base(initialComponent) {
 
     }
 
-    public void Run() {
-        Init();
+    public void Run(Component initialComponent) {
+        Init(initialComponent);
         FindAttackableGameObject();
     }
 
@@ -71,7 +69,7 @@ public class DocumentAttack : Pathfinder {
     private void DeleteAttack() {
         Debug.Log("Deleting attack..");
         this.stopScript = true;
-        Destroy(GetAttackObject());
+        Destroy(this);
     }
 
     /// <summary>

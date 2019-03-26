@@ -51,6 +51,7 @@ public class RansomPopup : Singleton<RansomPopup> {
         GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - this.ransomPrice);
         ShowRansomPanel(false);
         Debug.Log("Ransom payed");
+
     }
     
     public void DeclineRansom() {

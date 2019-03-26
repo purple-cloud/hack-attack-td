@@ -7,9 +7,6 @@ public class Pathfinder : MonoBehaviour {
     // A reference to the starting point for the pathfinder
     private Component initialComponent;
 
-    // A reference to the game object using the pathfinder
-    private GameObject attackGameObject;
-
     // Array containing the adjacent game objects for the attack
     private List<Component> listOfAdjacentGameObjects;
 
@@ -18,16 +15,15 @@ public class Pathfinder : MonoBehaviour {
     /// </summary>
     public Component SelectedComponent { get; private set; }
 
-    public Pathfinder(Component initialComponent, GameObject attackGameObject) {
+    public Pathfinder(Component initialComponent) {
         this.initialComponent = initialComponent;
-        this.attackGameObject = attackGameObject;
     }
 
     /// <summary>
     /// Initialization of the pathfinder
     /// </summary>
-     public void Init() {
-        SelectedComponent = this.initialComponent;
+     public void Init(Component initialComponent) {
+        SelectedComponent = initialComponent;
         this.listOfAdjacentGameObjects = new List<Component>();
     }
 
@@ -65,7 +61,4 @@ public class Pathfinder : MonoBehaviour {
         Debug.Log("New Place: " + this.SelectedComponent.name);
     }
 
-    public GameObject GetAttackObject() {
-        return this.attackGameObject;
-    }
 }
