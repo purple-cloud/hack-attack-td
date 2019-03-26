@@ -7,14 +7,16 @@ using UnityEngine.UI;
 
 public class DocumentAttack : Pathfinder {
 
-    private Timer timer;
-
     private bool foundTarget = false;
 
     private bool stopScript = false;
 
-    public void Run() {
-        Init();
+    public DocumentAttack(Component initialComponent) : base(initialComponent) {
+
+    }
+
+    public void Run(Component initialComponent) {
+        Init(initialComponent);
         FindAttackableGameObject();
     }
 
@@ -30,27 +32,12 @@ public class DocumentAttack : Pathfinder {
             }
         }
         if (this.stopScript == false) {
-            InitializeDownload();
+            StartCoroutine(InitializeDownload());
         }
     }
 
-    /// <summary>
-    /// Initializes the downloading state
-    /// </summary>
-    private void InitializeDownload() {
-        // TODO Deplete documents encryption level
-        Debug.Log("Document found!");
-        this.timer = new Timer(SelectedComponent.Encryption * 10);
-        this.timer.Elapsed += TimerPassed;
-        this.timer.Start();
-
-        
-    }
-
-    private void TimerPassed(System.Object source, ElapsedEventArgs e) {
-        // Stop timer
-        this.timer.Stop();
-        this.timer.Dispose();
+    private IEnumerator InitializeDownload() {
+        yield return new WaitForSeconds(SelectedComponent.Encryption);
         DownloadDocument();
     }
 
@@ -60,11 +47,14 @@ public class DocumentAttack : Pathfinder {
         SelectedComponent.Status = false;
         SelectedComponent.Locked = true;
         // TODO Change image color to be red
-        Image image = SelectedComponent.GetComponent<Image>();
-        image.GetComponent<Image>().color = Color.red;
-        SelectedComponent.SetCanvasImage(image);
+        //Image image = SelectedComponent.GetComponent<Image>();
+        //image.GetComponent<Image>().color = Color.red;
+        //SelectedComponent.SetCanvasImage(image);
         // TODO add event in gamemanager for updating panel
 
+        // Open Panel
+        RansomPopup.Instance.Set("Ransom Request", "Testing you for ransom", 30, 100);
+        RansomPopup.Instance.ShowRansomPanel(true);
         // Delete the attack
         DeleteAttack();
     }
@@ -79,7 +69,7 @@ public class DocumentAttack : Pathfinder {
     private void DeleteAttack() {
         Debug.Log("Deleting attack..");
         this.stopScript = true;
-        Destroy(GetAttackObject());
+        Destroy(this);
     }
 
     /// <summary>

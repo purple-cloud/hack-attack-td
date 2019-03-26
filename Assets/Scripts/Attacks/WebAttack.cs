@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Timers;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WebAttack : Pathfinder {
@@ -12,14 +10,17 @@ public class WebAttack : Pathfinder {
 
     private bool isAttackable = false;
 
-    private Timer timer;
-
-    private int lifeTicks = 5;
+    private int lifeTicks;
 
     private bool stopScript = false;
 
-    public void Run() {
-        Init();
+    public WebAttack(Component initialComponent) : base(initialComponent) {
+
+    }
+
+    public void Run(Component initialComponent) {
+        Init(initialComponent);
+        this.lifeTicks = 5;
         FindAttackableGameObject();
     }
 
@@ -35,30 +36,30 @@ public class WebAttack : Pathfinder {
             }
         }
         if (this.stopScript == false) {
-            StartAttackingTimer();
+            StartCoroutine(StartAttackingTimer());
         }
     }
 
-    private void StartAttackingTimer() {
+    private IEnumerator StartAttackingTimer() {
         Debug.Log(SelectedComponent.name + " is under attack!");
-        this.timer = new Timer(2000);
-        this.timer.Elapsed += AttackComponent;
-        this.timer.Start();
+        while (this.lifeTicks > 0) {
+            yield return new WaitForSeconds(2.0f);
+            if (SelectedComponent.Durability > 0) {
+                AttackComponent();
+            } else {
+                DeleteAttack();
+            }
+        }
+        DeleteAttack();
     }
 
-    private void AttackComponent(System.Object source, ElapsedEventArgs e) {
-        if (this.lifeTicks < 1) {
-            this.timer.Stop();
-            this.timer.Dispose();
-            DeleteAttack();
-        } else {
-            // Each attack does 10 dmg to the durability
-            SelectedComponent.Durability -= 10;
-            this.lifeTicks--;
-            Debug.Log("Durability left: " + SelectedComponent.Durability);
-            Debug.Log("Lifeticks: " + this.lifeTicks);
-            // TODO Update Module panel with new Computer Durability Values
-        }
+    private void AttackComponent() {
+        // Each attack does 10 dmg to the durability
+        SelectedComponent.Durability -= 10;
+        this.lifeTicks--;
+        Debug.Log("Durability left: " + SelectedComponent.Durability);
+        Debug.Log("Lifeticks: " + this.lifeTicks);
+        // TODO Update Module panel with new Computer Durability Values
     }
 
     /// <summary>
@@ -67,7 +68,7 @@ public class WebAttack : Pathfinder {
     private void DeleteAttack() {
         Debug.Log("Deleting attack..");
         this.stopScript = true;
-        Destroy(GetAttackObject());
+        Destroy(this.gameObject);
     }
 
     /// <summary>
@@ -79,20 +80,22 @@ public class WebAttack : Pathfinder {
     private bool ScanComponent(Component componentToScan) {
         bool computerComponentFound = false;
         try {
-            if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Computer)) {
+            if (componentToScan.GetType() == typeof(Computer)) {
                 computerComponentFound = true;
-            } else if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
+            } else if (componentToScan.GetType() == typeof(Firewall)) {
                 //TODO Change this check to find the status of port in real firewall script (Wait for liban to finish firewall)
-                Firewall firewall = (Firewall) componentToScan.GetComponent(typeof(Component));
+                Firewall firewall = (Firewall) componentToScan;
                 Debug.Log("Selected component is a firewall, port status: " + firewall.PortStatus);
                 if (!firewall.PortStatus) {
-                    if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Computer)) {
+                    if (componentToScan.GetType() == typeof(Computer)) {
                         computerComponentFound = true;
                     }
                 } else {
                     computerComponentFound = false;
                     DeleteAttack();
                 }
+            } else {
+                Debug.Log("Component is of type: " + componentToScan.Name);
             }
         } catch (NullReferenceException nre) {
             Debug.LogException(nre);
