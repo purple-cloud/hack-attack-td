@@ -75,4 +75,14 @@ public class Earth : Component {
         }
     }
 
+    private void DoSomething() {
+        // TODO Set a condition which stops creation of enemy when true
+        Debug.Log("Spawning random enemy");
+        int randomInt = 0;
+        float rand = 0;
+        Debug.Log("Random number: " + rand);
+        // If condition is true create Web Attack
+        // If condition is true, create document attack
+    }
+
 }
