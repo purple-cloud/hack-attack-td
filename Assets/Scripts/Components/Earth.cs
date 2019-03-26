@@ -1,21 +1,39 @@
-﻿using System.Collections;
+﻿using System;
+using System.Timers;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Earth : Component {
 
-    /// <summary>
-    /// Spawn x number of enemies with n interval
-    /// </summary>
-    public void SpawnEnemies() {
-        Debug.Log("cunt");
+    [SerializeField]
+    private GameObject initialGameObject;
+
+    [SerializeField]
+    private GameObject[] listOfAttacks;
+
+    private float webAttackProb = 0.9f;
+
+    private float documentAttackProb = 0.1f;
+
+    private Timer timer;
+
+    private Timer interval;
+
+    private void Start() {
+        // Some initialization stuff
+        Name = "Earth";
+        DoSomething();
     }
 
-    /// <summary>
-    /// Starts the wave of enemies after a certain time has passed
-    /// </summary>
-    public void CheckIfTimePassed() {
-
+    private void DoSomething() {
+        // TODO Set a condition which stops creation of enemy when true
+        Debug.Log("Spawning random enemy");
+        int randomInt = 0;
+        float rand = 0;
+        Debug.Log("Random number: " + rand);
+        // If condition is true create Web Attack
+        // If condition is true, create document attack
     }
 
 }

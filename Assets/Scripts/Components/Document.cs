@@ -24,7 +24,7 @@ public class Document : Component, IPointerClickHandler {
         Sellable = false;
         Price = NextUpgrade.Price;
         RepairPrice = 50;
-        Encryption = 250f;
+        Encryption = 5.0f;
         Sprite = documentSprites[0];
     }
 
