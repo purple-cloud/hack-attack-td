@@ -18,6 +18,10 @@ public class WebAttack : Pathfinder {
 
     private bool stopScript = false;
 
+    public WebAttack(Component initialComponent, GameObject attackGameObject) : base(initialComponent, attackGameObject) {
+
+    }
+
     public void Run() {
         Init();
         FindAttackableGameObject();
@@ -79,20 +83,22 @@ public class WebAttack : Pathfinder {
     private bool ScanComponent(Component componentToScan) {
         bool computerComponentFound = false;
         try {
-            if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Computer)) {
+            if (componentToScan.GetType() == typeof(Computer)) {
                 computerComponentFound = true;
-            } else if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
+            } else if (componentToScan.GetType() == typeof(Firewall)) {
                 //TODO Change this check to find the status of port in real firewall script (Wait for liban to finish firewall)
-                Firewall firewall = (Firewall) componentToScan.GetComponent(typeof(Component));
+                Firewall firewall = (Firewall) componentToScan;
                 Debug.Log("Selected component is a firewall, port status: " + firewall.PortStatus);
                 if (!firewall.PortStatus) {
-                    if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Computer)) {
+                    if (componentToScan.GetType() == typeof(Computer)) {
                         computerComponentFound = true;
                     }
                 } else {
                     computerComponentFound = false;
                     DeleteAttack();
                 }
+            } else {
+                Debug.Log("Component is of type: " + componentToScan.Name);
             }
         } catch (NullReferenceException nre) {
             Debug.LogException(nre);

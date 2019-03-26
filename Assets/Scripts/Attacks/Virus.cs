@@ -6,6 +6,10 @@ public class Virus : Pathfinder {
 
     private bool isInfectable = false;
 
+    public Virus(Component initialComponent, GameObject attackGameObject) : base(initialComponent, attackGameObject) {
+
+    }
+
     /// <summary>
     /// Runs the virus
     /// </summary>

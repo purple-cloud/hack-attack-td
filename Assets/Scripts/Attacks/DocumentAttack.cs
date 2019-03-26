@@ -13,6 +13,10 @@ public class DocumentAttack : Pathfinder {
 
     private bool stopScript = false;
 
+    public DocumentAttack(Component initialComponent, GameObject attackGameObject) : base(initialComponent, attackGameObject) {
+
+    }
+
     public void Run() {
         Init();
         FindAttackableGameObject();
