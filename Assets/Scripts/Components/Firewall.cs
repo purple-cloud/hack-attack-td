@@ -74,7 +74,7 @@ public class Firewall : Component, IPointerClickHandler {
 
 		foreach (Transform child in firewallPanel.transform) {
 			// Filters out the other children that does not show firewall port (i.e. title of the panel on top)
-			if (true) {
+			if (child.gameObject.name == (firewallPanelRow.name + "(Clone)")) {
 				if (child.gameObject.GetComponent<FirewallPort>().Port == port) {
 					fp = child.gameObject.GetComponent<FirewallPort>();
 				}
