@@ -8,7 +8,7 @@ namespace Defenses {
 	/// <summary>
 	/// Global class for managing structures and action bar items.
 	/// </summary>
-	public class CompController : MonoBehaviour {
+	public class CompController : Singleton<CompController> {
 		// The structures the new structure is being placed between
 		private GameObject targetStructureObj1;
 		private GameObject targetStructureObj2;
@@ -27,25 +27,14 @@ namespace Defenses {
 
 		public GameObject structureCanvas { get; private set; }
 
-		public static CompController Instance { get; private set; }
-
 		private void Awake() {
-			if (Instance == null) {
-				Instance = this;
-				DontDestroyOnLoad(gameObject);
-			} else {
-				Destroy(gameObject);
-			}
-		}
-
-		void Start() {
 			structureCanvas = GameObject.Find(structureCanvasName);
 
 			if (structureCanvas == null) {
 				throw new System.SystemException("CompController has invalid reference to structure canvas. Please check the serialized fields.");
 			}
 
-			IsPlacingStructure = false;		
+			IsPlacingStructure = false;
 			DrawStructurePaths();
 		}
 
@@ -226,7 +215,7 @@ namespace Defenses {
 			foreach (Transform child in structureCanvas.transform) {
 				Clone c;
 				if ((c = child.gameObject.GetComponent<Clone>()) != null) {
-					Destroy(child.gameObject);
+					//Destroy(child.gameObject);
 				}
 			}
 		}
