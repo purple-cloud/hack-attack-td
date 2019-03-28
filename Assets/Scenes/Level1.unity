@@ -5347,7 +5347,7 @@ MonoBehaviour:
   panelImage: {fileID: 367698863}
   panelName: {fileID: 1816734054}
   panelStatus: {fileID: 1290102012}
-  panelDurability: {fileID: 0}
+  panelDurability: {fileID: 991215388}
   repairButton: {fileID: 848591745}
   repairText: {fileID: 621899101}
   upgradeButton: {fileID: 1602566028}
@@ -7982,11 +7982,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1733406514}
     m_Modifications:
-    - target: {fileID: 7052481790645730057, guid: 7ab17b84c82406b4ea3805691d541197,
-        type: 3}
-      propertyPath: m_Name
-      value: FirewallPanel
-      objectReference: {fileID: 0}
     - target: {fileID: 7052481790645730056, guid: 7ab17b84c82406b4ea3805691d541197,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8091,6 +8086,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7052481790645730057, guid: 7ab17b84c82406b4ea3805691d541197,
+        type: 3}
+      propertyPath: m_Name
+      value: FirewallPanel
       objectReference: {fileID: 0}
     - target: {fileID: 7052481790363412586, guid: 7ab17b84c82406b4ea3805691d541197,
         type: 3}
@@ -8376,11 +8376,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 753011550}
     m_Modifications:
-    - target: {fileID: 4569841161843824618, guid: 123bc389e8d7e264e90abc4bb53914fd,
-        type: 3}
-      propertyPath: m_Name
-      value: DocumentAttack
-      objectReference: {fileID: 0}
     - target: {fileID: 4569841161843824617, guid: 123bc389e8d7e264e90abc4bb53914fd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8485,6 +8480,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4569841161843824618, guid: 123bc389e8d7e264e90abc4bb53914fd,
+        type: 3}
+      propertyPath: m_Name
+      value: DocumentAttack
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 123bc389e8d7e264e90abc4bb53914fd, type: 3}

@@ -21,6 +21,7 @@ public class WebAttack : Pathfinder {
     public void Run(Component initialComponent) {
         Init(initialComponent);
         this.lifeTicks = 5;
+        this.port = 22;
         FindAttackableGameObject();
     }
 
@@ -85,15 +86,16 @@ public class WebAttack : Pathfinder {
             } else if (componentToScan.GetType() == typeof(Firewall)) {
                 //TODO Change this check to find the status of port in real firewall script (Wait for liban to finish firewall)
                 Firewall firewall = (Firewall) componentToScan;
-                //Debug.Log("Selected component is a firewall, port status: " + firewall.PortStatus);
-                //if (!firewall.PortStatus) {
-                //    if (componentToScan.GetType() == typeof(Computer)) {
-                //        computerComponentFound = true;
-                //    }
-                //} else {
-                //    computerComponentFound = false;
-                //    DeleteAttack();
-                //}
+                bool portStatus = firewall.GetPort(this.port).IsActive;
+                Debug.Log("Selected component is a firewall, port status: " + portStatus);
+                if (!portStatus) {
+                    if (componentToScan.GetType() == typeof(Computer)) {
+                        computerComponentFound = true;
+                    }
+                } else {
+                    computerComponentFound = false;
+                    DeleteAttack();
+                }
             } else {
                 Debug.Log("Component is of type: " + componentToScan.Name);
             }
@@ -110,5 +112,7 @@ public class WebAttack : Pathfinder {
     public string GetWebAttackName() {
         return this.name;
     }
+
+
 
 }

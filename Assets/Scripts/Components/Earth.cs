@@ -12,7 +12,7 @@ public class Earth : Component {
     [SerializeField]
     private GameObject[] listOfAttacks;
 
-    private float webAttackProb = 0.25f;
+    private float webAttackProb = 0.85f;
 
     private float documentAttackProb = 0.3f;
 
@@ -42,7 +42,7 @@ public class Earth : Component {
     private void CreateRandomEnemy() {
         // TODO Set a condition which stops creation of enemy when true
         Debug.Log("Spawning random enemy");
-        int randomInt = UnityEngine.Random.Range(0, 2);
+        int randomInt = 0; //UnityEngine.Random.Range(0, 2);
         float rand = UnityEngine.Random.Range(0f, 1.0f);
         Debug.Log("randomInt: " + randomInt);
         Debug.Log("rand: " + rand);
