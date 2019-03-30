@@ -5308,6 +5308,7 @@ GameObject:
   - component: {fileID: 1208254560}
   - component: {fileID: 1208254561}
   - component: {fileID: 1208254562}
+  - component: {fileID: 1208254563}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5372,6 +5373,20 @@ MonoBehaviour:
   panelDescription: {fileID: 1553703177}
   payText: {fileID: 385446799}
   panelTimer: {fileID: 1027244843}
+--- !u!114 &1208254563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1208254559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852fec818852d8c41824752acfb79e94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerReference: {fileID: 1278873611}
+  countdownTime: 135
 --- !u!1 &1216161003
 GameObject:
   m_ObjectHideFlags: 0
@@ -7982,6 +7997,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1733406514}
     m_Modifications:
+    - target: {fileID: 7052481790645730057, guid: 7ab17b84c82406b4ea3805691d541197,
+        type: 3}
+      propertyPath: m_Name
+      value: FirewallPanel
+      objectReference: {fileID: 0}
     - target: {fileID: 7052481790645730056, guid: 7ab17b84c82406b4ea3805691d541197,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8086,11 +8106,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7052481790645730057, guid: 7ab17b84c82406b4ea3805691d541197,
-        type: 3}
-      propertyPath: m_Name
-      value: FirewallPanel
       objectReference: {fileID: 0}
     - target: {fileID: 7052481790363412586, guid: 7ab17b84c82406b4ea3805691d541197,
         type: 3}
@@ -8376,6 +8391,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 753011550}
     m_Modifications:
+    - target: {fileID: 4569841161843824618, guid: 123bc389e8d7e264e90abc4bb53914fd,
+        type: 3}
+      propertyPath: m_Name
+      value: DocumentAttack
+      objectReference: {fileID: 0}
     - target: {fileID: 4569841161843824617, guid: 123bc389e8d7e264e90abc4bb53914fd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8480,11 +8500,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4569841161843824618, guid: 123bc389e8d7e264e90abc4bb53914fd,
-        type: 3}
-      propertyPath: m_Name
-      value: DocumentAttack
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 123bc389e8d7e264e90abc4bb53914fd, type: 3}
