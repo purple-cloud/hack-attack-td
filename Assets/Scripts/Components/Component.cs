@@ -196,7 +196,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerUp(PointerEventData eventData) {
-		Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
+        if (Defenses.CompController.Instance.IsPlacingStructure) {
+            Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
+        } else if (BackupManager.Instance.BackupReady) {
+            BackupManager.Instance.AddToBackupPool(gameObject);
+        }
 	}
 
 	/// <summary>
