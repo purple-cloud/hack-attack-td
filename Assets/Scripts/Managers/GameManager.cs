@@ -40,6 +40,9 @@ public class GameManager : Singleton<GameManager> {
     [SerializeField] // A reference to panel status
     private Text panelStatus;
 
+    [SerializeField] // A reference to the panel durability text
+    private Text panelDurability;
+
     [SerializeField] // A reference to the repair button
     private Button repairButton;
 
@@ -229,8 +232,58 @@ public class GameManager : Singleton<GameManager> {
             this.sellText.text = "Sell (" + this.selectedComponent.SellValue + ")";
         }
 
+        // Checks if selected component is computer, if so show durability text, if not hide the text
+        // TODO Add check for other components using the durability field
+        if (this.selectedComponent.GetComponent(typeof(Component)).GetType() == typeof(Computer)) {
+            this.panelDurability.enabled = true;
+            this.panelDurability.text = "Durability: " + this.selectedComponent.Durability;
+        } else {
+            this.panelDurability.enabled = false;
+        }
+
+        // Custom visual settings for document component
+        if (this.selectedComponent.GetComponent(typeof(Component)).GetType() == typeof(Document)) {
+            if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price <= GetCurrency() && this.selectedComponent.Locked == false) {
+                this.upgradeButton.interactable = true;
+                this.upgradeButton.GetComponent<Image>().color = Color.green;
+                this.txtPrice.color = Color.white;
+                this.txtPrice.text = "Encryption (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+                // Comment here
+            } else if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price > GetCurrency() && this.selectedComponent.Locked == false) {
+                this.upgradeButton.interactable = false;
+                this.upgradeButton.GetComponent<Image>().color = Color.grey;
+                this.txtPrice.color = Color.black;
+                this.txtPrice.text = "Encryption (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
+                // Comment here
+            } else if (this.selectedComponent.Locked == true) {
+                this.repairButton.interactable = false;
+                this.repairButton.GetComponent<Image>().color = Color.grey;
+                this.repairText.text = "R̴̯̿͜͝e̴̢̔p̵̨̭̾̏á̵̪͈i̷̥̰͋ȑ̸̩̖ ̷͚̪̇̂(̴͍͋C̷͖̜̀ọ̵̙̀s̷̙̙̄̑t̴̨͝)̵͙̍͝";
+                this.repairText.color = Color.black;
+                this.upgradeButton.interactable = false;
+                this.upgradeButton.GetComponent<Image>().color = Color.grey;
+                this.txtPrice.text = "U̶͚̻̚ͅp̴̭͆͝g̸̻͈͠r̶̨̤̟̃ͅạ̸̺͇̔̐̆d̶̬̠͛̋͊̅ȇ̴͉̙͈̫̏͗̑ ̶̝̞͆̿͝(̷̛̦͇C̴͇͙̻̃̅̄ͅŏ̴̢͔͙̟̒̎̒s̶̡̰̘̕̚t̷̘̳͚̀̐)̴̼̈̚";
+                this.txtPrice.color = Color.black;
+                this.sellButton.interactable = false;
+                this.sellText.text = "S̵͓͇̆̿̉͑͐̎͋̒̾ĕ̸̡̧͙̖̰̺̼͇͜l̸͕̗̞̘͉̐̒͒̇͋̅̿̽̚͜l̶̢̫̺̪̼̤̻̑̏͑̀̃͜";
+            }  else {
+                this.upgradeButton.interactable = false;
+                this.upgradeButton.GetComponent<Image>().color = Color.grey;
+                this.txtPrice.color = Color.black;
+                this.txtPrice.text = "Max Encrypted";
+            }
+        }
+
         this.panelImage.GetComponent<Image>().sprite = this.selectedComponent.Sprite;
         this.selectedComponent.SetCanvasSprite(this.selectedComponent.Sprite);
+    }
+
+    /// <summary>
+    /// Updates the panels dynamic information on demand from other scripts;
+    /// </summary>
+    /// <param name="component">Component which contains the values that is wished to update</param>
+    public void UpdateDynamicText(Component component) {
+        this.panelDurability.text = "Durability: " + component.Durability;
     }
 
     /// <summary>

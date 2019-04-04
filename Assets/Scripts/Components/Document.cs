@@ -16,17 +16,16 @@ public class Document : Component, IPointerClickHandler {
     // Initialization
     private void Start() {
         Upgrades = new ComponentUpgrade[] {
-            new ComponentUpgrade("Encrypted doucuments", 100, documentSprites[1], 500f),
-            new ComponentUpgrade("Advanced Encryption", 500, documentSprites[2], 1000f),
+            new ComponentUpgrade("Encrypted doucument", 100, documentSprites[1], 500f),
+            new ComponentUpgrade("Advanced encrypted document", 500, documentSprites[2], 1000f),
         };
         Name = "Document";
         Status = true;
         Sellable = false;
         Price = NextUpgrade.Price;
         RepairPrice = 50;
-        Encryption = 250f;
+        Encryption = 5.0f;
         Sprite = documentSprites[0];
     }
 
 }
-

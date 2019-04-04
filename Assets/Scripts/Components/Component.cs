@@ -12,7 +12,7 @@ using UnityEngine.UI;
 public abstract class Component : MonoBehaviour, IPointerUpHandler {
 
 	[SerializeField] // A reference to the image displayed in canvas
-  private Image canvasImage;
+    private Image canvasImage;
 
 	[SerializeField]
 	private string outputObjectName;
@@ -62,6 +62,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// Getter & setter for the component price
     /// </summary>
     public int Price { get; set; }
+
+    /// <summary>
+    /// Getter & setter for the component locked status
+    /// </summary>
+    public bool Locked { get; set; }
 
     /// <summary>
     /// Getter & setter for the component initial price
@@ -275,4 +280,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		}
 	}
 
+  public Image GetCanvasImage() {
+        return this.canvasImage;
+    }
+
+    public void SetCanvasImage(Image image) {
+        this.canvasImage = image;
+    }
 }
