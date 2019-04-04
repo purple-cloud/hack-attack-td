@@ -4380,7 +4380,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bfcf1f0f92f2d946b154dfc55eec9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clone: {fileID: 9137473958989017960, guid: 4da3d8f3dae931843849dae91fbf1daf, type: 3}
   structureCanvasName: ObjectsInCanvas
+  pathLineMaterial: {fileID: 2100000, guid: 8861b2e96c9daac44a4195e17de6beec, type: 2}
+  clonePrefab: {fileID: 9137473958989017960, guid: 4da3d8f3dae931843849dae91fbf1daf,
+    type: 3}
 --- !u!4 &831879549
 Transform:
   m_ObjectHideFlags: 0
@@ -4393,7 +4397,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &848591743
 GameObject:
@@ -5331,7 +5335,7 @@ Transform:
   - {fileID: 346545686}
   - {fileID: 1337208177}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1208254559
 GameObject:
@@ -5365,7 +5369,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1208254561
 MonoBehaviour:
@@ -5423,7 +5427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerReference: {fileID: 1278873611}
-  countdownTime: 135
+  countdownTime: 122
 --- !u!114 &1208254564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7164,6 +7168,97 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 4569841163400778355}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1700387617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1700387621}
+  - component: {fileID: 1700387620}
+  - component: {fileID: 1700387619}
+  - component: {fileID: 1700387618}
+  m_Layer: 0
+  m_Name: LineRendererCamera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &1700387618
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1700387617}
+  m_Enabled: 1
+--- !u!124 &1700387619
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1700387617}
+  m_Enabled: 1
+--- !u!20 &1700387620
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1700387617}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 4
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_GateFitMode: 2
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 155.34102
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 32
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &1700387621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1700387617}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 276, y: 155.7, z: -9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1733406510
 GameObject:
   m_ObjectHideFlags: 0
@@ -7264,7 +7359,7 @@ RectTransform:
   - {fileID: 101583683}
   - {fileID: 1216161004}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -8701,7 +8796,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2037360939
 PrefabInstance:
@@ -9113,9 +9208,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasImage: {fileID: 3019921276251778676}
-  inputObjectName: Firewall
   outputObjectName: Document
-  input: {fileID: 0}
+  input:
+  - {fileID: 0}
   output: {fileID: 0}
   computerSprites:
   - {fileID: 21300000, guid: 9cf6eba6186716fcbb1f504b158d8afd, type: 3}

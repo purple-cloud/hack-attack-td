@@ -35,7 +35,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 		Sprite itemSprite = gameObject.transform.GetChild(0).GetComponent<Image>().sprite;
 
 		// Get object from resources
-		clone = Instantiate(Resources.Load("Prefabs/Clone", typeof(GameObject))) as GameObject;
+		clone = Instantiate(CompController.Instance.clonePrefab) as GameObject;
 		clone.GetComponent<Clone>().defensePrefab = defensePrefab; // Pass the structure object to the clone
 
 		// Name the object to see it in the hierarchy

@@ -12,6 +12,8 @@ namespace Defenses {
 		// The structures the new structure is being placed between
 		private GameObject targetStructureObj1;
 		private GameObject newStructure;        // New structure that is being placed
+
+		[HideInInspector]
 		public GameObject clone;				// A reference to the current clone (created from the item slot)
 		
 		/// <summary>
@@ -28,6 +30,9 @@ namespace Defenses {
 
 		[SerializeField]
 		public Material pathLineMaterial;
+
+		[SerializeField]
+		public GameObject clonePrefab;
 
 		private void Awake() {
 			structureCanvas = GameObject.Find(structureCanvasName);
