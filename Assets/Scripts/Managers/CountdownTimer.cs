@@ -15,7 +15,15 @@ public class CountdownTimer : MonoBehaviour {
     /// Updates the countdown timer text for each second passed
     /// </summary>
     private void Update() {
-        this.timerReference.text = Mathf.Floor(this.countdownTime / 60).ToString("00") + ":" + Mathf.RoundToInt(this.countdownTime % 60).ToString("00");
-        this.countdownTime -= Time.deltaTime;
-    }
+		if (countdownTime > 0) {
+			int min = Mathf.FloorToInt(countdownTime) / 60;
+			int sec = Mathf.FloorToInt(countdownTime - (60 * min));
+
+			timerReference.text = System.String.Format("{0:0#}:{1:0#}", min, sec);
+
+			countdownTime -= Time.deltaTime;
+		} else {
+			// Do something
+		}
+	}
 }
