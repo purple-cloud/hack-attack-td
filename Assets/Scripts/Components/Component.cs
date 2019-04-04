@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Defenses;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,13 +15,10 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     private Image canvasImage;
 
 	[SerializeField]
-	private string inputObjectName;
-
-	[SerializeField]
 	private string outputObjectName;
 
 	[HideInInspector]
-	public GameObject input;
+	public List<GameObject> input;
 
 	[HideInInspector]
 	public GameObject output;
@@ -99,8 +97,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// Awake is called after all objects are initialized
     /// </summary>
     private void Awake() {
-		// Sets input and output extracted from Unity editor for predefined levels
-		input = (inputObjectName != null) ? GameObject.Find(inputObjectName) : null;
+		input = new List<GameObject>();
 		output = (outputObjectName != null) ? GameObject.Find(outputObjectName) : null;
 
 		this.ComponentLevel = 1;
@@ -108,7 +105,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         this.InitialPrice = 0;
         // Sets immune default to false;
         ImmuneToVirus = false;
-    }
+		ValidateLineRenderComponent();
+	}
 
     /// <summary>
     /// Returns the next upgrade for the component if there are any.
@@ -125,6 +123,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 
         }
     }
+
+	public void SetLineRendererMaterial(Material m) {
+		// Set the material for the line
+		gameObject.GetComponent<LineRenderer>().material = m;
+	}
 
     /// <summary>
     /// Is called by the GameManager when pressing Repair on the stats panel
@@ -167,7 +170,22 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         }
     }
 
-    public void Buy() {
+	/// <summary>
+	/// Loops though all child objects of Component and ensures they have a LineRenderer component.
+	/// If they don't, add it.
+	/// </summary>
+	private void ValidateLineRenderComponent() {
+		if (gameObject.GetComponent(typeof(Component)) != null) {
+			// Add LineRenderer if it is doesn't exist
+			if (gameObject.GetComponent<LineRenderer>() == null)
+				gameObject.AddComponent<LineRenderer>();
+
+			gameObject.GetComponent<LineRenderer>().sortingLayerName = "UI";
+			gameObject.GetComponent<LineRenderer>().material = CompController.Instance.pathLineMaterial;
+		}
+	}
+
+	public void Buy() {
         Debug.Log("Buying " + this.Name + " component...");
         GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - this.InitialPrice);
     }
@@ -214,7 +232,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		GameObject borderGO;
 		if (state == true) {
 			// Instantiates new game object under this game object and gives it a color
-			borderGO = Instantiate<GameObject>(Resources.Load("Prefabs/HighlightBorder") as GameObject);
+			borderGO = Instantiate(Resources.Load("Prefabs/HighlightBorder") as GameObject);
 			borderGO.name = "HighlightBorder";
 			borderGO.GetComponent<Image>().color = Color.green;
 			borderGO.transform.position = gameObject.transform.position;
@@ -251,7 +269,25 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         }
     }
 
-    public Image GetCanvasImage() {
+	void OnTriggerStay2D(Collider2D col) {
+		CompController.Instance.CollisionDetected = true;
+	}
+
+	//TODO Stop mouse pointer altering the clones position when collision is detected.
+	void OnTriggerExit2D(Collider2D col) {
+		CompController.Instance.CollisionDetected = false;
+	}
+
+	void Update() {
+		if (output != null) {
+			// Creates lines between this gameObject and output gameObject
+			LineRenderer lr = gameObject.GetComponent<LineRenderer>();
+			lr.SetPosition(0, gameObject.transform.position);
+			lr.SetPosition(1, output.transform.position);
+		}
+	}
+
+  public Image GetCanvasImage() {
         return this.canvasImage;
     }
 

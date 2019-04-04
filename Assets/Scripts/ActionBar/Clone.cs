@@ -26,7 +26,7 @@ public class Clone : MonoBehaviour, IPointerClickHandler {
 	void Update() {
 		// Check if escape or right mouse is clicked and if the clone is on the display
 		if (Input.GetMouseButtonUp(1) || Input.GetButtonDown("Cancel")) {
-			CompController.Instance.CancelPlacement(gameObject);
+			CompController.Instance.CancelPlacement();
 		}
 
 		if (isDragging) {

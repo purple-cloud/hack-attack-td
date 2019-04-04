@@ -11,21 +11,28 @@ namespace Defenses {
 	public class CompController : Singleton<CompController> {
 		// The structures the new structure is being placed between
 		private GameObject targetStructureObj1;
-		private GameObject targetStructureObj2;
-
 		private GameObject newStructure;        // New structure that is being placed
-		private GameObject clone;				// A reference to the current clone (created from the item slot)
 
-		// Contains the component of the target structures
-		private Component targetStructureObj1Comp;
-		private Component targetStructureObj2Comp;
+		[HideInInspector]
+		public GameObject clone;				// A reference to the current clone (created from the item slot)
 		
+		/// <summary>
+		/// An indication on if a structure is in the progress of being placed.
+		/// This variable is only altered by the action bar elements.
+		/// </summary>
 		public bool IsPlacingStructure { get; set; }
 
 		[SerializeField]
 		private string structureCanvasName;
 
 		public GameObject structureCanvas { get; private set; }
+		public bool CollisionDetected { get; set; }
+
+		[SerializeField]
+		public Material pathLineMaterial;
+
+		[SerializeField]
+		public GameObject clonePrefab;
 
 		private void Awake() {
 			structureCanvas = GameObject.Find(structureCanvasName);
@@ -35,30 +42,6 @@ namespace Defenses {
 			}
 
 			IsPlacingStructure = false;
-			DrawStructurePaths();
-		}
-
-		/// <summary>
-		/// Draws a path between all connected structures.
-		/// </summary>
-		private void DrawStructurePaths() {
-			foreach (Transform child in structureCanvas.transform) {
-				GameObject obj = child.gameObject;
-				Component bs = obj.GetComponent(typeof(Component)) as Component;
-
-				if (bs != null) {
-					if (bs.output != null) {
-						// If the component does not have a line renderer, add the component
-						if (obj.GetComponent<LineRenderer>() == null) {
-							obj.AddComponent<LineRenderer>();
-						}
-
-						// Draw line between this object and its output component
-						obj.GetComponent<LineRenderer>().SetPosition(0, obj.transform.position);
-						obj.GetComponent<LineRenderer>().SetPosition(1, bs.output.transform.position);
-					}
-				}
-			}
 		}
 
 		/// <summary>
@@ -67,49 +50,21 @@ namespace Defenses {
 		/// <param name="obj">The reporting object.</param>
 		public void OnStructureClickEvent(GameObject obj) {
 			if (IsPlacingStructure) {
-				// Checks if it is a new or on-going placement
-				if (targetStructureObj1 == null && targetStructureObj2 == null) {
-					// Find the script derived from Component and assign it to a variable
-					Component comp = obj.GetComponent(typeof(Component)) as Component;
-
-					if (comp.GetType().IsSubclassOf(typeof(Component))) {
-						targetStructureObj1 = obj;
-						targetStructureObj1Comp = comp;
-					}
-
-					if (targetStructureObj1Comp.output == null) {
-						EnableCloneDragging();
-					}
-				} else if (targetStructureObj2 == null) {
-					// Find the script derived from Component and assign it to a variable for the 2nd object
-					Component comp = obj.GetComponent(typeof(Component)) as Component;
-
-					if (comp.GetType().IsSubclassOf(typeof(Component))) {
-						targetStructureObj2 = obj;
-						targetStructureObj2Comp = comp;
-					}
-
-					// Ensures that the defenses are adjecent
-					if ((targetStructureObj1Comp.output != targetStructureObj2 || targetStructureObj2Comp.input != targetStructureObj1) &&
-						(targetStructureObj2Comp.output != targetStructureObj1 || targetStructureObj1Comp.input != targetStructureObj2)) {
-						Debug.Log("Defenses must be adjecent.");
-						foreach (Transform child in structureCanvas.transform) {
-							Clone c;
-							if ((c = child.gameObject.GetComponent<Clone>()) != null) {
-								Destroy(child.gameObject);
-								IsPlacingStructure = false;
-							}
-						}
-						NullifyPlacementObejcts();
-					} else {
-						EnableCloneDragging();
-					}
+				// Checks if the game object has an output
+				if ((obj.GetComponent(typeof(Component)) as Component).output == null) {
+					// Save the game object and enable dragging of the clone
+					targetStructureObj1 = obj;
+					EnableCloneDragging();
+				} else {
+					// Abort placement
+					Debug.Log(obj.name + " already has an output.");
+					CancelPlacement();
 				}
 			}
 		}
 
 		/// <summary>
-		/// Enables clone dragging
+		/// Enables clone dragging.
 		/// </summary>
 		private void EnableCloneDragging() {
 			clone.GetComponent<Clone>().isDragging = true;
@@ -126,9 +81,19 @@ namespace Defenses {
 		}
 
 		/// <summary>
-		/// Places the structure and cleans u
+		/// It creates an instance of the prefab associated with the clone and makes it
+		/// visible on canvas. On placement, the user pays its price. If there is a collision,
+		/// cancel it. There is a problem
 		/// </summary>
 		public void FinishPlacement() {
+			// If there is a collision between component and the new structure, cancel placement
+			if (CollisionDetected) {
+				Debug.Log("You cannot place components over each other.");
+				CollisionDetected = false;
+				CancelPlacement();
+				return;
+			}
+
 			newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
 			newStructure.transform.position = clone.transform.position;
 
@@ -145,41 +110,9 @@ namespace Defenses {
                 GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
             }
 
-            SwapInputOutput();
+			SetInputOutput(targetStructureObj1, newStructure);
 			Destroy(clone);
-
 			NullifyPlacementObejcts();
-		}
-
-		/// <summary>
-		/// Fixes the input and output for target and new structures.
-		/// </summary>
-		private void SwapInputOutput() {
-			if (targetStructureObj1Comp.output == null) {
-				SetInputOutput(targetStructureObj1, newStructure);
-
-				targetStructureObj1.GetComponent<LineRenderer>().SetPosition(0, targetStructureObj1.transform.position);
-				targetStructureObj1.GetComponent<LineRenderer>().SetPosition(1, newStructure.transform.position);
-			} else if (targetStructureObj2Comp.output == targetStructureObj1) {
-				SetInputOutput(targetStructureObj2, newStructure);
-				SetInputOutput(newStructure, targetStructureObj1);
-
-				targetStructureObj2.GetComponent<LineRenderer>().SetPosition(0, targetStructureObj2.transform.position);
-				targetStructureObj2.GetComponent<LineRenderer>().SetPosition(1, newStructure.transform.position);
-				newStructure.GetComponent<LineRenderer>().SetPosition(0, newStructure.transform.position);
-				newStructure.GetComponent<LineRenderer>().SetPosition(1, targetStructureObj1.transform.position);
-			} else if (targetStructureObj1Comp.output == targetStructureObj2) {
-				// Create a rift for the new structure
-				SetInputOutput(targetStructureObj1, newStructure);
-				SetInputOutput(newStructure, targetStructureObj2);
-
-				targetStructureObj1.GetComponent<LineRenderer>().SetPosition(0, targetStructureObj1.transform.position);
-				targetStructureObj1.GetComponent<LineRenderer>().SetPosition(1, newStructure.transform.position);
-				newStructure.GetComponent<LineRenderer>().SetPosition(0, newStructure.transform.position);
-				newStructure.GetComponent<LineRenderer>().SetPosition(1, targetStructureObj2.transform.position);
-			} else {
-				Debug.Log("Something wrong happened...");
-			}
 		}
 
 		/// <summary>
@@ -191,8 +124,9 @@ namespace Defenses {
 			Component inputCore = input.GetComponent(typeof(Component)) as Component;
 			Component outputCore = output.GetComponent(typeof(Component)) as Component;
 
+			//TODO Change this
 			inputCore.output = output;
-			outputCore.input = input;
+			outputCore.input.Add(input);
 		}
 
 		/// <summary>
@@ -208,6 +142,7 @@ namespace Defenses {
 			}
 		}
 
+		//TODO Remove this.
 		/// <summary>
 		/// Finds and destroys all visible clones.
 		/// </summary>
@@ -215,7 +150,7 @@ namespace Defenses {
 			foreach (Transform child in structureCanvas.transform) {
 				Clone c;
 				if ((c = child.gameObject.GetComponent<Clone>()) != null) {
-					//Destroy(child.gameObject);
+					Destroy(child.gameObject);
 				}
 			}
 		}
@@ -226,9 +161,6 @@ namespace Defenses {
 		public void NullifyPlacementObejcts() {
 			clone = null;
 			targetStructureObj1 = null;
-			targetStructureObj2 = null;
-			targetStructureObj1Comp = null;
-			targetStructureObj2Comp = null;
 			newStructure = null;
 			
 			IsPlacingStructure = false;
@@ -239,12 +171,11 @@ namespace Defenses {
 		/// Abandons the placement for the new structure.
 		/// </summary>
 		/// <param name="clone"></param>
-		public void CancelPlacement(GameObject clone) {
+		public void CancelPlacement() {
 			// Removes button highlight on the item when dropping it
 			EventSystem.current.SetSelectedGameObject(null);
 
-			IsPlacingStructure = false;
-			HighlightAllStructures(false);
+			NullifyPlacementObejcts();
 			DestroyAllClones();
 			Destroy(clone);
 		}
