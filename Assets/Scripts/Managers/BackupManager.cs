@@ -46,11 +46,37 @@ public class BackupManager : Singleton<BackupManager> {
         Defenses.CompController.Instance.HighlightAllStructures(false);
         Debug.Log("Component Clicked: " + gameObject.name);
         // TODO The cloned gameobject added to backup contains default component values
-        this.listOfBackupedComponents.Add(Instantiate(gameObject));
+        System.Type type = ((Component) gameObject.GetComponent(typeof(Component))).GetType();
+        GameObject clone = Instantiate(gameObject);
+        // Copy all the values of the component inside gameObject and add the to the clone
+        System.Reflection.FieldInfo[] fields = type.GetFields();
+        System.Reflection.PropertyInfo[] properties = type.GetProperties();
+        clone.AddComponent(gameObject.GetComponents(typeof(Component)).GetType());
+
+        for (int i = 0; i <= 17; i++) {
+            // Assign properties
+            System.Reflection.PropertyInfo property = properties[i];
+                property.SetValue((Component) clone.GetComponent(typeof(Component)), property.GetValue((Component)  gameObject.GetComponent(typeof(Component))));
+        }
+        foreach (System.Reflection.FieldInfo field in fields) {
+            // Assign fields
+            field.SetValue((Component) clone.GetComponent(typeof(Component)), field.GetValue((Component) gameObject.GetComponent(typeof(Component))));
+        }
+        this.listOfBackupedComponents.Add(clone);
     }
 
     public void RestoreBackup() {
         Debug.Log("Restoring Backup...");
+    }
+
+    T CopyComponent<T>(T original, GameObject destination) where T : UnityEngine.Component {
+        System.Type type = original.GetType();
+        UnityEngine.Component copy = destination.AddComponent(type);
+        System.Reflection.FieldInfo[] fields = type.GetFields();
+        foreach (System.Reflection.FieldInfo field in fields) {
+            field.SetValue(copy, field.GetValue(original));
+        }
+        return copy as T;
     }
 
     /// <summary>
