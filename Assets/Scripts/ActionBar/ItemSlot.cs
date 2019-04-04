@@ -15,6 +15,9 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	[SerializeField]
 	private GameObject defensePrefab;	// The actual defensive structure representing the item in the itemslot
 
+    [SerializeField]
+    private bool isPlacable = false;
+
 	/// <summary>
 	/// Changes the color of the border.
 	/// </summary>
@@ -62,8 +65,15 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 		if (CompController.Instance.IsPlacingStructure == true) {
 			CompController.Instance.NullifyPlacementObejcts();
 		}
-		CreateClone();
-		SetItemBorderColor(itemBorderColorActive);
+        if (this.isPlacable == false) {
+            CreateClone();
+            SetItemBorderColor(itemBorderColorActive);
+        } else {
+            if (this.defensePrefab.GetComponent(typeof(Component)).GetType() == typeof(Backup)) {
+                BackupManager.Instance.OpenPanel(this.transform.position);
+            }
+        }
+		
 	}
 
 	/// <summary>
@@ -73,4 +83,6 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	public void OnPointerExit(PointerEventData eventData) {
 		SetItemBorderColor(itemBorderColorDefault);
 	}
+
+    // TODO Create method for backing up component that is clicked after selecting backup defense feature in actionbar
 }

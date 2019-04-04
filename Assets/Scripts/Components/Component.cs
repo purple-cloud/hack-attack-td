@@ -26,12 +26,12 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// <summary>
     /// List containing all the specific upgrades for desired component
     /// </summary>
-    public ComponentUpgrade[] Upgrades { get; protected set; }
+    public ComponentUpgrade[] Upgrades { get; set; }
 
     /// <summary>
     /// Getter & setter for the component level
     /// </summary>
-    public int ComponentLevel { get; protected set; }
+    public int ComponentLevel { get; set; }
 
     /// <summary>
     /// Getter & setter for the component name
@@ -118,6 +118,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                 return this.Upgrades[this.ComponentLevel - 1];
             }
             return null;
+        }
+        set {
+
         }
     }
 
@@ -214,7 +217,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerUp(PointerEventData eventData) {
-		Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
+        if (Defenses.CompController.Instance.IsPlacingStructure) {
+            Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
+        } else if (BackupManager.Instance.BackupReady) {
+            BackupManager.Instance.AddToBackupPool(gameObject);
+        }
 	}
 
 	/// <summary>
