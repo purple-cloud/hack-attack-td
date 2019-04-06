@@ -39,11 +39,9 @@ namespace Defenses {
 
 		private void Awake() {
 			structureCanvas = GameObject.Find(structureCanvasName);
-
 			if (structureCanvas == null) {
 				throw new System.SystemException("CompController has invalid reference to structure canvas. Please check the serialized fields.");
 			}
-
 			IsPlacingStructure = false;
 		}
 
