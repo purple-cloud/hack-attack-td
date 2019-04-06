@@ -232,7 +232,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		GameObject borderGO;
 		if (state == true) {
 			// Instantiates new game object under this game object and gives it a color
-			borderGO = Instantiate(Resources.Load("Prefabs/HighlightBorder") as GameObject);
+			borderGO = Instantiate(CompController.Instance.highlightBorder as GameObject);
 			borderGO.name = "HighlightBorder";
 			borderGO.GetComponent<Image>().color = Color.green;
 			borderGO.transform.position = gameObject.transform.position;

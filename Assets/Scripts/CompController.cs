@@ -13,6 +13,9 @@ namespace Defenses {
 		private GameObject targetStructureObj1;
 		private GameObject newStructure;        // New structure that is being placed
 
+		[SerializeField]
+		public GameObject highlightBorder;
+
 		[HideInInspector]
 		public GameObject clone;				// A reference to the current clone (created from the item slot)
 		
