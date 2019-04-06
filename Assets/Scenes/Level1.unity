@@ -4777,6 +4777,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bfcf1f0f92f2d946b154dfc55eec9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightBorder: {fileID: 21692251796054221, guid: 0b49c55e03bc35f4d9d27746bdff9b93,
+    type: 3}
   clone: {fileID: 9137473958989017960, guid: 4da3d8f3dae931843849dae91fbf1daf, type: 3}
   structureCanvasName: ObjectsInCanvas
   pathLineMaterial: {fileID: 2100000, guid: 8861b2e96c9daac44a4195e17de6beec, type: 2}
