@@ -219,8 +219,18 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	public void OnPointerUp(PointerEventData eventData) {
         if (Defenses.CompController.Instance.IsPlacingStructure) {
             Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
-        } else if (BackupManager.Instance.BackupReady) {
+        } 
+        // If user is choosing to select component to backup
+        else if (BackupManager.Instance.BackupReady) {
             BackupManager.Instance.AddToBackupPool(gameObject);
+        }
+        // If user have pressed backupped component from backup selection panel
+        else if (BackupManager.Instance.BackupComponentSelected == true && BackupManager.Instance.BackupReady == false) {
+            if (((Component) BackupManager.Instance.BackuppedComponent.GetComponent(typeof(Component))).GetType() == 
+                    ((Component) gameObject.GetComponent(typeof(Component))).GetType()) {
+                // TODO Find a way to add the backupped component to replace current with as parameter
+                BackupManager.Instance.ReplaceComponent(BackupManager.Instance.BackuppedComponent, gameObject);
+            }
         }
 	}
 

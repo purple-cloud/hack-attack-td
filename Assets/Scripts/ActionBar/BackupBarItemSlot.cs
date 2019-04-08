@@ -8,7 +8,10 @@ public class BackupBarItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     // TODO Remove [SerializeField] when done testing this field will be set by BackupManager
     [SerializeField] // A reference to the actual backupped component 
-    private GameObject backuppedComponent;
+    public GameObject backuppedComponent;
+
+    [SerializeField]
+    public Image canvasImage;
 
     private GameObject clone;
 
@@ -16,30 +19,12 @@ public class BackupBarItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private Color itemBorderColorDefault = new Color(1f, 1f, 1f);	// Border color when the item slot is unfocused
 
     public void OnPointerUp(PointerEventData eventData) {
-        this.BackupComponentSelected = true;
-        BackupManager.Instance.HighlightReplacableComponents((Component) this.backuppedComponent.GetComponent(typeof(Component)), true);
-        CreateClone();
+        BackupManager.Instance.HighlightReplacableComponents(((Component) this.backuppedComponent.GetComponent(typeof(Component))), true);
+        BackupManager.Instance.BackuppedComponent = this.backuppedComponent;
+        BackupManager.Instance.BackupComponentSelected = true;
+        BackupManager.Instance.ShowBackupSelectionPanel();
     }
     
-    /// <summary>
-    /// Creates a clone and displays it. 
-    /// <seealso cref="Clone"/>
-    /// </summary>
-    private void CreateClone() {
-        // Save this objects sprite
-        Sprite itemSprite = gameObject.transform.GetChild(0).GetComponent<Image>().sprite;
-        // Get object from resources
-        clone = Instantiate(Defenses.CompController.Instance.clonePrefab) as GameObject;
-        clone.GetComponent<Clone>().defensePrefab = backuppedComponent; // Pass the structure object to the clone
-        // Name the object to see it in the hierarchy
-        clone.name = gameObject.name + " Clone (Snapped)";
-        // Get child image (named ItemImage in the hierarchy) and assign this object's sprite
-        Image cloneItemImage = clone.transform.GetChild(0).GetComponent<Image>();
-        cloneItemImage.sprite = itemSprite;
-        // Assign "clone" as a child of ActionBar so it shows on screen
-        clone.transform.SetParent(Defenses.CompController.Instance.structureCanvas.transform);
-    }
-
     /// <summary>
 	/// Set border color when mouse pointer is on the object.
 	/// </summary>

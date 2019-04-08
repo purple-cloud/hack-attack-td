@@ -37,6 +37,7 @@ public class Earth : Component {
             // Create random attack
             CreateRandomEnemy();
         }
+
     }
 
     private void CreateRandomEnemy() {
@@ -47,17 +48,17 @@ public class Earth : Component {
         Debug.Log("randomInt: " + randomInt);
         Debug.Log("rand: " + rand);
         // If condition is true create Web Attack
-        if (randomInt == 0 && (rand < this.webAttackProb)) {
-            Debug.Log("Creating WebAttack...");
-            WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
-            webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
-        }
-        // If condition is true, create document attack
-        else if (randomInt == 1 && (rand) < this.documentAttackProb) {
-            Debug.Log("Creating DocumentAttack...");
-            DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
-            documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
-        }
+        //if (randomInt == 0 && (rand < this.webAttackProb)) {
+        //    Debug.Log("Creating WebAttack...");
+        //    WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
+        //    webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        //}
+        //// If condition is true, create document attack
+        //else if (randomInt == 1 && (rand) < this.documentAttackProb) {
+        //    Debug.Log("Creating DocumentAttack...");
+        //    DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
+        //    documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        //}
     }
 
 }
