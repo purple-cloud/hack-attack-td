@@ -49,6 +49,8 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 		clone.transform.SetParent(CompController.Instance.structureCanvas.transform);
 	}
 
+    // TODO This and down can be refactored into own abstract class
+
 	/// <summary>
 	/// Set border color when mouse pointer is on the object.
 	/// </summary>
