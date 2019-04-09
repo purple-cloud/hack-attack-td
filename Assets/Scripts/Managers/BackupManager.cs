@@ -92,7 +92,7 @@ public class BackupManager : Singleton<BackupManager> {
         this.BackuppedComponent = null;
         foreach (GameObject obj in this.listOfBackuppedComponents) {
             ((Component) obj.GetComponent(typeof(Component))).input = null;
-            ((Component) obj.GetComponent(typeof(Component))).output = null;
+            ((Component) obj.GetComponent(typeof(Component))).outputs = null;
         }
     }
 
@@ -134,7 +134,7 @@ public class BackupManager : Singleton<BackupManager> {
                 property.SetValue((Component) clone.GetComponent(typeof(Component)), property.GetValue((Component) gameObject.GetComponent(typeof(Component))));
             }
             ((Component) clone.GetComponent(typeof(Component))).input = null;
-            ((Component) clone.GetComponent(typeof(Component))).output = null;
+            ((Component) clone.GetComponent(typeof(Component))).outputs = null;
             AddBackupToListOfBackups(clone);
         } catch (Exception) {
             Debug.LogError("ERROR: ListOfBackuppedGameObjects reference not found. Please check project structure.");

@@ -14,18 +14,19 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     private Image canvasImage;
 
 	[SerializeField]
-	private string outputObjectName;
+	private string[] outputObjectName;
 
 	[HideInInspector]
 	public List<GameObject> input;
 
 	[HideInInspector]
-	public GameObject output;
+	public List<GameObject> outputs;
 
-    /// <summary>
-    /// List containing all the specific upgrades for desired component
-    /// </summary>
-    public ComponentUpgrade[] Upgrades { get; set; }
+	#region PROPERTIES
+	/// <summary>
+	/// List containing all the specific upgrades for desired component
+	/// </summary>
+	public ComponentUpgrade[] Upgrades { get; set; }
 
     /// <summary>
     /// Getter & setter for the component level
@@ -91,20 +92,86 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// Getter & setter for components immunity for virus
     /// </summary>
     public bool ImmuneToVirus { get; set; }
-  
-    /// <summary>
-    /// Awake is called after all objects are initialized
-    /// </summary>
-    private void Awake() {
+	#endregion
+
+	#region EVENTS
+
+	/// <summary>
+	/// Notifies the controller about the click event.
+	/// </summary>
+	/// <param name="eventData"></param>
+	public void OnPointerUp(PointerEventData eventData) {
+		if (Defenses.CompController.Instance.IsPlacingStructure) {
+			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
+		}
+		// If user is choosing to select component to backup
+		else if (BackupManager.Instance.BackupReady) {
+			BackupManager.Instance.AddToBackupPool(gameObject);
+		}
+		// If user have pressed backupped component from backup selection panel
+		else if (BackupManager.Instance.BackupComponentSelected == true && BackupManager.Instance.BackupReady == false) {
+			if (((Component) BackupManager.Instance.BackuppedComponent.GetComponent(typeof(Component))).GetType() ==
+					((Component) gameObject.GetComponent(typeof(Component))).GetType()) {
+				// TODO Find a way to add the backupped component to replace current with as parameter
+				BackupManager.Instance.ReplaceComponent(BackupManager.Instance.BackuppedComponent, gameObject);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Currently this method needs to be called for each component
+	/// 
+	/// When the component is clicked it checks if the GameManagers selected component = this component,
+	/// and if so closes the information panel. If not it updates the information panel with
+	/// the specified information from the clicked component and opens up the panel if its not open
+	/// </summary>
+	public void OnPointerClick(PointerEventData eventData) {
+		if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {
+			GameManager.Instance.DeselectGameObject();
+		} else {
+			GameManager.Instance.SelectGameObject(gameObject);
+			GameManager.Instance.UpdateComputerPanel();
+		}
+	}
+
+	void OnTriggerStay2D(Collider2D col) {
+		CompController.Instance.CollisionDetected = true;
+	}
+
+	//TODO Stop mouse pointer altering the clones position when collision is detected.
+	void OnTriggerExit2D(Collider2D col) {
+		CompController.Instance.CollisionDetected = false;
+	}
+
+	#endregion
+
+	/// <summary>
+	/// Awake is called after all objects are initialized
+	/// </summary>
+	private void Awake() {
 		input = new List<GameObject>();
-		output = (outputObjectName != null) ? GameObject.Find(outputObjectName) : null;
+
+		foreach (string outputString in outputObjectName) {
+			GameObject obj = GameObject.Find(outputString);
+			if (obj != null) {
+				outputs.Add(obj);
+			}
+		}
+
+		if (gameObject.GetComponent<LineHandler>() == null) {
+			gameObject.AddComponent<LineHandler>();
+		}
+
+		LineHandler lineHandler = gameObject.GetComponent<LineHandler>();
+		foreach (GameObject output in outputs) {
+			lineHandler.AddList(output);
+		}
 
 		this.ComponentLevel = 1;
         this.Sellable = false;
         this.InitialPrice = 0;
         // Sets immune default to false;
         ImmuneToVirus = false;
-		ValidateLineRenderComponent();
 	}
 
     /// <summary>
@@ -170,21 +237,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         }
     }
 
-	/// <summary>
-	/// Loops though all child objects of Component and ensures they have a LineRenderer component.
-	/// If they don't, add it.
-	/// </summary>
-	private void ValidateLineRenderComponent() {
-		if (gameObject.GetComponent(typeof(Component)) != null) {
-			// Add LineRenderer if it is doesn't exist
-			if (gameObject.GetComponent<LineRenderer>() == null)
-				gameObject.AddComponent<LineRenderer>();
-
-			gameObject.GetComponent<LineRenderer>().sortingLayerName = "UI";
-			gameObject.GetComponent<LineRenderer>().material = CompController.Instance.pathLineMaterial;
-		}
-	}
-
 	public void Buy() {
         Debug.Log("Buying " + this.Name + " component...");
         GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - this.InitialPrice);
@@ -211,28 +263,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         }
         return status;
     }
-
-	/// <summary>
-	/// Notifies the controller about the click event.
-	/// </summary>
-	/// <param name="eventData"></param>
-	public void OnPointerUp(PointerEventData eventData) {
-        if (Defenses.CompController.Instance.IsPlacingStructure) {
-            Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
-        } 
-        // If user is choosing to select component to backup
-        else if (BackupManager.Instance.BackupReady) {
-            BackupManager.Instance.AddToBackupPool(gameObject);
-        }
-        // If user have pressed backupped component from backup selection panel
-        else if (BackupManager.Instance.BackupComponentSelected == true && BackupManager.Instance.BackupReady == false) {
-            if (((Component) BackupManager.Instance.BackuppedComponent.GetComponent(typeof(Component))).GetType() == 
-                    ((Component) gameObject.GetComponent(typeof(Component))).GetType()) {
-                // TODO Find a way to add the backupped component to replace current with as parameter
-                BackupManager.Instance.ReplaceComponent(BackupManager.Instance.BackuppedComponent, gameObject);
-            }
-        }
-	}
 
 	/// <summary>
 	/// Creates a green border on all compatible combination of structures on the canvas (when an item is picked from the item slot).
@@ -263,41 +293,67 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         this.canvasImage.sprite = sprite;
     }
 
-    /// <summary>
-    /// Currently this method needs to be called for each component
-    /// 
-    /// When the component is clicked it checks if the GameManagers selected component = this component,
-    /// and if so closes the information panel. If not it updates the information panel with
-    /// the specified information from the clicked component and opens up the panel if its not open
-    /// </summary>
-    public void OnPointerClick(PointerEventData eventData) {
-        if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {
-            GameManager.Instance.DeselectGameObject();
-        } else {
-            GameManager.Instance.SelectGameObject(gameObject);
-            GameManager.Instance.UpdateComputerPanel();
-        }
-    }
 
-	void OnTriggerStay2D(Collider2D col) {
-		CompController.Instance.CollisionDetected = true;
+	#region OUTPUT
+	/// <summary>
+	/// Finds all outputs that has a defined component type.
+	/// </summary>
+	/// <param name="type">A structure type</param>
+	/// <returns>A list of all outputs with that has the specified type</returns>
+	public GameObject[] GetOutputs(System.Type type) {
+		return outputs.FindAll(obj => obj.GetComponent(typeof(Component)).GetType() == type).ToArray();
 	}
 
-	//TODO Stop mouse pointer altering the clones position when collision is detected.
-	void OnTriggerExit2D(Collider2D col) {
-		CompController.Instance.CollisionDetected = false;
-	}
-
-	void Update() {
-		if (output != null) {
-			// Creates lines between this gameObject and output gameObject
-			LineRenderer lr = gameObject.GetComponent<LineRenderer>();
-			lr.SetPosition(0, gameObject.transform.position);
-			lr.SetPosition(1, output.transform.position);
+	/// <summary>
+	/// Adds a new output to this structure.
+	/// </summary>
+	/// <param name="obj"></param>
+	public void AddOutput(GameObject obj) {
+		if (!outputs.Contains(obj)) {
+			outputs.Add(obj);
+			gameObject.GetComponent<LineHandler>().Add(obj);
 		}
 	}
 
-    public Image GetCanvasImage() {
+	/// <summary>
+	/// Removes the output object from this structure if it exists.
+	/// </summary>
+	/// <param name="obj">Output object</param>
+	/// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
+	public bool RemoveOutput(GameObject obj) {
+		if (outputs.Contains(obj)) {
+			outputs.Remove(obj);
+		}
+
+		return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
+	}
+
+	/// <summary>
+	/// Collects all components with a spesific type of <code>Component</code>.
+	/// </summary>
+	/// <param name="type">A derived class type of <code>Component</code></param>
+	/// <returns>A list of all components with the type</returns>
+	public Component[] GetOutputComponents(System.Type type) {
+		List<Component> comps = new List<Component>();
+
+		foreach (GameObject output in 
+			outputs.FindAll(obj => obj.GetComponent(typeof(Component)).GetType() == type)) {
+			comps.Add(output.GetComponent(typeof(Component)) as Component);
+		}
+
+		return comps.ToArray();
+	}
+
+	/// <summary>
+	/// Collects all output components.
+	/// </summary>
+	/// <returns>All output components</returns>
+	public Component[] GetOutputComponents() {
+		return GetOutputComponents(typeof(Component));
+	}
+	#endregion
+
+	public Image GetCanvasImage() {
         return this.canvasImage;
     }
 

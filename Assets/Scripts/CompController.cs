@@ -12,9 +12,13 @@ namespace Defenses {
 	public class CompController : Singleton<CompController> {
 
 		// The structures the new structure is being placed between
-		private GameObject targetStructureObj1;
+		private GameObject targetStructure;
+
         // New structure that is being placed
         private GameObject newStructure;        
+
+		[SerializeField]
+		public GameObject emptyPrefab;
 
 		[SerializeField]
 		public GameObject highlightBorder;
@@ -46,17 +50,9 @@ namespace Defenses {
 		/// <param name="obj">The reporting object.</param>
 		public void OnStructureClickEvent(GameObject obj) {
 			if (IsPlacingStructure) {
-				// Checks if the game object has an output
-				if ((obj.GetComponent(typeof(Component)) as Component).output == null) {
-					// Save the game object and enable dragging of the clone
-					targetStructureObj1 = obj;
-                    this.clone.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
-                    EnableCloneDragging();
-				} else {
-					// Abort placement
-					Debug.Log(obj.name + " already has an output.");
-					CancelPlacement();
-				}
+				// Save the game object and enable dragging of the clone
+				targetStructure = obj;
+				EnableCloneDragging();
 			}
 		}
 
@@ -108,7 +104,7 @@ namespace Defenses {
                     GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
                 }
 
-                SetInputOutput(targetStructureObj1, newStructure);
+                SetInputOutput(targetStructure, newStructure);
                 Destroy(clone);
                 NullifyPlacementObejcts();
             } catch (Exception) {
@@ -125,8 +121,7 @@ namespace Defenses {
 			Component inputCore = input.GetComponent(typeof(Component)) as Component;
 			Component outputCore = output.GetComponent(typeof(Component)) as Component;
 
-			//TODO Change this
-			inputCore.output = output;
+			inputCore.outputs.Add(output);
 			outputCore.input.Add(input);
 		}
 
@@ -171,7 +166,7 @@ namespace Defenses {
 		/// </summary>
 		public void NullifyPlacementObejcts() {
 			clone = null;
-			targetStructureObj1 = null;
+			targetStructure = null;
 			newStructure = null;
 			
 			IsPlacingStructure = false;

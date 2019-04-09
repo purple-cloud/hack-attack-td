@@ -16,7 +16,7 @@ public class PathfindingManager : Singleton<PathfindingManager> {
     public void FindOutputs() {
         Debug.Log("Current Place: " + ((Computer) GameObject.Find("Computer").GetComponent(typeof(Computer))).Name);
         // TODO Change this to use while loop over output array from Component.outputs[]
-        GameObject selectedOutput = ((Component) this.selectedComponent.GetComponent(typeof(Component))).output;
+        GameObject selectedOutput = ((Component) this.selectedComponent.GetComponent(typeof(Component))).outputs[0];
         SelectGameObject(selectedOutput);
         Debug.Log("New Place: " + this.selectedComponent.Name);
     }
