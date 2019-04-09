@@ -1,11 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BackupManager : Singleton<BackupManager> {
-
-    [SerializeField] // A reference to the name of the backup selection panel
-    private string structureCanvasName;
 
     [SerializeField] // A reference to the backup popup panel
     private GameObject backupPanel;
@@ -30,16 +28,6 @@ public class BackupManager : Singleton<BackupManager> {
 
     // Checks if user have already selected a backup component to replace existing component
     public bool BackupComponentSelected { get; set; }
-
-    // Getter and setter for the structure canvas for backup selection panel
-    public GameObject structureCanvas { get; private set; }
-
-    private void Awake() {
-        structureCanvas = GameObject.Find(structureCanvasName);
-        if (structureCanvas == null) {
-            throw new System.SystemException("CompController has invalid reference to structure canvas. Please check the serialized fields.");
-        }
-    }
 
     private void Start() {
         this.listOfBackuppedComponents = new List<GameObject>();
@@ -67,26 +55,30 @@ public class BackupManager : Singleton<BackupManager> {
     /// <param name="selectedBackup">selected backup component</param>
     /// <param name="objectToReplace">component to be replaced</param>
     public void ReplaceComponent(GameObject selectedBackup, GameObject objectToReplace) {
-        Defenses.CompController.Instance.HighlightAllStructures(false);
-        if (this.BackupComponentSelected) {
-            // Get the type of the object to replace
-            System.Type type = ((Component) objectToReplace.GetComponent(typeof(Component))).GetType();
-            // Get input and output fields of the object to replace
-            System.Reflection.FieldInfo[] fields = type.GetFields();
-            // Add the input and output fields extracted above into the backup to be placed
-            foreach (System.Reflection.FieldInfo field in fields) {
-                field.SetValue((Component) selectedBackup.GetComponent(typeof(Component)), field.GetValue((Component) objectToReplace.GetComponent(typeof(Component))));
+        try {
+            Defenses.CompController.Instance.HighlightAllStructures(false);
+            if (this.BackupComponentSelected) {
+                // Get the type of the object to replace
+                System.Type type = ((Component) objectToReplace.GetComponent(typeof(Component))).GetType();
+                // Get input and output fields of the object to replace
+                System.Reflection.FieldInfo[] fields = type.GetFields();
+                // Add the input and output fields extracted above into the backup to be placed
+                foreach (System.Reflection.FieldInfo field in fields) {
+                    field.SetValue((Component) selectedBackup.GetComponent(typeof(Component)), field.GetValue((Component) objectToReplace.GetComponent(typeof(Component))));
+                }
+                // Add the selected backup to the canvas where the object to replace was
+                selectedBackup = Instantiate(selectedBackup);
+                // Set the selected backup position to that of the current component position
+                selectedBackup.transform.position = objectToReplace.transform.position;
+                // Destroy the object to replace from canvas
+                Destroy(objectToReplace);
+                // Set the selected backup in the object in canvas layer
+                selectedBackup.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+                // Reset values
+                ResetAll();
             }
-            // Add the selected backup to the canvas where the object to replace was
-            selectedBackup = Instantiate(selectedBackup);
-            // Set the selected backup position to that of the current component position
-            selectedBackup.transform.position = objectToReplace.transform.position;
-            // Destroy the object to replace from canvas
-            Destroy(objectToReplace);
-            // Set the selected backup in the object in canvas layer
-            selectedBackup.transform.SetParent(Defenses.CompController.Instance.structureCanvas.transform);
-            // Reset values
-            ResetAll();
+        } catch (Exception) {
+            Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
         }
     }
 
@@ -122,26 +114,32 @@ public class BackupManager : Singleton<BackupManager> {
     /// </summary>
     /// <param name="gameObject">gameobject to backup</param>
     public void AddToBackupPool(GameObject gameObject) {
-        this.BackupReady = false;
-        Defenses.CompController.Instance.HighlightAllStructures(false);
-        System.Type type = ((Component) gameObject.GetComponent(typeof(Component))).GetType();
-        // TODO FIX this so it isnt instantiated and added to project structure folder
-        if (GameObject.Find("ListOfBackuppedGameObjects").transform.childCount >= 7) {
-            Destroy(GameObject.Find("ListOfBackuppedGameObjects").transform.GetChild(0).gameObject);
+        this.backupSelectionPanel.SetActive(true);
+        try {
+            this.BackupReady = false;
+            Defenses.CompController.Instance.HighlightAllStructures(false);
+            System.Type type = ((Component) gameObject.GetComponent(typeof(Component))).GetType();
+            // TODO FIX this so it isnt instantiated and added to project structure folder
+            if (GameObject.Find("ListOfBackuppedGameObjects").transform.childCount >= 7) {
+                Destroy(GameObject.Find("ListOfBackuppedGameObjects").transform.GetChild(0).gameObject);
+            }
+            GameObject clone = Instantiate(gameObject);
+            clone.transform.SetParent(GameObject.Find("ListOfBackuppedGameObjects").transform);
+            // Copy all the values of the component inside gameObject and add the to the clone
+            System.Reflection.PropertyInfo[] properties = type.GetProperties();
+            clone.AddComponent(gameObject.GetComponents(typeof(Component)).GetType());
+            // Assign properties
+            for (int i = 0; i <= 17; i++) {
+                System.Reflection.PropertyInfo property = properties[i];
+                property.SetValue((Component) clone.GetComponent(typeof(Component)), property.GetValue((Component) gameObject.GetComponent(typeof(Component))));
+            }
+            ((Component) clone.GetComponent(typeof(Component))).input = null;
+            ((Component) clone.GetComponent(typeof(Component))).output = null;
+            AddBackupToListOfBackups(clone);
+        } catch (Exception) {
+            Debug.LogError("ERROR: ListOfBackuppedGameObjects reference not found. Please check project structure.");
+            //TODO Make something to notify the user
         }
-        GameObject clone = Instantiate(gameObject);
-        clone.transform.SetParent(GameObject.Find("ListOfBackuppedGameObjects").transform);
-        // Copy all the values of the component inside gameObject and add the to the clone
-        System.Reflection.PropertyInfo[] properties = type.GetProperties();
-        clone.AddComponent(gameObject.GetComponents(typeof(Component)).GetType());
-        // Assign properties
-        for (int i = 0; i <= 17; i++) {
-            System.Reflection.PropertyInfo property = properties[i];
-                property.SetValue((Component) clone.GetComponent(typeof(Component)), property.GetValue((Component)  gameObject.GetComponent(typeof(Component))));
-        }
-        ((Component) clone.GetComponent(typeof(Component))).input = null;
-        ((Component) clone.GetComponent(typeof(Component))).output = null;
-        AddBackupToListOfBackups(clone);
     }
 
     /// <summary>
@@ -149,14 +147,19 @@ public class BackupManager : Singleton<BackupManager> {
     /// </summary>
     /// <param name="backupObject">backup object to create backup slot from</param>
     public void ConvertGameObjectToBackupBarItemSlot(GameObject backupObject) {
-        // Instantiate new backupslot
-        GameObject backupSlot = Instantiate(this.backupBarItemSlotPrefab);
-        // Set the backupslot to be placed in BackupSelection
-        backupSlot.transform.SetParent(this.structureCanvas.transform);
-        // Set the backupped game object in backupslot prefab
-        ((BackupBarItemSlot) backupSlot.GetComponent(typeof(BackupBarItemSlot))).backuppedComponent = backupObject;
-        // Set the backup slot image to be the same of backupObject
-        ((BackupBarItemSlot) backupSlot.GetComponent(typeof(BackupBarItemSlot))).canvasImage.sprite = ((Component) backupObject.GetComponent(typeof(Component))).Sprite;
+        try {
+            // Instantiate new backupslot
+            GameObject backupSlot = Instantiate(this.backupBarItemSlotPrefab);
+            // Set the backupslot to be placed in BackupSelection
+            backupSlot.transform.SetParent(GameObject.Find("BackupSelection").transform);
+            // Set the backupped game object in backupslot prefab
+            ((BackupBarItemSlot) backupSlot.GetComponent(typeof(BackupBarItemSlot))).backuppedComponent = backupObject;
+            // Set the backup slot image to be the same of backupObject
+            ((BackupBarItemSlot) backupSlot.GetComponent(typeof(BackupBarItemSlot))).canvasImage.sprite = ((Component) backupObject.GetComponent(typeof(Component))).Sprite;
+        } catch (Exception) {
+            Debug.LogError("ERROR: BackupSelection reference not found. Please Check project structure.");
+            //TODO Make something to notify the user
+        }
     }
 
     /// <summary>
@@ -165,19 +168,24 @@ public class BackupManager : Singleton<BackupManager> {
     /// </summary>
     /// <param name="backupObject">backup object to add to the list of backupped components</param>
     public void AddBackupToListOfBackups(GameObject backupObject) {
-        // If list of backupped components is equal to 5 delete the oldest and add new
-        if (this.listOfBackuppedComponents.Count >= 6) {
-            this.listOfBackuppedComponents.RemoveAt(0);
-        }
-        // Add the component to the list of backupped components
-        this.listOfBackuppedComponents.Add(backupObject);
-        // Delete all current backup slots (TODO Add feature so we dont have to delete all. just replace single)
-        foreach (Transform obj in this.structureCanvas.transform) {
-            Destroy(obj.gameObject);
-        } 
-        // In the end, refresh the backup selection manager to show updated list of backupped components
-        foreach(GameObject obj in this.listOfBackuppedComponents) {
-            ConvertGameObjectToBackupBarItemSlot(obj);
+        try {
+            // If list of backupped components is equal to 5 delete the oldest and add new
+            if (this.listOfBackuppedComponents.Count >= 6) {
+                this.listOfBackuppedComponents.RemoveAt(0);
+            }
+            // Add the component to the list of backupped components
+            this.listOfBackuppedComponents.Add(backupObject);
+            // Delete all current backup slots (TODO Add feature so we dont have to delete all. just replace single)
+            foreach (Transform obj in (GameObject.Find("BackupSelection").transform)) {
+                Destroy(obj.gameObject);
+            }
+            // In the end, refresh the backup selection manager to show updated list of backupped components
+            foreach (GameObject obj in this.listOfBackuppedComponents) {
+                ConvertGameObjectToBackupBarItemSlot(obj);
+            }
+        } catch (Exception) {
+            Debug.LogError("ERROR: BackupSelection reference not found. Please Check project structure.");
+            //TODO Make something to notify the user
         }
     }
 
@@ -188,13 +196,17 @@ public class BackupManager : Singleton<BackupManager> {
     /// <param name="component">selected backup component</param>
     /// <param name="condition">condition for if it should be highligted or not</param>
     public void HighlightReplacableComponents(Component component, bool condition) {
-        foreach (Transform child in Defenses.CompController.Instance.structureCanvas.transform) {
-            Component comp;
-            if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
-                if (comp.GetType() == component.GetType()) {
-                    comp.ShowHighlight(condition);
+        try {
+            foreach (Transform child in GameObject.Find("ObjectsInCanvas").transform) {
+                Component comp;
+                if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
+                    if (comp.GetType() == component.GetType()) {
+                        comp.ShowHighlight(condition);
+                    }
                 }
             }
+        } catch (Exception) {
+            Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
         }
     }
 

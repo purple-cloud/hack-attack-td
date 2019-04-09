@@ -1,4 +1,5 @@
-﻿using Defenses;
+﻿using System;
+using Defenses;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -31,23 +32,27 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	/// <seealso cref="Clone"/>
 	/// </summary>
 	private void CreateClone() {
-		// Save this objects sprite
-		Sprite itemSprite = gameObject.transform.GetChild(0).GetComponent<Image>().sprite;
+		try {
+            // Save this objects sprite
+            Sprite itemSprite = gameObject.transform.GetChild(0).GetComponent<Image>().sprite;
 
-		// Get object from resources
-		clone = Instantiate(CompController.Instance.clonePrefab) as GameObject;
-		clone.GetComponent<Clone>().defensePrefab = defensePrefab; // Pass the structure object to the clone
+            // Get object from resources
+            clone = Instantiate(CompController.Instance.clonePrefab) as GameObject;
+            clone.GetComponent<Clone>().defensePrefab = defensePrefab; // Pass the structure object to the clone
 
-		// Name the object to see it in the hierarchy
-		clone.name = gameObject.name + " Clone (Snapped)";
+            // Name the object to see it in the hierarchy
+            clone.name = gameObject.name + " Clone (Snapped)";
 
-		// Get child image (named ItemImage in the hierarchy) and assign this object's sprite
-		Image cloneItemImage = clone.transform.GetChild(0).GetComponent<Image>();
-		cloneItemImage.sprite = itemSprite;
+            // Get child image (named ItemImage in the hierarchy) and assign this object's sprite
+            Image cloneItemImage = clone.transform.GetChild(0).GetComponent<Image>();
+            cloneItemImage.sprite = itemSprite;
 
-		// Assign "clone" as a child of ActionBar so it shows on screen
-		clone.transform.SetParent(CompController.Instance.structureCanvas.transform);
-	}
+            // Assign "clone" as a child of ActionBar so it shows on screen
+            clone.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+        } catch (Exception) {
+            Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
+        }
+    }
 
     // TODO This and down can be refactored into own abstract class
 
@@ -86,5 +91,4 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 		SetItemBorderColor(itemBorderColorDefault);
 	}
 
-    // TODO Create method for backing up component that is clicked after selecting backup defense feature in actionbar
 }

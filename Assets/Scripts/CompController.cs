@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,15 +10,17 @@ namespace Defenses {
 	/// Global class for managing structures and action bar items.
 	/// </summary>
 	public class CompController : Singleton<CompController> {
+
 		// The structures the new structure is being placed between
 		private GameObject targetStructureObj1;
-		private GameObject newStructure;        // New structure that is being placed
+        // New structure that is being placed
+        private GameObject newStructure;        
 
 		[SerializeField]
 		public GameObject highlightBorder;
 
-		[HideInInspector]
-		public GameObject clone;				// A reference to the current clone (created from the item slot)
+		[HideInInspector] // A reference to the current clone (created from the item slot)
+        public GameObject clone;				
 		
 		/// <summary>
 		/// An indication on if a structure is in the progress of being placed.
@@ -25,10 +28,6 @@ namespace Defenses {
 		/// </summary>
 		public bool IsPlacingStructure { get; set; }
 
-		[SerializeField]
-		private string structureCanvasName;
-
-		public GameObject structureCanvas { get; private set; }
 		public bool CollisionDetected { get; set; }
 
 		[SerializeField]
@@ -37,11 +36,7 @@ namespace Defenses {
 		[SerializeField]
 		public GameObject clonePrefab;
 
-		private void Awake() {
-			structureCanvas = GameObject.Find(structureCanvasName);
-			if (structureCanvas == null) {
-				throw new System.SystemException("CompController has invalid reference to structure canvas. Please check the serialized fields.");
-			}
+		private void Start() {
 			IsPlacingStructure = false;
 		}
 
@@ -87,33 +82,37 @@ namespace Defenses {
 		/// cancel it. There is a problem
 		/// </summary>
 		public void FinishPlacement() {
-			// If there is a collision between component and the new structure, cancel placement
-			if (CollisionDetected) {
-				Debug.Log("You cannot place components over each other.");
-				CollisionDetected = false;
-				CancelPlacement();
-				return;
-			}
+			try {
+                // If there is a collision between component and the new structure, cancel placement
+                if (CollisionDetected) {
+                    Debug.Log("You cannot place components over each other.");
+                    CollisionDetected = false;
+                    CancelPlacement();
+                    return;
+                }
 
-			newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
-			newStructure.transform.position = clone.transform.position;
+                newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
+                newStructure.transform.position = clone.transform.position;
 
-			//TODO Unity is on some serious drugs. Please make sure that the child component in the defense prefab automatically instantaites the child (Image) object.
-			GameObject img = Instantiate(clone.GetComponent<Clone>().defensePrefab.transform.GetChild(0).gameObject) as GameObject;
-			img.transform.position = clone.transform.position;
-			img.transform.SetParent(newStructure.transform);
-			newStructure.transform.SetParent(structureCanvas.transform);
-            // End maniac code
+                //TODO Unity is on some serious drugs. Please make sure that the child component in the defense prefab automatically instantaites the child (Image) object.
+                GameObject img = Instantiate(clone.GetComponent<Clone>().defensePrefab.transform.GetChild(0).gameObject) as GameObject;
+                img.transform.position = clone.transform.position;
+                img.transform.SetParent(newStructure.transform);
+                newStructure.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+                // End maniac code
 
-            // TODO Fill in more components when added to action-bar
-            if (this.newStructure.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
-                Debug.Log("Component is Firewall: Subtracting 100 from currency");
-                GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
+                // TODO Fill in more components when added to action-bar
+                if (this.newStructure.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
+                    Debug.Log("Component is Firewall: Subtracting 100 from currency");
+                    GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
+                }
+
+                SetInputOutput(targetStructureObj1, newStructure);
+                Destroy(clone);
+                NullifyPlacementObejcts();
+            } catch (Exception) {
+                Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
             }
-
-			SetInputOutput(targetStructureObj1, newStructure);
-			Destroy(clone);
-			NullifyPlacementObejcts();
 		}
 
 		/// <summary>
@@ -135,26 +134,34 @@ namespace Defenses {
 		/// </summary>
 		/// <param name="state"></param>
 		public void HighlightAllStructures(bool state) {
-			foreach (Transform child in structureCanvas.transform) {
-				Component comp;
-				if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
-					comp.ShowHighlight(state);
-				}
-			}
-		}
+            try {
+                foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
+                    Component comp;
+                    if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
+                        comp.ShowHighlight(state);
+                    }
+                }
+            } catch (Exception) {
+                Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
+            }
+        }
 
 		//TODO Remove this.
 		/// <summary>
 		/// Finds and destroys all visible clones.
 		/// </summary>
 		private void DestroyAllClones() {
-			foreach (Transform child in structureCanvas.transform) {
-				Clone c;
-				if ((c = child.gameObject.GetComponent<Clone>()) != null) {
-					Destroy(child.gameObject);
-				}
-			}
-		}
+            try {
+                foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
+                    Clone c;
+                    if ((c = child.gameObject.GetComponent<Clone>()) != null) {
+                        Destroy(child.gameObject);
+                    }
+                }
+            } catch (Exception) {
+                Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
+            }
+        }
 
 		/// <summary>
 		/// Cleans the mess from placing structures.
