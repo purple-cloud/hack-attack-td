@@ -86,8 +86,21 @@ public class BackupManager : Singleton<BackupManager> {
             // Set the selected backup in the object in canvas layer
             selectedBackup.transform.SetParent(Defenses.CompController.Instance.structureCanvas.transform);
             // Reset values
-            this.BackupComponentSelected = false;
-            this.BackuppedComponent = null;
+            ResetAll();
+        }
+    }
+
+    /// <summary>
+    /// Resets all values and sets all inputs and outputs
+    /// for each game object in list of backupped components
+    /// to null. to prevent connection where it isnt supposed to be
+    /// </summary>
+    public void ResetAll() {
+        this.BackupComponentSelected = false;
+        this.BackuppedComponent = null;
+        foreach (GameObject obj in this.listOfBackuppedComponents) {
+            ((Component) obj.GetComponent(typeof(Component))).input = null;
+            ((Component) obj.GetComponent(typeof(Component))).output = null;
         }
     }
 
@@ -119,7 +132,6 @@ public class BackupManager : Singleton<BackupManager> {
         GameObject clone = Instantiate(gameObject);
         clone.transform.SetParent(GameObject.Find("ListOfBackuppedGameObjects").transform);
         // Copy all the values of the component inside gameObject and add the to the clone
-        System.Reflection.FieldInfo[] fields = type.GetFields();
         System.Reflection.PropertyInfo[] properties = type.GetProperties();
         clone.AddComponent(gameObject.GetComponents(typeof(Component)).GetType());
         // Assign properties
@@ -127,6 +139,8 @@ public class BackupManager : Singleton<BackupManager> {
             System.Reflection.PropertyInfo property = properties[i];
                 property.SetValue((Component) clone.GetComponent(typeof(Component)), property.GetValue((Component)  gameObject.GetComponent(typeof(Component))));
         }
+        ((Component) clone.GetComponent(typeof(Component))).input = null;
+        ((Component) clone.GetComponent(typeof(Component))).output = null;
         AddBackupToListOfBackups(clone);
     }
 
