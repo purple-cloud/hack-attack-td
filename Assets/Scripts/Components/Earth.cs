@@ -32,7 +32,8 @@ public class Earth : Component {
 
     private IEnumerator StartSpawningAttacks() {
         Debug.Log("Starting to spawn attacks...");
-        while (true) {
+		// TODO This loop freezes the game
+        while (false) {
             yield return new WaitForSeconds(5.0f);
             // Create random attack
             CreateRandomEnemy();
