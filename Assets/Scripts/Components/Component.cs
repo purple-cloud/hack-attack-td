@@ -1,6 +1,5 @@
 ﻿using Defenses;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -155,7 +154,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                 this.Name = NextUpgrade.Name;
                 this.RepairPrice = NextUpgrade.RepairPrice;
                 this.SellValue = NextUpgrade.SellValue;
-                this.Encryption = NextUpgrade.Encryption; 
+                this.Encryption = NextUpgrade.Encryption;
+                this.Durability = NextUpgrade.Durability;
 
                 // Assign the value to the upgrade button
                 Debug.Log("this.Price: " + Price);
@@ -271,10 +271,10 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// the specified information from the clicked component and opens up the panel if its not open
     /// </summary>
     public void OnPointerClick(PointerEventData eventData) {
-        if (GameManager.Instance.GetSelectedGameObjext == this) {
+        if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {
             GameManager.Instance.DeselectGameObject();
         } else {
-            GameManager.Instance.SelectGameObjext(gameObject);
+            GameManager.Instance.SelectGameObject(gameObject);
             GameManager.Instance.UpdateComputerPanel();
         }
     }
@@ -297,7 +297,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		}
 	}
 
-  public Image GetCanvasImage() {
+    public Image GetCanvasImage() {
         return this.canvasImage;
     }
 
