@@ -88,7 +88,7 @@ public class GameManager : Singleton<GameManager> {
         }
     }
 
-    public GameObject GetSelectedGameObjext {
+    public GameObject GetSelectedGameObject {
         get {
             if (this.selectedGameObject != null) {
                 return this.selectedGameObject;
@@ -147,7 +147,7 @@ public class GameManager : Singleton<GameManager> {
     /// Selects a GameObjext by clicking it
     /// </summary>
     /// <param name="gameObject">The clicked gameObject</param>
-    public void SelectGameObjext(GameObject gameObject) {
+    public void SelectGameObject(GameObject gameObject) {
         if (this.selectedGameObject != null) {
             this.selectedGameObject = gameObject;
             this.selectedComponent = (Component) this.selectedGameObject.GetComponent(typeof(Component));
