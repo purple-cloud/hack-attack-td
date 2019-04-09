@@ -34,9 +34,9 @@ public class ActionBarSlot : ItemSlot {
             cloneItemImage.sprite = itemSprite;
 
             // Assign "clone" as a child of ActionBar so it shows on screen
-            clone.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+            clone.transform.SetParent(GameObject.Find("TemporaryLocation").transform);
         } catch (Exception) {
-            Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
+            Debug.LogError("ERROR: TemporaryLocation reference not found. Please check project structure.");
         }
     }
 

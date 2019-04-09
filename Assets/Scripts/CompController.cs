@@ -50,7 +50,8 @@ namespace Defenses {
 				if ((obj.GetComponent(typeof(Component)) as Component).output == null) {
 					// Save the game object and enable dragging of the clone
 					targetStructureObj1 = obj;
-					EnableCloneDragging();
+                    this.clone.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+                    EnableCloneDragging();
 				} else {
 					// Abort placement
 					Debug.Log(obj.name + " already has an output.");
@@ -90,10 +91,10 @@ namespace Defenses {
                     CancelPlacement();
                     return;
                 }
-
+                
                 newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
                 newStructure.transform.position = clone.transform.position;
-
+                
                 //TODO Unity is on some serious drugs. Please make sure that the child component in the defense prefab automatically instantaites the child (Image) object.
                 GameObject img = Instantiate(clone.GetComponent<Clone>().defensePrefab.transform.GetChild(0).gameObject) as GameObject;
                 img.transform.position = clone.transform.position;
