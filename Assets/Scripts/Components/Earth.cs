@@ -61,5 +61,7 @@ public class Earth : Component {
         //}
     }
 
+    /* TODO Add ransom decision consequence and variable related stuff in this script */
+
 }
 
