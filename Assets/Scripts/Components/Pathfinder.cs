@@ -38,14 +38,11 @@ public class Pathfinder : MonoBehaviour {
     public Component GetNextOutput() {
         Component selectedOutput = null;
         Debug.Log("Current Place: " + this.SelectedComponent.Name);
-        // TODO Change this to use iterator over outputs 
-        // TODO (after output can contain more then 1) to find all outputs
 
-        // IT CRASHES HERE!!! CANT FIND COMPONENT!!!!
-        this.listOfAdjacentGameObjects.Add((Component) this.SelectedComponent.output.GetComponent(typeof(Component)));
+		this.listOfAdjacentGameObjects.AddRange(SelectedComponent.GetOutputComponents());
         // See if list containing all outputs is bigger then 1
         if (this.listOfAdjacentGameObjects.Count > 1) {
-            selectedOutput = this.listOfAdjacentGameObjects[Random.Range(0, this.listOfAdjacentGameObjects.Count)];
+            selectedOutput = this.listOfAdjacentGameObjects[Random.Range(0, this.listOfAdjacentGameObjects.Count - 1)];
         } else {
             selectedOutput = this.listOfAdjacentGameObjects[0];
         }
@@ -57,7 +54,7 @@ public class Pathfinder : MonoBehaviour {
     /// </summary>
     /// <param name="targetGameObject">the game object to move to</param>
     public void MoveToNextOutput() {
-        this.SelectedComponent = GetNextOutput();
+        //this.SelectedComponent = GetNextOutput();
         Debug.Log("New Place: " + this.SelectedComponent.name);
     }
 

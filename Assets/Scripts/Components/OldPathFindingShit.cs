@@ -42,7 +42,7 @@ public class AttackPathfinding : MonoBehaviour {
     public void FindOutputs() {
         Debug.Log("Current Place: " + this.selectedGameObject.GetComponent(typeof(Component)).name);
         // TODO Change this to use while loop over output array from Component.outputs[]
-        Move(((Component) this.selectedGameObject.GetComponent(typeof(Component))).output);
+        Move(((Component) this.selectedGameObject.GetComponent(typeof(Component))).outputs[0]);
         Debug.Log("Current Place: " + this.selectedGameObject.GetComponent(typeof(Component)).name);
         if (ScanComponent(this.selectedComponent)) {
             this.conditionToStopSearching = true;

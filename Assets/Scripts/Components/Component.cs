@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using Defenses;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,26 +14,24 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     private Image canvasImage;
 
 	[SerializeField]
-	private string inputObjectName;
-
-	[SerializeField]
-	private string outputObjectName;
+	private string[] outputObjectName;
 
 	[HideInInspector]
-	public GameObject input;
+	public List<GameObject> input;
 
 	[HideInInspector]
-	public GameObject output;
+	public List<GameObject> outputs;
 
-    /// <summary>
-    /// List containing all the specific upgrades for desired component
-    /// </summary>
-    public ComponentUpgrade[] Upgrades { get; protected set; }
+	#region PROPERTIES
+	/// <summary>
+	/// List containing all the specific upgrades for desired component
+	/// </summary>
+	public ComponentUpgrade[] Upgrades { get; set; }
 
     /// <summary>
     /// Getter & setter for the component level
     /// </summary>
-    public int ComponentLevel { get; protected set; }
+    public int ComponentLevel { get; set; }
 
     /// <summary>
     /// Getter & setter for the component name
@@ -94,21 +92,87 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// Getter & setter for components immunity for virus
     /// </summary>
     public bool ImmuneToVirus { get; set; }
-  
-    /// <summary>
-    /// Awake is called after all objects are initialized
-    /// </summary>
-    private void Awake() {
-		// Sets input and output extracted from Unity editor for predefined levels
-		input = (inputObjectName != null) ? GameObject.Find(inputObjectName) : null;
-		output = (outputObjectName != null) ? GameObject.Find(outputObjectName) : null;
+	#endregion
+
+	#region EVENTS
+
+	/// <summary>
+	/// Notifies the controller about the click event.
+	/// </summary>
+	/// <param name="eventData"></param>
+	public void OnPointerUp(PointerEventData eventData) {
+		if (Defenses.CompController.Instance.IsPlacingStructure) {
+			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
+		}
+		// If user is choosing to select component to backup
+		else if (BackupManager.Instance.BackupReady) {
+			BackupManager.Instance.AddToBackupPool(gameObject);
+		}
+		// If user have pressed backupped component from backup selection panel
+		else if (BackupManager.Instance.BackupComponentSelected == true && BackupManager.Instance.BackupReady == false) {
+			if (((Component) BackupManager.Instance.BackuppedComponent.GetComponent(typeof(Component))).GetType() ==
+					((Component) gameObject.GetComponent(typeof(Component))).GetType()) {
+				// TODO Find a way to add the backupped component to replace current with as parameter
+				BackupManager.Instance.ReplaceComponent(BackupManager.Instance.BackuppedComponent, gameObject);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Currently this method needs to be called for each component
+	/// 
+	/// When the component is clicked it checks if the GameManagers selected component = this component,
+	/// and if so closes the information panel. If not it updates the information panel with
+	/// the specified information from the clicked component and opens up the panel if its not open
+	/// </summary>
+	public void OnPointerClick(PointerEventData eventData) {
+		if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {
+			GameManager.Instance.DeselectGameObject();
+		} else {
+			GameManager.Instance.SelectGameObject(gameObject);
+			GameManager.Instance.UpdateComputerPanel();
+		}
+	}
+
+	void OnTriggerStay2D(Collider2D col) {
+		CompController.Instance.CollisionDetected = true;
+	}
+
+	//TODO Stop mouse pointer altering the clones position when collision is detected.
+	void OnTriggerExit2D(Collider2D col) {
+		CompController.Instance.CollisionDetected = false;
+	}
+
+	#endregion
+
+	/// <summary>
+	/// Awake is called after all objects are initialized
+	/// </summary>
+	private void Awake() {
+		input = new List<GameObject>();
+
+		foreach (string outputString in outputObjectName) {
+			GameObject obj = GameObject.Find(outputString);
+			if (obj != null) {
+				outputs.Add(obj);
+			}
+		}
+
+		if (gameObject.GetComponent<LineHandler>() == null) {
+			gameObject.AddComponent<LineHandler>();
+		}
+
+		LineHandler lineHandler = gameObject.GetComponent<LineHandler>();
+		foreach (GameObject output in outputs) {
+			lineHandler.AddList(output);
+		}
 
 		this.ComponentLevel = 1;
         this.Sellable = false;
         this.InitialPrice = 0;
         // Sets immune default to false;
         ImmuneToVirus = false;
-    }
+	}
 
     /// <summary>
     /// Returns the next upgrade for the component if there are any.
@@ -121,7 +185,15 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
             }
             return null;
         }
+        set {
+
+        }
     }
+
+	public void SetLineRendererMaterial(Material m) {
+		// Set the material for the line
+		gameObject.GetComponent<LineRenderer>().material = m;
+	}
 
     /// <summary>
     /// Is called by the GameManager when pressing Repair on the stats panel
@@ -149,7 +221,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                 this.Name = NextUpgrade.Name;
                 this.RepairPrice = NextUpgrade.RepairPrice;
                 this.SellValue = NextUpgrade.SellValue;
-                this.Encryption = NextUpgrade.Encryption; 
+                this.Encryption = NextUpgrade.Encryption;
+                this.Durability = NextUpgrade.Durability;
 
                 // Assign the value to the upgrade button
                 Debug.Log("this.Price: " + Price);
@@ -164,7 +237,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         }
     }
 
-    public void Buy() {
+	public void Buy() {
         Debug.Log("Buying " + this.Name + " component...");
         GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - this.InitialPrice);
     }
@@ -192,14 +265,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     }
 
 	/// <summary>
-	/// Notifies the controller about the click event.
-	/// </summary>
-	/// <param name="eventData"></param>
-	public void OnPointerUp(PointerEventData eventData) {
-		Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
-	}
-
-	/// <summary>
 	/// Creates a green border on all compatible combination of structures on the canvas (when an item is picked from the item slot).
 	/// </summary>
 	/// <param name="state">Controls if the game object will create or remove border.</param>
@@ -207,7 +272,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		GameObject borderGO;
 		if (state == true) {
 			// Instantiates new game object under this game object and gives it a color
-			borderGO = Instantiate<GameObject>(Resources.Load("Prefabs/HighlightBorder") as GameObject);
+			borderGO = Instantiate(CompController.Instance.highlightBorder as GameObject);
 			borderGO.name = "HighlightBorder";
 			borderGO.GetComponent<Image>().color = Color.green;
 			borderGO.transform.position = gameObject.transform.position;
@@ -228,23 +293,67 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         this.canvasImage.sprite = sprite;
     }
 
-    /// <summary>
-    /// Currently this method needs to be called for each component
-    /// 
-    /// When the component is clicked it checks if the GameManagers selected component = this component,
-    /// and if so closes the information panel. If not it updates the information panel with
-    /// the specified information from the clicked component and opens up the panel if its not open
-    /// </summary>
-    public void OnPointerClick(PointerEventData eventData) {
-        if (GameManager.Instance.GetSelectedGameObjext == this) {
-            GameManager.Instance.DeselectGameObject();
-        } else {
-            GameManager.Instance.SelectGameObjext(gameObject);
-            GameManager.Instance.UpdateComputerPanel();
-        }
-    }
 
-    public Image GetCanvasImage() {
+	#region OUTPUT
+	/// <summary>
+	/// Finds all outputs that has a defined component type.
+	/// </summary>
+	/// <param name="type">A structure type</param>
+	/// <returns>A list of all outputs with that has the specified type</returns>
+	public GameObject[] GetOutputs(System.Type type) {
+		return outputs.FindAll(obj => obj.GetComponent(typeof(Component)).GetType() == type).ToArray();
+	}
+
+	/// <summary>
+	/// Adds a new output to this structure.
+	/// </summary>
+	/// <param name="obj"></param>
+	public void AddOutput(GameObject obj) {
+		if (!outputs.Contains(obj)) {
+			outputs.Add(obj);
+			gameObject.GetComponent<LineHandler>().Add(obj);
+		}
+	}
+
+	/// <summary>
+	/// Removes the output object from this structure if it exists.
+	/// </summary>
+	/// <param name="obj">Output object</param>
+	/// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
+	public bool RemoveOutput(GameObject obj) {
+		if (outputs.Contains(obj)) {
+			outputs.Remove(obj);
+		}
+
+		return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
+	}
+
+	/// <summary>
+	/// Collects all components with a spesific type of <code>Component</code>.
+	/// </summary>
+	/// <param name="type">A derived class type of <code>Component</code></param>
+	/// <returns>A list of all components with the type</returns>
+	public Component[] GetOutputComponents(System.Type type) {
+		List<Component> comps = new List<Component>();
+
+		foreach (GameObject output in 
+			outputs.FindAll(obj => obj.GetComponent(typeof(Component)).GetType() == type)) {
+			comps.Add(output.GetComponent(typeof(Component)) as Component);
+		}
+
+		return comps.ToArray();
+	}
+
+	/// <summary>
+	/// Collects all output components.
+	/// </summary>
+	/// <returns>All output components</returns>
+	public Component[] GetOutputComponents() {
+		return GetOutputComponents(typeof(Component));
+	}
+	#endregion
+
+	public Image GetCanvasImage() {
         return this.canvasImage;
     }
 
