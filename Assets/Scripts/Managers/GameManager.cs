@@ -18,15 +18,22 @@ public class GameManager : Singleton<GameManager> {
 
     #region STATS_PANEL
 
-    [SerializeField]
-    private GameObject statsPanel;
+    [Header("Information Panel")]
 
     [SerializeField]
-    private Text statsTitle;
+    private GameObject informationPanel;
+
+    [SerializeField]
+    public Text informationPanelTitle;
+
+    [SerializeField]
+    public Text informationPanelText;
 
     #endregion
 
     #region MODULE_PANEL
+
+    [Header("Module Panel")]
 
     [SerializeField] // A reference to the panel object
     private GameObject modulePanel;
@@ -61,6 +68,8 @@ public class GameManager : Singleton<GameManager> {
     [SerializeField]
     private Text sellText;
     
+    [Header("Miscellaneous")]
+
     [SerializeField] // A reference to the currency text
     private Text currencyText;
 
@@ -132,8 +141,7 @@ public class GameManager : Singleton<GameManager> {
     /// any of the Update methods is called the first time.
     /// </summary>
     private void Start() {
-        // Sets the initial currency
-        SetCurrency(700);
+        
     }
 
     /// <summary>
@@ -332,7 +340,7 @@ public class GameManager : Singleton<GameManager> {
     /// </summary>
     /// <param name="active">either true or false</param>
     public void ShowStats(bool active) {
-        this.statsPanel.SetActive(active);
+        this.informationPanel.SetActive(active);
     }
 
     /// <summary>
