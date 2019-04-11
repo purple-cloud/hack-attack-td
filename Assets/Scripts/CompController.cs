@@ -90,6 +90,7 @@ namespace Defenses {
 				}
 
 				newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
+				newStructure.name = clone.GetComponent<Clone>().defensePrefab.name;
 				newStructure.transform.position = clone.transform.position;
 
 				//TODO Unity is on some serious drugs. Please make sure that the child component in the defense prefab automatically instantaites the child (Image) object.

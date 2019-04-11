@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Defenses;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -47,7 +48,7 @@ public class ActionBarSlot : ItemSlot {
     /// <param name="eventData"></param>
     public override void OnPointerUp(PointerEventData eventData) {
         if (Defenses.CompController.Instance.IsPlacingStructure == true) {
-            Defenses.CompController.Instance.NullifyPlacementObejcts();
+            Defenses.CompController.Instance.CancelPlacement();
         }
         if (this.isPlacable) {
             CreateClone();
