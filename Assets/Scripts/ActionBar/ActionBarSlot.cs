@@ -32,9 +32,10 @@ public class ActionBarSlot : ItemSlot {
             // Get child image (named ItemImage in the hierarchy) and assign this object's sprite
             Image cloneItemImage = clone.transform.GetChild(0).GetComponent<Image>();
             cloneItemImage.sprite = itemSprite;
+			cloneItemImage.color = new Color(1f, 1f, 1f, 0f);
 
             // Assign "clone" as a child of ActionBar so it shows on screen
-            clone.transform.SetParent(GameObject.Find("TemporaryLocation").transform);
+            clone.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
         } catch (Exception) {
             Debug.LogError("ERROR: TemporaryLocation reference not found. Please check project structure.");
         }

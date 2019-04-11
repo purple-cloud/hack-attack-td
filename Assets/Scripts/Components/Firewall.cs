@@ -8,9 +8,8 @@ using UnityEngine.EventSystems;
 /// Class representing the firewall component
 /// </summary>
 public class Firewall : Component, IPointerClickHandler {
-
 	[SerializeField]
-	private string firewallPanelReference;
+	private GameObject firewallPanel;
 
 	[SerializeField]
 	private GameObject firewallPanelRow;
@@ -21,8 +20,6 @@ public class Firewall : Component, IPointerClickHandler {
 	[Header("Firewall Port")]
 	[SerializeField]
 	private FirewallPortDummy[] ports;
-
-	private GameObject firewallPanel;
 
     public void Start() {
         Upgrades = new ComponentUpgrade[] {
@@ -40,13 +37,11 @@ public class Firewall : Component, IPointerClickHandler {
         // Sets virus immune to true
         ImmuneToVirus = true;
 
-		firewallPanel = GameObject.Find(firewallPanelReference);
-
 		if (firewallPanel == null) {
 			throw new System.Exception("Firewall has invalid reference to statistics panel. Please check the serialized fields.");
 		}
 
-		CreateGameObjects();
+		//CreateGameObjects();
 	}
 
 	/// <summary>
