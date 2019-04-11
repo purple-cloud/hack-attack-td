@@ -38,10 +38,10 @@ public class Firewall : Component, IPointerClickHandler {
         ImmuneToVirus = true;
 
 		if (firewallPanel == null) {
-			throw new System.Exception("Firewall has invalid reference to statistics panel. Please check the serialized fields.");
+			//throw new System.Exception("Firewall has invalid reference to statistics panel. Please check the serialized fields.");
+		} else {
+			CreateGameObjects();
 		}
-
-		//CreateGameObjects();
 	}
 
 	/// <summary>

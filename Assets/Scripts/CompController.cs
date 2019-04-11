@@ -123,7 +123,7 @@ namespace Defenses {
 			Component inputCore = input.GetComponent(typeof(Component)) as Component;
 			Component outputCore = output.GetComponent(typeof(Component)) as Component;
 
-			inputCore.outputs.Add(output);
+			inputCore.AddOutput(output.gameObject);
 			outputCore.input.Add(input);
 		}
 
