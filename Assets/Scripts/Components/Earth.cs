@@ -30,7 +30,8 @@ public class Earth : Component {
         Debug.Log("Starting to spawn attacks...");
         // TODO This loop freezes the game
         // TODO Find another solution for this!!!
-        while (true) { 
+        yield return new WaitForSeconds(time);
+        while (false) { 
             Debug.Log("Waiting...");
             Debug.Log("Before: Current thread: " + System.Threading.Thread.CurrentThread);
             CreateRandomEnemy();
@@ -41,6 +42,7 @@ public class Earth : Component {
             
         }
         // For testing
+        CreateRandomEnemy();
     }
 
     private void CreateRandomEnemy() {
@@ -57,8 +59,12 @@ public class Earth : Component {
         //    webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
         //}
 
+        // TODO Only works if it finds a Computer component. Will use up computer resources and crash unity if not
         //WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
         //webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+
+        DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
+        documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
 
         //// If condition is true, create document attack
         //else if (randomInt == 1 && (rand) < this.documentAttackProb) {

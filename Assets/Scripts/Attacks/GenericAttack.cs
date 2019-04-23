@@ -8,7 +8,7 @@ public class GenericAttack : Pathfinder {
 
     private int port;
 
-    private bool isAttackable = false;
+    private bool isAttackable;
 
     private bool repeatAttack = false;
 
@@ -16,19 +16,28 @@ public class GenericAttack : Pathfinder {
 
     }
 
-    private void AttackComponent() {
-        // Each attack does 10 dmg to the durability
-        SelectedComponent.Durability -= 10;
-        Debug.Log("Durability left: " + SelectedComponent.Durability);
-        // TODO Update Module panel with new Computer Durability Values
+    private void Awake() {
+        this.isAttackable = false;
     }
 
     /// <summary>
-    /// deletes this attack object
+    /// Finds a game object to attack
     /// </summary>
-    private void DeleteAttack() {
-        Debug.Log("Deleting attack..");
-        Destroy(this.gameObject);
+    public Component FindAttackableGameObject(System.Type component) {
+        Component foundComponent = null;
+        try {
+            while (this.isAttackable != true) {
+                if (ScanComponent(SelectedComponent, component)) {
+                    this.isAttackable = true;
+                    foundComponent = SelectedComponent;
+                } else {
+                    MoveToNextOutput();
+                }
+            }
+        } catch (NullReferenceException e) {
+            Debug.LogException(e);
+        }
+        return foundComponent;
     }
 
     /// <summary>
@@ -40,7 +49,7 @@ public class GenericAttack : Pathfinder {
     private bool ScanComponent(Component componentToScan, System.Type componentToFind) {
         bool componentFound = false;
         try {
-            if (componentToScan.GetType() == componentToFind.GetType()) {
+            if ((System.Type) componentToScan.GetType() == componentToFind) {
                 componentFound = true;
             } else if (componentToScan.GetType() == typeof(Firewall)) {
                 //TODO Change this check to find the status of port in real firewall script (Wait for liban to finish firewall)
@@ -55,7 +64,10 @@ public class GenericAttack : Pathfinder {
                     componentFound = false;
                     DeleteAttack();
                 }
-            } else {
+            } else if (componentToScan.GetType() == typeof(Document)) {
+                componentFound = true;
+            } 
+            else {
                 Debug.Log("Component is of type: " + componentToScan.Name);
             }
         } catch (NullReferenceException nre) {
@@ -65,33 +77,19 @@ public class GenericAttack : Pathfinder {
     }
 
     /// <summary>
+    /// deletes this attack object
+    /// </summary>
+    public void DeleteAttack() {
+        Debug.Log("Deleting attack..");
+        Destroy(this.gameObject);
+    }
+
+    /// <summary>
     /// Returns the name of the attack. Could be domain, location etc.
     /// </summary>
     /// <returns>Returns the name of the attack</returns>
     public string GenericAttackName() {
         return this.name;
     }
-
-    /// <summary>
-    /// Finds a game object to attack
-    /// </summary>
-    public Component FindAttackableGameObject(System.Type component) {
-        Component foundComponent = null;
-        try {
-            while (!this.isAttackable) {
-                if (ScanComponent(SelectedComponent, component)) {
-                    this.isAttackable = true;
-                    foundComponent = SelectedComponent;
-                } else {
-                    MoveToNextOutput();
-                }
-            }
-        } catch (NullReferenceException e) {
-            Debug.LogException(e);
-        }
-        return foundComponent;
-    }
-
-
 
 }

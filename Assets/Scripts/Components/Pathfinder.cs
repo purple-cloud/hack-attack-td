@@ -38,8 +38,13 @@ public class Pathfinder : MonoBehaviour {
     public Component GetNextOutput() {
         Component selectedOutput = null;
         Debug.Log("Current Place: " + this.SelectedComponent.Name);
+        // TODO Inputs & Outputs = [0] FIX THIS SHIT
+		this.listOfAdjacentGameObjects.AddRange(SelectedComponent.GetInputComponents());
 
-		this.listOfAdjacentGameObjects.AddRange(SelectedComponent.GetOutputComponents());
+        if (this.listOfAdjacentGameObjects.Count == 0) {
+            Destroy(this.gameObject);
+        }
+
         // See if list containing all outputs is bigger then 1
         if (this.listOfAdjacentGameObjects.Count > 1) {
             selectedOutput = this.listOfAdjacentGameObjects[Random.Range(0, this.listOfAdjacentGameObjects.Count - 1)];
@@ -54,7 +59,7 @@ public class Pathfinder : MonoBehaviour {
     /// </summary>
     /// <param name="targetGameObject">the game object to move to</param>
     public void MoveToNextOutput() {
-        // this.SelectedComponent = GetNextOutput();
+        this.SelectedComponent = GetNextOutput();
         Debug.Log("New Place: " + this.SelectedComponent.name);
     }
 
