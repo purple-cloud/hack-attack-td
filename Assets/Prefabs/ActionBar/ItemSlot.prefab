@@ -267,8 +267,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasImage: {fileID: 0}
-  clone: {fileID: 0}
-  defensePrefab: {fileID: 0}
+  defensePrefab: {fileID: 6912742713897239523, guid: a666608d8974c0443a6ab329ab799f96,
+    type: 3}
   isPlacable: 0
 --- !u!114 &8515798797753365392
 MonoBehaviour:
