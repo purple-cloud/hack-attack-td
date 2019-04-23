@@ -66,6 +66,15 @@ public class BackupManager : Singleton<BackupManager> {
                 foreach (System.Reflection.FieldInfo field in fields) {
                     field.SetValue((Component) selectedBackup.GetComponent(typeof(Component)), field.GetValue((Component) objectToReplace.GetComponent(typeof(Component))));
                 }
+
+				Debug.Log((objectToReplace.GetComponent(typeof(Component)) as Component).input.Count);
+
+				foreach (GameObject obj in (objectToReplace.GetComponent(typeof(Component)) as Component).input) {
+					Component objComp = obj.GetComponent(typeof(Component)) as Component;
+					objComp.RemoveOutput(objectToReplace);
+					objComp.AddOutput(selectedBackup);
+				}
+
                 // Add the selected backup to the canvas where the object to replace was
                 selectedBackup = Instantiate(selectedBackup);
                 // Set the selected backup position to that of the current component position
@@ -91,8 +100,8 @@ public class BackupManager : Singleton<BackupManager> {
         this.BackupComponentSelected = false;
         this.BackuppedComponent = null;
         foreach (GameObject obj in this.listOfBackuppedComponents) {
-            ((Component) obj.GetComponent(typeof(Component))).input = null;
-            ((Component) obj.GetComponent(typeof(Component))).outputs = null;
+            ((Component) obj.GetComponent(typeof(Component))).input = new List<GameObject>();
+            ((Component) obj.GetComponent(typeof(Component))).outputs = new List<GameObject>();
         }
     }
 
@@ -135,7 +144,9 @@ public class BackupManager : Singleton<BackupManager> {
             }
             ((Component) clone.GetComponent(typeof(Component))).input = null;
             ((Component) clone.GetComponent(typeof(Component))).outputs = null;
-            AddBackupToListOfBackups(clone);
+
+			clone.GetComponent<LineHandler>().ResetHandler();
+			AddBackupToListOfBackups(clone);
         } catch (Exception) {
             Debug.LogError("ERROR: ListOfBackuppedGameObjects reference not found. Please check project structure.");
             //TODO Make something to notify the user

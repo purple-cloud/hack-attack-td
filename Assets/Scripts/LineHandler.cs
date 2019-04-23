@@ -16,12 +16,15 @@ public class LineHandler : MonoBehaviour {
 	void Update() {
 		if (renderLine) {
 			foreach (KeyValuePair<GameObject, GameObject> lineObj in targetObjs) {
-				DrawLine(lineObj);
+				//TODO Instead of iterating over dead gameobjects, remove them
+				if (lineObj.Key != null) {
+					DrawLine(lineObj);
+				}
 			}
 		}
 	}
 
-	public void AddList(params GameObject[] outputObjs) {
+	private void Init() {
 		if (lineObjectParent == null) {
 			if (gameObject.transform.Find("LineHandler") != null) {
 				lineObjectParent = gameObject.transform.Find("LineHandler").gameObject;
@@ -36,23 +39,31 @@ public class LineHandler : MonoBehaviour {
 			Debug.Log(lineObjectParent.name + " is the child of " + gameObject.name);
 			targetObjs = new Dictionary<GameObject, GameObject>();
 		}
+	}
+
+	public void AddList(params GameObject[] outputObjs) {
+		Init();
 		
 		// Adds every target objects in a list and creates an object to draw the lines
 		foreach (GameObject obj in outputObjs) {
-			GameObject lineObj = Instantiate(CompController.Instance.emptyPrefab);
-			lineObj.name = "Line to " + obj.name;
-			lineObj.AddComponent<LineRenderer>().material = CompController.Instance.pathLineMaterial;
-			lineObj.transform.SetParent(lineObjectParent.transform);
-			lineObj.transform.position = componentCenterPoint;
-			Debug.Log(lineObj.name + " is the child of " + lineObjectParent.name);
+			if (!targetObjs.ContainsKey(obj)) {
+				GameObject lineObj = Instantiate(CompController.Instance.emptyPrefab);
+				lineObj.name = "Line to " + obj.name;
+				lineObj.AddComponent<LineRenderer>().material = CompController.Instance.pathLineMaterial;
+				lineObj.transform.SetParent(lineObjectParent.transform);
+				lineObj.transform.position = componentCenterPoint;
+				Debug.Log(lineObj.name + " is the child of " + lineObjectParent.name);
 
-			targetObjs.Add(obj, lineObj);
+				targetObjs.Add(obj, lineObj);
+			}
 		}
 
 		renderLine = (targetObjs.Count > 0) ? true : false;
 	}
 
 	public void Add(GameObject obj) {
+		Init();
+
 		GameObject lineObj = Instantiate(CompController.Instance.emptyPrefab);
 		lineObj.name = "Line to " + obj.name;
 		lineObj.AddComponent<LineRenderer>().material = CompController.Instance.pathLineMaterial;
@@ -85,5 +96,11 @@ public class LineHandler : MonoBehaviour {
 		}
 
 		return targetObjs.ContainsKey(outputStructure);
+	}
+
+	public void ResetHandler() {
+		renderLine = false;
+		targetObjs = new Dictionary<GameObject, GameObject>();
+		Destroy(lineObjectParent);
 	}
 }

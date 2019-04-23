@@ -42,6 +42,18 @@ namespace Defenses {
 
 		private void Start() {
 			IsPlacingStructure = false;
+			GenerateStructureInputs();
+		}
+
+		private void GenerateStructureInputs() {
+			foreach (Component comp in GameObject.FindObjectsOfType(typeof(Component))) {
+				foreach (GameObject output in comp.outputs) {
+					Component outputComp = output.GetComponent(typeof(Component)) as Component;
+					if (!outputComp.input.Contains(comp.gameObject)) {
+						outputComp.input.Add(comp.gameObject);
+					}
+				}
+			}
 		}
 
 		/// <summary>

@@ -16,10 +16,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	[SerializeField]
 	private string[] outputObjectName;
 
-	[HideInInspector]
+	// TODO Remove flag BEFORE push
+	//[HideInInspector]
 	public List<GameObject> input;
 
-	[HideInInspector]
+	//[HideInInspector]
 	public List<GameObject> outputs;
 
 	#region PROPERTIES
@@ -151,18 +152,22 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	private void Awake() {
 		input = new List<GameObject>();
 
-		foreach (string outputString in outputObjectName) {
-			GameObject obj = GameObject.Find(outputString);
-			if (obj != null) {
-				outputs.Add(obj);
-			}
-		}
-
 		if (gameObject.GetComponent<LineHandler>() == null) {
 			gameObject.AddComponent<LineHandler>();
 		}
 
 		LineHandler lineHandler = gameObject.GetComponent<LineHandler>();
+
+		foreach (string outputString in outputObjectName) {
+			GameObject obj = GameObject.Find(outputString);
+			if (obj != null) {
+				if (!outputs.Contains(obj)) {
+					outputs.Add(obj);
+					gameObject.GetComponent<LineHandler>().Add(obj);
+				}
+			}
+		}
+
 		foreach (GameObject output in outputs) {
 			lineHandler.AddList(output);
 		}
@@ -312,6 +317,10 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		if (!outputs.Contains(obj)) {
 			outputs.Add(obj);
 			gameObject.GetComponent<LineHandler>().Add(obj);
+
+			if (!(obj.GetComponent(typeof(Component)) as Component).outputs.Contains(gameObject)) {
+				(obj.GetComponent(typeof(Component)) as Component).AddOutput(gameObject);
+			}
 		}
 	}
 
