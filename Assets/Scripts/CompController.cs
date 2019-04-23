@@ -111,6 +111,7 @@ namespace Defenses {
 				img.transform.SetParent(newStructure.transform);
 				newStructure.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
 				// End maniac code
+				ResizeGameObject(newStructure, new Vector3(1, 1, 1));
 
 				// TODO Fill in more components when added to action-bar
 				if (this.newStructure.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
@@ -157,6 +158,10 @@ namespace Defenses {
                 Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
             }
         }
+
+		public void ResizeGameObject(GameObject obj, Vector3 v) {
+			((RectTransform) obj.transform).localScale = new Vector3(1, 1, 1);
+		}
 
 		//TODO Remove this.
 		/// <summary>
