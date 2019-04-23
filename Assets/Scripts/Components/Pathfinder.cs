@@ -54,7 +54,7 @@ public class Pathfinder : MonoBehaviour {
     /// </summary>
     /// <param name="targetGameObject">the game object to move to</param>
     public void MoveToNextOutput() {
-        this.SelectedComponent = GetNextOutput();
+        // this.SelectedComponent = GetNextOutput();
         Debug.Log("New Place: " + this.SelectedComponent.name);
     }
 

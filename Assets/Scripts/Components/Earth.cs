@@ -16,35 +16,31 @@ public class Earth : Component {
 
     private float documentAttackProb = 0.3f;
 
+    private IEnumerator coroutine;
+
     private void Start() {
         // Some initialization stuff
         Name = "Earth";
-        StartCoroutine(StartCountdown());
+        Debug.Log("Start Shitty script...");
+        this.coroutine = StartSpawningAttacks(5.0f);
+        StartCoroutine(this.coroutine);
     }
 
-    private IEnumerator StartCountdown() {
-        Debug.Log("In Countdown...");
-        // Default countdown time
-        yield return new WaitForSeconds(5.0f);
-        // Called after countdown of 10s (Lets user prepare himself)
-        //StartCoroutine(StartSpawningAttacks());
-        StartSpawningAttacks();
-    }
-
-    private void StartSpawningAttacks() {
+    private IEnumerator StartSpawningAttacks(float time) {
         Debug.Log("Starting to spawn attacks...");
-		// TODO This loop freezes the game
+        // TODO This loop freezes the game
         // TODO Find another solution for this!!!
-        //while (false) {
-        //    Debug.Log("Waiting...");
-        //    yield return new WaitForSeconds(5);
-        //    Debug.Log("Done Waiting!");
-
-        //    // Create random attack
-        //    CreateRandomEnemy();
-        //}
+        while (true) { 
+            Debug.Log("Waiting...");
+            Debug.Log("Before: Current thread: " + System.Threading.Thread.CurrentThread);
+            CreateRandomEnemy();
+            yield return new WaitForSeconds(time);
+            Debug.Log("Done Waiting!");
+            Debug.Log("After: Current thread: " + System.Threading.Thread.CurrentThread);
+            // Create random attack
+            
+        }
         // For testing
-        CreateRandomEnemy();
     }
 
     private void CreateRandomEnemy() {
@@ -61,8 +57,8 @@ public class Earth : Component {
         //    webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
         //}
 
-        WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
-        webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        //WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
+        //webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
 
         //// If condition is true, create document attack
         //else if (randomInt == 1 && (rand) < this.documentAttackProb) {
