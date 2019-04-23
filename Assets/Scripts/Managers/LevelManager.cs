@@ -4,28 +4,10 @@ using UnityEngine;
 
 public class LevelManager : Singleton<LevelManager> {
 
-    public int currentLevel { get; set; }
-
-    private void Awake() {
-        // TODO Change this later. for now it just sets the current level manually to 1 as it is the only level available
-        this.currentLevel = 1;
-    }
-
-    private void Start() {
-        switch (this.currentLevel) {
-            case 1:
-                InitLevel1();
-                break;
-
-            default:
-                break;
-        }
-    }
-
     /// <summary>
     /// Initializes level 1 related values and information
     /// </summary>
-    public void InitLevel1() {
+    private void Start() {
         // Set the initial player currency
         GameManager.Instance.SetCurrency(1000);
         // Set the information panel title
