@@ -37,7 +37,7 @@ public class Firewall : Component, IPointerClickHandler {
         // Sets virus immune to true
         ImmuneToVirus = true;
 
-		firewallPanel = GameObject.Find(firewallPanelReference);
+		//firewallPanel = GameObject.Find(firewallPanelReference);
 
 		//if (firewallPanel == null) {
 		//	throw new System.Exception("Firewall has invalid reference to statistics panel. Please check the serialized fields.");
