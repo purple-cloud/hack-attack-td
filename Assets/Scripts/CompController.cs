@@ -42,6 +42,18 @@ namespace Defenses {
 
 		private void Start() {
 			IsPlacingStructure = false;
+			GenerateStructureInputs();
+		}
+
+		private void GenerateStructureInputs() {
+			foreach (Component comp in GameObject.FindObjectsOfType(typeof(Component))) {
+				foreach (GameObject output in comp.outputs) {
+					Component outputComp = output.GetComponent(typeof(Component)) as Component;
+					if (!outputComp.input.Contains(comp.gameObject)) {
+						outputComp.input.Add(comp.gameObject);
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -61,6 +73,7 @@ namespace Defenses {
 		/// </summary>
 		private void EnableCloneDragging() {
 			clone.GetComponent<Clone>().isDragging = true;
+			clone.transform.GetChild(0).GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
 		}
 
 		/// <summary>
@@ -80,36 +93,37 @@ namespace Defenses {
 		/// </summary>
 		public void FinishPlacement() {
 			try {
-                // If there is a collision between component and the new structure, cancel placement
-                if (CollisionDetected) {
-                    Debug.Log("You cannot place components over each other.");
-                    CollisionDetected = false;
-                    CancelPlacement();
-                    return;
-                }
-                
-                newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
-                newStructure.transform.position = clone.transform.position;
-                
-                //TODO Unity is on some serious drugs. Please make sure that the child component in the defense prefab automatically instantaites the child (Image) object.
-                GameObject img = Instantiate(clone.GetComponent<Clone>().defensePrefab.transform.GetChild(0).gameObject) as GameObject;
-                img.transform.position = clone.transform.position;
-                img.transform.SetParent(newStructure.transform);
-                newStructure.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
-                // End maniac code
+				// If there is a collision between component and the new structure, cancel placement
+				if (CollisionDetected) {
+					Debug.Log("You cannot place components over each other.");
+					CollisionDetected = false;
+					CancelPlacement();
+					return;
+				}
 
-                // TODO Fill in more components when added to action-bar
-                if (this.newStructure.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
-                    Debug.Log("Component is Firewall: Subtracting 100 from currency");
-                    GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
-                }
+				newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
+				newStructure.name = clone.GetComponent<Clone>().defensePrefab.name;
+				newStructure.transform.position = clone.transform.position;
 
-                SetInputOutput(targetStructure, newStructure);
-                Destroy(clone);
-                NullifyPlacementObejcts();
-            } catch (Exception) {
-                Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
-            }
+				//TODO Unity is on some serious drugs. Please make sure that the child component in the defense prefab automatically instantaites the child (Image) object.
+				GameObject img = Instantiate(clone.GetComponent<Clone>().defensePrefab.transform.GetChild(0).gameObject) as GameObject;
+				img.transform.position = clone.transform.position;
+				img.transform.SetParent(newStructure.transform);
+				newStructure.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+				// End maniac code
+
+				// TODO Fill in more components when added to action-bar
+				if (this.newStructure.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
+					Debug.Log("Component is Firewall: Subtracting 100 from currency");
+					GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
+				}
+
+				SetInputOutput(targetStructure, newStructure);
+				Destroy(clone);
+				NullifyPlacementObejcts();
+			} catch (Exception) {
+				Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
+			}
 		}
 
 		/// <summary>
@@ -121,7 +135,7 @@ namespace Defenses {
 			Component inputCore = input.GetComponent(typeof(Component)) as Component;
 			Component outputCore = output.GetComponent(typeof(Component)) as Component;
 
-			inputCore.outputs.Add(output);
+			inputCore.AddOutput(output.gameObject);
 			outputCore.input.Add(input);
 		}
 
