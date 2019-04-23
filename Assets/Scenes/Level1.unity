@@ -2392,7 +2392,7 @@ RectTransform:
   m_Children:
   - {fileID: 1958484334}
   - {fileID: 1006079859}
-  - {fileID: 2119923612}
+  - {fileID: 1411500701}
   - {fileID: 675254440}
   - {fileID: 115313532}
   m_Father: {fileID: 1733406514}
@@ -2971,6 +2971,11 @@ PrefabInstance:
     - target: {fileID: 2285183361532126424, guid: a666608d8974c0443a6ab329ab799f96,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6912742713897239522, guid: a666608d8974c0443a6ab329ab799f96,
+        type: 3}
+      propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4197,6 +4202,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1339873099}
   m_CullTransparentMesh: 0
+--- !u!224 &1411500701 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6912742713897239522, guid: a666608d8974c0443a6ab329ab799f96,
+    type: 3}
+  m_PrefabInstance: {fileID: 933724883}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1425205906
 GameObject:
   m_ObjectHideFlags: 0
@@ -6603,7 +6614,7 @@ PrefabInstance:
         type: 3}
       propertyPath: defensePrefab
       value: 
-      objectReference: {fileID: 2285183361532126428, guid: a666608d8974c0443a6ab329ab799f96,
+      objectReference: {fileID: 6912742713897239523, guid: a666608d8974c0443a6ab329ab799f96,
         type: 3}
     - target: {fileID: 6105995330362867441, guid: 77c0193ab43411b418849ede39ff102f,
         type: 3}
@@ -6977,12 +6988,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!224 &2119923612 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2285183361532126429, guid: a666608d8974c0443a6ab329ab799f96,
-    type: 3}
-  m_PrefabInstance: {fileID: 933724883}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2128353965
 GameObject:
   m_ObjectHideFlags: 0
@@ -7504,6 +7509,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
         type: 3}
+      propertyPath: outputObjectName.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
+        type: 3}
+      propertyPath: input.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
+        type: 3}
+      propertyPath: outputs.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
+        type: 3}
       propertyPath: initialGameObject
       value: 
       objectReference: {fileID: 1006079858}
@@ -7519,5 +7539,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4569841161843824618, guid: 123bc389e8d7e264e90abc4bb53914fd,
         type: 3}
+    - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
+        type: 3}
+      propertyPath: outputObjectName.Array.data[0]
+      value: Firewall
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 020fc6827cda52f45b44ff66f37ff4fd, type: 3}

@@ -16,7 +16,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	[SerializeField]
 	private string[] outputObjectName;
 
-	// TODO Remove flag BEFORE push
 	//[HideInInspector]
 	public List<GameObject> input;
 
@@ -152,22 +151,18 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	private void Awake() {
 		input = new List<GameObject>();
 
+		foreach (string outputString in outputObjectName) {
+			GameObject obj = GameObject.Find(outputString);
+			if (obj != null) {
+				outputs.Add(obj);
+			}
+		}
+
 		if (gameObject.GetComponent<LineHandler>() == null) {
 			gameObject.AddComponent<LineHandler>();
 		}
 
 		LineHandler lineHandler = gameObject.GetComponent<LineHandler>();
-
-		foreach (string outputString in outputObjectName) {
-			GameObject obj = GameObject.Find(outputString);
-			if (obj != null) {
-				if (!outputs.Contains(obj)) {
-					outputs.Add(obj);
-					gameObject.GetComponent<LineHandler>().Add(obj);
-				}
-			}
-		}
-
 		foreach (GameObject output in outputs) {
 			lineHandler.AddList(output);
 		}
@@ -317,10 +312,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		if (!outputs.Contains(obj)) {
 			outputs.Add(obj);
 			gameObject.GetComponent<LineHandler>().Add(obj);
-
-			if (!(obj.GetComponent(typeof(Component)) as Component).outputs.Contains(gameObject)) {
-				(obj.GetComponent(typeof(Component)) as Component).AddOutput(gameObject);
-			}
 		}
 	}
 
@@ -358,11 +349,24 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// </summary>
 	/// <returns>All output components</returns>
 	public Component[] GetOutputComponents() {
-		return GetOutputComponents(typeof(Component));
+        List<Component> outputComps = new List<Component>();
+        foreach (GameObject obj in outputs) {
+            outputComps.Add(obj.GetComponent(typeof(Component)) as Component);
+        }
+        return outputComps.ToArray();
 	}
-	#endregion
 
-	public Image GetCanvasImage() {
+    #endregion
+
+    public Component[] GetInputComponents() {
+        List<Component> inputComps = new List<Component>();
+        foreach (GameObject obj in input) {
+            inputComps.Add(obj.GetComponent(typeof(Component)) as Component);
+        }
+        return inputComps.ToArray();
+    }
+
+    public Image GetCanvasImage() {
         return this.canvasImage;
     }
 

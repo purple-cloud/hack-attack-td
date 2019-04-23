@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DocumentAttack : Pathfinder {
+public class DocumentAttack : GenericAttack {
 
-    private bool foundTarget = false;
+    private Component document;
 
-    private bool stopScript = false;
+    private IEnumerator coroutine;
 
     public DocumentAttack(Component initialComponent) : base(initialComponent) {
 
@@ -17,35 +17,25 @@ public class DocumentAttack : Pathfinder {
 
     public void Run(Component initialComponent) {
         Init(initialComponent);
-        FindAttackableGameObject();
+        AttackDocument(FindAttackableGameObject(typeof(Document)));
     }
 
-    /// <summary>
-    /// Finds a game object to attack
-    /// </summary>
-    private void FindAttackableGameObject() {
-        while (!this.foundTarget && this.stopScript == false) {
-            if (ScanComponent(SelectedComponent)) {
-                this.foundTarget = true;
-            } else {
-                MoveToNextOutput();
-            }
-        }
-        if (this.stopScript == false) {
-            StartCoroutine(InitializeDownload());
-        }
+    private void AttackDocument(Component component) {
+        this.document = component;
+        this.coroutine = InitializeDownload();
+        StartCoroutine(this.coroutine);
     }
 
     private IEnumerator InitializeDownload() {
-        yield return new WaitForSeconds(SelectedComponent.Encryption);
+        yield return new WaitForSeconds(this.document.Encryption);
         DownloadDocument();
     }
 
     private void DownloadDocument() {
         // TODO add some condition to prevent download (defensive mechanism) also check document encryption level maybe?
         Debug.Log("Downloading Document Complete...");
-        SelectedComponent.Status = false;
-        SelectedComponent.Locked = true;
+        this.document.Status = false;
+        this.document.Locked = true;
         // TODO Change image color to be red
         //Image image = SelectedComponent.GetComponent<Image>();
         //image.GetComponent<Image>().color = Color.red;
@@ -63,25 +53,4 @@ public class DocumentAttack : Pathfinder {
         // TODO Demand ransom from user (Use popup?)
     }
 
-    /// <summary>
-    /// deletes this attack object
-    /// </summary>
-    private void DeleteAttack() {
-        Debug.Log("Deleting attack..");
-        this.stopScript = true;
-        Destroy(this);
-    }
-
-    /// <summary>
-    /// Scans the specified component
-    /// </summary>
-    /// <param name="componentToScan"></param>
-    /// <returns>true if document component is found and false if not</returns>
-    private bool ScanComponent(Component componentToScan) {
-       if (componentToScan.GetComponent(typeof(Component)).GetType() == typeof(Document)) {
-            return true;
-       } else {
-            return false;
-        }
-    }
 }
