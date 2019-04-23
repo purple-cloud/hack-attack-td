@@ -27,18 +27,24 @@ public class Earth : Component {
         // Default countdown time
         yield return new WaitForSeconds(5.0f);
         // Called after countdown of 10s (Lets user prepare himself)
-        StartCoroutine(StartSpawningAttacks());
+        //StartCoroutine(StartSpawningAttacks());
+        StartSpawningAttacks();
     }
 
-    private IEnumerator StartSpawningAttacks() {
+    private void StartSpawningAttacks() {
         Debug.Log("Starting to spawn attacks...");
 		// TODO This loop freezes the game
-        while (false) {
-            yield return new WaitForSeconds(5.0f);
-            // Create random attack
-            CreateRandomEnemy();
-        }
+        // TODO Find another solution for this!!!
+        //while (false) {
+        //    Debug.Log("Waiting...");
+        //    yield return new WaitForSeconds(5);
+        //    Debug.Log("Done Waiting!");
 
+        //    // Create random attack
+        //    CreateRandomEnemy();
+        //}
+        // For testing
+        CreateRandomEnemy();
     }
 
     private void CreateRandomEnemy() {
@@ -54,6 +60,10 @@ public class Earth : Component {
         //    WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
         //    webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
         //}
+
+        WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
+        webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+
         //// If condition is true, create document attack
         //else if (randomInt == 1 && (rand) < this.documentAttackProb) {
         //    Debug.Log("Creating DocumentAttack...");

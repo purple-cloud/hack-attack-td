@@ -20,7 +20,7 @@ public class WebAttack : GenericAttack {
 
     public void Run(Component initialComponent) {
         Init(initialComponent);
-        AttackComponent(FindAttackableGameObject((Component) GetComponent(typeof(Computer))));
+        AttackComponent(FindAttackableGameObject(typeof(Computer)));
     }
 
     private void AttackComponent(Component component) {

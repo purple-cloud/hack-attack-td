@@ -37,7 +37,7 @@ public class GenericAttack : Pathfinder {
     /// </summary>
     /// <param name="componentToScan"></param>
     /// <returns>true if computer component is found and false if not</returns>
-    private bool ScanComponent(Component componentToScan, Component componentToFind) {
+    private bool ScanComponent(Component componentToScan, System.Type componentToFind) {
         bool componentFound = false;
         try {
             if (componentToScan.GetType() == componentToFind.GetType()) {
@@ -75,7 +75,7 @@ public class GenericAttack : Pathfinder {
     /// <summary>
     /// Finds a game object to attack
     /// </summary>
-    public Component FindAttackableGameObject(Component component) {
+    public Component FindAttackableGameObject(System.Type component) {
         Component foundComponent = null;
         try {
             while (!this.isAttackable) {

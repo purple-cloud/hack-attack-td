@@ -7504,6 +7504,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
         type: 3}
+      propertyPath: outputObjectName.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
+        type: 3}
       propertyPath: initialGameObject
       value: 
       objectReference: {fileID: 1006079858}
