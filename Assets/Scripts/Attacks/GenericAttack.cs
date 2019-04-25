@@ -25,13 +25,20 @@ public class GenericAttack : Pathfinder {
     /// </summary>
     public Component FindAttackableGameObject(System.Type component) {
         Component foundComponent = null;
+        int maxMoves = 10;
         try {
             while (this.isAttackable != true) {
                 if (ScanComponent(SelectedComponent, component)) {
                     this.isAttackable = true;
                     foundComponent = SelectedComponent;
                 } else {
-                    MoveToNextOutput();
+                    if (maxMoves <= 0) {
+                        Debug.Log("Couldnt find target component");
+                        DeleteAttack();
+                    } else {
+                        maxMoves--;
+                        MoveToNextOutput();
+                    }
                 }
             }
         } catch (NullReferenceException e) {
@@ -53,17 +60,17 @@ public class GenericAttack : Pathfinder {
                 componentFound = true;
             } else if (componentToScan.GetType() == typeof(Firewall)) {
                 //TODO Change this check to find the status of port in real firewall script (Wait for liban to finish firewall)
-                Firewall firewall = (Firewall) componentToScan;
-                bool portStatus = firewall.GetPort(this.port).IsActive;
-                Debug.Log("Selected component is a firewall, port status: " + portStatus);
-                if (!portStatus) {
-                    if (componentToScan.GetType() == componentToFind.GetType()) {
-                        componentFound = true;
-                    }
-                } else {
-                    componentFound = false;
-                    DeleteAttack();
-                }
+                //Firewall firewall = (Firewall) componentToScan;
+                //bool portStatus = firewall.GetPort(this.port).IsActive;
+                //Debug.Log("Selected component is a firewall, port status: " + portStatus);
+                //if (!portStatus) {
+                //    if (componentToScan.GetType() == componentToFind.GetType()) {
+                //        componentFound = true;
+                //    }
+                //} else {
+                //    componentFound = false;
+                //    DeleteAttack();
+                //}
             } else if (componentToScan.GetType() == typeof(Document)) {
                 componentFound = true;
             } 
