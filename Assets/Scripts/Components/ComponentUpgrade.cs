@@ -15,6 +15,16 @@ public class ComponentUpgrade {
     public int Price { get; private set; }
 
     /// <summary>
+    /// Getter & setter for the component backup price
+    /// </summary>
+    public int BackupPrice { get; set; }
+
+    /// <summary>
+    /// Getter & setter for the component backup restore price
+    /// </summary>
+    public int BackupRestorePrice { get; set; }
+
+    /// <summary>
     /// Generates getter and private setter for upgrade durability
     /// </summary>
     public float Durability { get; private set; }
@@ -44,12 +54,14 @@ public class ComponentUpgrade {
     /// </summary>
     /// <param name="price">price of the new component upgrade</param>
     /// <param name="sprite">sprite of the new component upgrade</param>
-    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal) {
+    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal, int backupPrice, int backupRestorePrice) {
         this.Name = name;
         this.Price = price;
         this.Sprite = sprite;
         this.RepairPrice = repairPrice;
         this.SellValue = sellVal;
+        this.BackupPrice = backupPrice;
+        this.BackupRestorePrice = backupRestorePrice;
     }
 
     /// <summary>
@@ -58,13 +70,15 @@ public class ComponentUpgrade {
     /// <param name="price">price of the new computer upgrade</param>
     /// <param name="durability">durability of the new computer upgrade</param>
     /// <param name="sprite">sprite of the new computer upgrade</param>
-    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal, float durability) {
+    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal, float durability, int backupPrice, int backupRestorePrice) {
         this.Name = name;
         this.Price = price;
         this.Sprite = sprite;
         this.RepairPrice = repairPrice;
         this.SellValue = sellVal;
         this.Durability = durability;
+        this.BackupPrice = backupPrice;
+        this.BackupRestorePrice = backupRestorePrice;
     }
 
     /// <summary>
@@ -73,11 +87,13 @@ public class ComponentUpgrade {
     /// <param name="price">price of the new computer upgrade</param>
     /// <param name="encryption">encryption of the new computer upgrade</param>
     /// <param name="sprite">sprite of the new computer upgrade</param>
-    public ComponentUpgrade(string name, int price, Sprite sprite, float encryption) {
+    public ComponentUpgrade(string name, int price, Sprite sprite, float encryption, int backupPrice, int backupRestorePrice) {
         this.Name = name;
         this.Price = price;
         this.Sprite = sprite;
         this.Encryption = encryption;
+        this.BackupPrice = backupPrice;
+        this.BackupRestorePrice = backupRestorePrice;
     }
 
 }
