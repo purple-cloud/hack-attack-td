@@ -45,7 +45,7 @@ public class BackupManager : Singleton<BackupManager> {
     }
 
     public void OpenPanel(Vector3 itemSlotPos) {
-        this.backupPanel.transform.position = new Vector3(itemSlotPos.x, (itemSlotPos.y + 50), 0);
+        this.backupPanel.transform.position = new Vector3(itemSlotPos.x, (itemSlotPos.y + 115), 0);
         this.backupPanel.SetActive(!(this.backupPanel.activeSelf));
     }
 
@@ -83,6 +83,7 @@ public class BackupManager : Singleton<BackupManager> {
                 Destroy(objectToReplace);
                 // Set the selected backup in the object in canvas layer
                 selectedBackup.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+                selectedBackup.transform.localScale = new Vector3(1f, 1f, 1f);
                 // Reset values
                 ResetAll();
             }
@@ -167,6 +168,8 @@ public class BackupManager : Singleton<BackupManager> {
             ((BackupBarItemSlot) backupSlot.GetComponent(typeof(BackupBarItemSlot))).backuppedComponent = backupObject;
             // Set the backup slot image to be the same of backupObject
             ((BackupBarItemSlot) backupSlot.GetComponent(typeof(BackupBarItemSlot))).canvasImage.sprite = ((Component) backupObject.GetComponent(typeof(Component))).Sprite;
+            // Set the scaling of the backupslot
+            backupSlot.transform.localScale = new Vector3(1f, 1f, 1f);
         } catch (Exception) {
             Debug.LogError("ERROR: BackupSelection reference not found. Please Check project structure.");
             //TODO Make something to notify the user
