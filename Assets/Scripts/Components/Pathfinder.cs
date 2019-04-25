@@ -37,17 +37,19 @@ public class Pathfinder : MonoBehaviour {
     /// </returns>
     public Component GetNextOutput() {
         Component selectedOutput = null;
+        this.listOfAdjacentGameObjects.Clear();
         Debug.Log("Current Place: " + this.SelectedComponent.Name);
         // TODO Inputs & Outputs = [0] FIX THIS SHIT
-		this.listOfAdjacentGameObjects.AddRange(SelectedComponent.GetInputComponents());
-
-        if (this.listOfAdjacentGameObjects.Count == 0) {
-            Destroy(this.gameObject);
+        this.listOfAdjacentGameObjects.AddRange(SelectedComponent.GetInputComponents());
+        foreach (Component comp in SelectedComponent.GetOutputComponents()) {
+            this.listOfAdjacentGameObjects.Add(comp);
         }
-
+        //this.listOfAdjacentGameObjects.AddRange(SelectedComponent.GetOutputComponents());
         // See if list containing all outputs is bigger then 1
         if (this.listOfAdjacentGameObjects.Count > 1) {
-            selectedOutput = this.listOfAdjacentGameObjects[Random.Range(0, this.listOfAdjacentGameObjects.Count - 1)];
+            selectedOutput = this.listOfAdjacentGameObjects[UnityEngine.Random.Range(0, this.listOfAdjacentGameObjects.Count - 1)];
+        } else if (this.listOfAdjacentGameObjects.Count == 0) {
+            Destroy(this.gameObject);
         } else {
             selectedOutput = this.listOfAdjacentGameObjects[0];
         }

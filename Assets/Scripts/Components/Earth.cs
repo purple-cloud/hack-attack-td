@@ -30,8 +30,8 @@ public class Earth : Component {
         Debug.Log("Starting to spawn attacks...");
         // TODO This loop freezes the game
         // TODO Find another solution for this!!!
-        yield return new WaitForSeconds(time);
-        while (false) { 
+        //yield return new WaitForSeconds(time);
+        while (true) { 
             Debug.Log("Waiting...");
             Debug.Log("Before: Current thread: " + System.Threading.Thread.CurrentThread);
             CreateRandomEnemy();
@@ -42,13 +42,13 @@ public class Earth : Component {
             
         }
         // For testing
-        CreateRandomEnemy();
+        //CreateRandomEnemy();
     }
 
     private void CreateRandomEnemy() {
         // TODO Set a condition which stops creation of enemy when true
         Debug.Log("Spawning random enemy");
-        int randomInt = 0; //UnityEngine.Random.Range(0, 2);
+        int randomInt = UnityEngine.Random.Range(0, 2);
         float rand = UnityEngine.Random.Range(0f, 1.0f);
         Debug.Log("randomInt: " + randomInt);
         Debug.Log("rand: " + rand);

@@ -82,6 +82,10 @@ public class BackupManager : Singleton<BackupManager> {
 
 			// Set the selected backup position to that of the current component position
 			selectedBackup.transform.position = objectToReplace.transform.position;
+      
+      // Subtract the cost of restoring backup from currency 
+      // TODO Needs adjustments, maybe create an own BackupRestore property in Component?
+      GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - ((Component) objectToReplace.GetComponent(typeof(Component))).BackupRestorePrice);
 
 			// Set the selected backup in the object in canvas layer
 			selectedBackup.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
@@ -151,6 +155,9 @@ public class BackupManager : Singleton<BackupManager> {
 
 			clone.GetComponent<LineHandler>().ResetHandler();
 			AddBackupToListOfBackups(clone);
+            // Subtract the cost of setting up backup from currency
+            // TODO Needs adjustments, maybe create an own BackupPrice property in Component?
+            GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - ((Component) gameObject.GetComponent(typeof(Component))).BackupPrice);
         } catch (Exception) {
             Debug.LogError("ERROR: ListOfBackuppedGameObjects reference not found. Please check project structure.");
             //TODO Make something to notify the user

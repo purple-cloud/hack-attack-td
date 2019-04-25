@@ -72,6 +72,16 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// Getter & setter for the component initial price
     /// </summary>
     public int InitialPrice { get; set; }
+
+    /// <summary>
+    /// Getter & setter for the component backup price
+    /// </summary>
+    public int BackupPrice { get; set; }
+
+    /// <summary>
+    /// Getter & setter for the component backup restore price
+    /// </summary>
+    public int BackupRestorePrice { get; set; }
   
     /// <summary>
     /// Getter & setter for the component durability
@@ -223,6 +233,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                 this.SellValue = NextUpgrade.SellValue;
                 this.Encryption = NextUpgrade.Encryption;
                 this.Durability = NextUpgrade.Durability;
+                this.BackupPrice = NextUpgrade.BackupPrice;
+                this.BackupRestorePrice = NextUpgrade.BackupRestorePrice;
 
                 // Assign the value to the upgrade button
                 Debug.Log("this.Price: " + Price);
