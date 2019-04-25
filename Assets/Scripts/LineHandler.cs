@@ -78,7 +78,6 @@ public class LineHandler : MonoBehaviour {
 	}
 
 	public void Add(GameObject obj) {
-		Debug.Log("+");
 		// Ensures that everything is set up
 		Init();
 
