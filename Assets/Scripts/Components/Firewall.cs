@@ -23,8 +23,8 @@ public class Firewall : Component, IPointerClickHandler {
 
     public void Start() {
         Upgrades = new ComponentUpgrade[] {
-            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100),
-            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100)
+            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200),
+            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200)
 		};
         Name = "Shitty Firewall";
         Status = false;
@@ -37,14 +37,17 @@ public class Firewall : Component, IPointerClickHandler {
         // Sets virus immune to true
         ImmuneToVirus = true;
 
-		//firewallPanel = GameObject.Find(firewallPanelReference);
+        BackupPrice = 50;
+        BackupRestorePrice = 100;
 
-		//if (firewallPanel == null) {
-		//	throw new System.Exception("Firewall has invalid reference to statistics panel. Please check the serialized fields.");
-		//}
+        //firewallPanel = GameObject.Find(firewallPanelReference);
 
-		//CreateGameObjects();
-	}
+        //if (firewallPanel == null) {
+        //	throw new System.Exception("Firewall has invalid reference to statistics panel. Please check the serialized fields.");
+        //}
+
+        //CreateGameObjects();
+    }
 
 	/// <summary>
 	/// Instansiates and adjusts the firewall port statuses on the firewall panel.
