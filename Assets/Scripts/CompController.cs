@@ -45,12 +45,14 @@ namespace Defenses {
 			GenerateStructureInputs();
 		}
 
-		private void GenerateStructureInputs() {
+		public void GenerateStructureInputs() {
 			foreach (Component comp in GameObject.FindObjectsOfType(typeof(Component))) {
-				foreach (GameObject output in comp.outputs) {
-					Component outputComp = output.GetComponent(typeof(Component)) as Component;
-					if (!outputComp.input.Contains(comp.gameObject)) {
-						outputComp.input.Add(comp.gameObject);
+				if (comp.outputs != null) {
+					foreach (GameObject output in comp.outputs) {
+						Component outputComp = output.GetComponent(typeof(Component)) as Component;
+						if (!outputComp.input.Contains(comp.gameObject)) {
+							outputComp.input.Add(comp.gameObject);
+						}
 					}
 				}
 			}
@@ -138,6 +140,16 @@ namespace Defenses {
 
 			inputCore.AddOutput(output.gameObject);
 			outputCore.input.Add(input);
+		}
+
+		/// <summary>
+		/// Connects two structures with each other.
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="output"></param>
+		public void SetInputOutput(Component input, Component output) {
+			input.AddOutput(output.gameObject);
+			output.input.Add(input.gameObject);
 		}
 
 		/// <summary>

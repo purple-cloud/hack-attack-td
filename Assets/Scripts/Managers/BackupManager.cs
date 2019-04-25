@@ -55,51 +55,58 @@ public class BackupManager : Singleton<BackupManager> {
     /// <param name="selectedBackup">selected backup component</param>
     /// <param name="objectToReplace">component to be replaced</param>
     public void ReplaceComponent(GameObject selectedBackup, GameObject objectToReplace) {
-        try {
-            Defenses.CompController.Instance.HighlightAllStructures(false);
-            if (this.BackupComponentSelected) {
-                // Get the type of the object to replace
-                System.Type type = ((Component) objectToReplace.GetComponent(typeof(Component))).GetType();
-                // Get input and output fields of the object to replace
-                System.Reflection.FieldInfo[] fields = type.GetFields();
-                // Add the input and output fields extracted above into the backup to be placed
-                // TODO Liban, kan dette fjernes nå med tanke på foreach løkken under?
-                // TODO Causes Exception that crashes things
-                foreach (System.Reflection.FieldInfo field in fields) {
-                    // Add inputs
-                    field.SetValue(((Component) selectedBackup.GetComponent(typeof(Component))).input, field.GetValue(((Component) objectToReplace.GetComponent(typeof(Component))).input));
-                    // Add outputs
-                    field.SetValue(((Component) selectedBackup.GetComponent(typeof(Component))).outputs, field.GetValue(((Component) objectToReplace.GetComponent(typeof(Component))).outputs));
-                }
+		Defenses.CompController.Instance.HighlightAllStructures(false);
+		if (this.BackupComponentSelected) {
+			// Get the type of the object to replace
+			System.Type type = ((Component) objectToReplace.GetComponent(typeof(Component))).GetType();
+			// Get input and output fields of the object to replace
+			System.Reflection.FieldInfo[] fields = type.GetFields();
+			// Add the input and output fields extracted above into the backup to be placed
+			// TODO Liban, kan dette fjernes nå med tanke på foreach løkken under?
+			// TODO Causes Exception that crashes things
 
-				Debug.Log((objectToReplace.GetComponent(typeof(Component)) as Component).input.Count);
+			Debug.Log((objectToReplace.GetComponent(typeof(Component)) as Component).input.Count);
 
-                // Add the selected backup to the canvas where the object to replace was
-                selectedBackup = Instantiate(selectedBackup);
-                // Set the selected backup position to that of the current component position
-                selectedBackup.transform.position = objectToReplace.transform.position;
+			// Add the selected backup to the canvas where the object to replace was
+			selectedBackup = Instantiate(selectedBackup);
 
-                // Set the selected backup in the object in canvas layer
-                selectedBackup.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
-                selectedBackup.transform.localScale = new Vector3(1f, 1f, 1f);
+			Component objectToReplaceComp = objectToReplace.GetComponent(typeof(Component)) as Component;
+			Component selectedBackupComp = selectedBackup.GetComponent(typeof(Component)) as Component;
 
-                // Add the inputs and outputs to the new placed backup component 
-                foreach (GameObject obj in (objectToReplace.GetComponent(typeof(Component)) as Component).input) {
-                    Component objComp = obj.GetComponent(typeof(Component)) as Component;
-                    objComp.RemoveOutput(objectToReplace);
-                    objComp.AddOutput(selectedBackup);
-                }
+			selectedBackupComp.input = new List<GameObject>();
+
+			foreach (Component comp in objectToReplaceComp.GetInputComponents()) {
+				comp.RemoveOutput(objectToReplace);
+				Defenses.CompController.Instance.SetInputOutput(comp, selectedBackupComp);
+			}
+
+			selectedBackupComp.outputs = objectToReplaceComp.outputs;
+
+			Defenses.CompController.Instance.GenerateStructureInputs();
+
+			// Set the selected backup position to that of the current component position
+			selectedBackup.transform.position = objectToReplace.transform.position;
+
+			// Set the selected backup in the object in canvas layer
+			selectedBackup.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+			selectedBackup.transform.localScale = new Vector3(1f, 1f, 1f);
 
 
-                // Destroy the object to replace from canvas
-                Destroy(objectToReplace);
-                // Reset values
-                ResetAll();
-            }
-        } catch (Exception) {
-            Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
-        }
-    }
+
+			//// Add the inputs and outputs to the new placed backup component 
+			//foreach (GameObject obj in (objectToReplace.GetComponent(typeof(Component)) as Component).input) {
+			//	Component objComp = obj.GetComponent(typeof(Component)) as Component;
+			//	objComp.RemoveOutput(objectToReplace);
+			//	objComp.AddOutput(selectedBackup);
+			//}
+
+
+			// Destroy the object to replace from canvas
+			Destroy(objectToReplace);
+			// Reset values
+			ResetAll();
+		}
+	}
 
     /// <summary>
     /// Resets all values and sets all inputs and outputs
