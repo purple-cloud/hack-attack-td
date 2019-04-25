@@ -304,27 +304,49 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		return outputs.FindAll(obj => obj.GetComponent(typeof(Component)).GetType() == type).ToArray();
 	}
 
-	/// <summary>
-	/// Adds a new output to this structure.
-	/// </summary>
-	/// <param name="obj"></param>
-	public void AddOutput(GameObject obj) {
-		if (!outputs.Contains(obj)) {
-			outputs.Add(obj);
-			gameObject.GetComponent<LineHandler>().Add(obj);
-		}
-	}
 
-	/// <summary>
-	/// Removes the output object from this structure if it exists.
-	/// </summary>
-	/// <param name="obj">Output object</param>
-	/// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
-	public bool RemoveOutput(GameObject obj) {
+    /// <summary>
+    /// Adds a new input to the specified structure
+    /// </summary>
+    /// <param name="obj"></param>
+    public void AddInput(GameObject obj) {
+        if (!this.input.Contains(obj)) {
+            this.input.Add(obj);
+        }
+    }
+
+    /// <summary>
+    /// Removes the input object from this structure if it exists.
+    /// </summary>
+    /// <param name="obj">Input object</param>
+    /// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
+    public bool RemoveInput(GameObject obj) {
+        if (this.input.Contains(obj)) {
+            this.input.Remove(obj);
+        }
+        return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
+    }
+
+    /// <summary>
+    /// Adds a new output to this structure.
+    /// </summary>
+    /// <param name="obj"></param>
+    public void AddOutput(GameObject obj) {
+        if (!outputs.Contains(obj)) {
+            outputs.Add(obj);
+            gameObject.GetComponent<LineHandler>().Add(obj);
+        }
+    }
+
+    /// <summary>
+    /// Removes the output object from this structure if it exists.
+    /// </summary>
+    /// <param name="obj">Output object</param>
+    /// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
+    public bool RemoveOutput(GameObject obj) {
 		if (outputs.Contains(obj)) {
 			outputs.Remove(obj);
 		}
-
 		return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
 	}
 

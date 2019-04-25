@@ -63,27 +63,36 @@ public class BackupManager : Singleton<BackupManager> {
                 // Get input and output fields of the object to replace
                 System.Reflection.FieldInfo[] fields = type.GetFields();
                 // Add the input and output fields extracted above into the backup to be placed
+                // TODO Liban, kan dette fjernes nå med tanke på foreach løkken under?
+                // TODO Causes Exception that crashes things
                 foreach (System.Reflection.FieldInfo field in fields) {
-                    field.SetValue((Component) selectedBackup.GetComponent(typeof(Component)), field.GetValue((Component) objectToReplace.GetComponent(typeof(Component))));
+                    // Add inputs
+                    field.SetValue(((Component) selectedBackup.GetComponent(typeof(Component))).input, field.GetValue(((Component) objectToReplace.GetComponent(typeof(Component))).input));
+                    // Add outputs
+                    field.SetValue(((Component) selectedBackup.GetComponent(typeof(Component))).outputs, field.GetValue(((Component) objectToReplace.GetComponent(typeof(Component))).outputs));
                 }
 
 				Debug.Log((objectToReplace.GetComponent(typeof(Component)) as Component).input.Count);
-
-				foreach (GameObject obj in (objectToReplace.GetComponent(typeof(Component)) as Component).input) {
-					Component objComp = obj.GetComponent(typeof(Component)) as Component;
-					objComp.RemoveOutput(objectToReplace);
-					objComp.AddOutput(selectedBackup);
-				}
 
                 // Add the selected backup to the canvas where the object to replace was
                 selectedBackup = Instantiate(selectedBackup);
                 // Set the selected backup position to that of the current component position
                 selectedBackup.transform.position = objectToReplace.transform.position;
-                // Destroy the object to replace from canvas
-                Destroy(objectToReplace);
+
                 // Set the selected backup in the object in canvas layer
                 selectedBackup.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
                 selectedBackup.transform.localScale = new Vector3(1f, 1f, 1f);
+
+                // Add the inputs and outputs to the new placed backup component 
+                foreach (GameObject obj in (objectToReplace.GetComponent(typeof(Component)) as Component).input) {
+                    Component objComp = obj.GetComponent(typeof(Component)) as Component;
+                    objComp.RemoveOutput(objectToReplace);
+                    objComp.AddOutput(selectedBackup);
+                }
+
+
+                // Destroy the object to replace from canvas
+                Destroy(objectToReplace);
                 // Reset values
                 ResetAll();
             }

@@ -63,8 +63,8 @@ public class Earth : Component {
         //WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
         //webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
 
-        DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
-        documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        //DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
+        //documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
 
         //// If condition is true, create document attack
         //else if (randomInt == 1 && (rand) < this.documentAttackProb) {
