@@ -113,6 +113,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	public void OnPointerUp(PointerEventData eventData) {
 		if (Defenses.CompController.Instance.IsPlacingStructure) {
 			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
+		} else if (PathConnection.Instance.IsSelectingStructure) {
+			PathConnection.Instance.ShowComponentInputOutput(this);
 		}
 		// If user is choosing to select component to backup
 		else if (BackupManager.Instance.BackupReady) {
@@ -316,40 +318,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		return outputs.FindAll(obj => obj.GetComponent(typeof(Component)).GetType() == type).ToArray();
 	}
 
-
-    /// <summary>
-    /// Adds a new input to the specified structure
-    /// </summary>
-    /// <param name="obj"></param>
-    public void AddInput(GameObject obj) {
-        if (!this.input.Contains(obj)) {
-            this.input.Add(obj);
-        }
-    }
-
-    /// <summary>
-    /// Removes the input object from this structure if it exists.
-    /// </summary>
-    /// <param name="obj">Input object</param>
-    /// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
-    public bool RemoveInput(GameObject obj) {
-        if (this.input.Contains(obj)) {
-            this.input.Remove(obj);
-        }
-        return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
-    }
-
-    /// <summary>
-    /// Adds a new output to this structure.
-    /// </summary>
-    /// <param name="obj"></param>
-    public void AddOutput(GameObject obj) {
-        if (!outputs.Contains(obj)) {
-            outputs.Add(obj);
-            gameObject.GetComponent<LineHandler>().Add(obj);
-        }
-    }
-
     /// <summary>
     /// Removes the output object from this structure if it exists.
     /// </summary>
@@ -390,9 +358,44 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         return outputComps.ToArray();
 	}
 
-    #endregion
+	#endregion
 
-    public Component[] GetInputComponents() {
+	#region INPUT
+
+	/// <summary>
+	/// Adds a new input to the specified structure
+	/// </summary>
+	/// <param name="obj"></param>
+	public void AddInput(GameObject obj) {
+		if (!this.input.Contains(obj)) {
+			this.input.Add(obj);
+		}
+	}
+
+	/// <summary>
+	/// Removes the input object from this structure if it exists.
+	/// </summary>
+	/// <param name="obj">Input object</param>
+	/// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
+	public bool RemoveInput(GameObject obj) {
+		if (this.input.Contains(obj)) {
+			this.input.Remove(obj);
+		}
+		return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
+	}
+
+	/// <summary>
+	/// Adds a new output to this structure.
+	/// </summary>
+	/// <param name="obj"></param>
+	public void AddOutput(GameObject obj) {
+		if (!outputs.Contains(obj)) {
+			outputs.Add(obj);
+			gameObject.GetComponent<LineHandler>().Add(obj);
+		}
+	}
+
+	public Component[] GetInputComponents() {
         List<Component> inputComps = new List<Component>();
         foreach (GameObject obj in input) {
             inputComps.Add(obj.GetComponent(typeof(Component)) as Component);
@@ -400,7 +403,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         return inputComps.ToArray();
     }
 
-    public Image GetCanvasImage() {
+	#endregion
+
+	public Image GetCanvasImage() {
         return this.canvasImage;
     }
 
