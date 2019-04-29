@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Defenses;
 
-public class Clone : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
+public class Clone : MonoBehaviour, IPointerDownHandler {
 	public GameObject defensePrefab;
 	public bool isDragging;
 
@@ -34,9 +34,5 @@ public class Clone : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 			// Snap the clone object to the mouse
 			gameObject.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
 		}
-	}
-
-	public void OnPointerUp(PointerEventData eventData) {
-		Debug.Log("Released mouse click on clone");
 	}
 }
