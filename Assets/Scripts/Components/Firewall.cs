@@ -40,13 +40,13 @@ public class Firewall : Component, IPointerClickHandler {
         BackupPrice = 50;
         BackupRestorePrice = 100;
 
-        //firewallPanel = GameObject.Find(firewallPanelReference);
+        firewallPanel = GameObject.Find("FirewallPanelCanvas");
 
-        //if (firewallPanel == null) {
-        //	throw new System.Exception("Firewall has invalid reference to statistics panel. Please check the serialized fields.");
-        //}
+        if (firewallPanel == null) {
+            throw new System.Exception("Firewall has invalid reference to statistics panel. Please check the serialized fields.");
+        }
 
-        //CreateGameObjects();
+        CreateGameObjects();
     }
 
 	/// <summary>

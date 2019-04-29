@@ -34,8 +34,8 @@ public class Earth : Component {
         while (true) { 
             Debug.Log("Waiting...");
             Debug.Log("Before: Current thread: " + System.Threading.Thread.CurrentThread);
-            CreateRandomEnemy();
             yield return new WaitForSeconds(time);
+            CreateRandomEnemy();
             Debug.Log("Done Waiting!");
             Debug.Log("After: Current thread: " + System.Threading.Thread.CurrentThread);
             // Create random attack
@@ -60,8 +60,8 @@ public class Earth : Component {
         //}
 
         // TODO Only works if it finds a Computer component. Will use up computer resources and crash unity if not
-        //WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
-        //webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
+        webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
 
         //DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
         //documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
