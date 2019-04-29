@@ -10,11 +10,11 @@ public class WebAttack : GenericAttack {
 
     public void Run(Component initialComponent) {
         Init(initialComponent);
-        AttackComponent(FindAttackableGameObject(typeof(Computer)));
+        AttackComponent(FindAttackableGameObject(typeof(Virus)));
     }
 
     private void AttackComponent(Component component) {
-        if (component.GetType() == typeof(Computer)) {
+        if (component.GetType() == typeof(Virus)) {
             // Each attack does 10 dmg to the durability
             component.Durability -= 10;
             Debug.Log("Durability left: " + SelectedComponent.Durability);
