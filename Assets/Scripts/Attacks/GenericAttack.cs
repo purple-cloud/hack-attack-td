@@ -57,9 +57,11 @@ public class GenericAttack : Pathfinder {
             } else if (componentToScan.GetType() == typeof(Firewall)) {
                 //TODO Change this check to find the status of port in real firewall script (Wait for liban to finish firewall)
                 Firewall firewall = (Firewall) componentToScan;
-                bool portStatus = firewall.GetPort(port).IsActive;
+                FirewallPort firewallPort = firewall.GetPort(port);
+                firewallPort.Activity = GetAttackName();
+                bool portStatus = firewallPort.IsActive;
                 Debug.Log("Selected component is a firewall, port status: " + portStatus);
-                if (portStatus) {
+                if (false == portStatus) {
                     if (componentToScan.GetType() == componentToFind.GetType()) {
                         componentFound = true;
                     }
@@ -86,14 +88,6 @@ public class GenericAttack : Pathfinder {
     public void DeleteAttack() {
         Debug.Log("Deleting attack..");
         Destroy(this.gameObject);
-    }
-
-    /// <summary>
-    /// Returns the name of the attack. Could be domain, location etc.
-    /// </summary>
-    /// <returns>Returns the name of the attack</returns>
-    public string GenericAttackName() {
-        return this.name;
     }
 
 }

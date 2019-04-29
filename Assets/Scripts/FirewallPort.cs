@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 [System.Serializable]
 public class FirewallPort : MonoBehaviour {
+
 	public int Port { get; set; }
 	public bool IsActive { get; set; }
 	public string Activity { get; set; }
@@ -37,8 +38,6 @@ public class FirewallPort : MonoBehaviour {
 		Port = port;
 		IsActive = isActive;
 		Activity = activity;
-
-		UpdateGUI();
 	}
 
 	/// <summary>
@@ -46,21 +45,11 @@ public class FirewallPort : MonoBehaviour {
 	/// </summary>
 	private void OnButtonPress() {
 		IsActive = !IsActive;
-		UpdateGUI();
+        FirewallManager.Instance.UpdateStatus(this);
 	}
 
-	/// <summary>
-	/// Keeps the GUI up to date with the states.
-	/// </summary>
-	public void UpdateGUI() {
-		//This check prevents a NullPointer despite this field being defined in Start()
-		if (btnStatus == null) {
-			btnStatus = gameObject.transform.Find("Status").GetComponent<Button>();
-		}
 
-		gameObject.transform.Find("Port").GetComponent<Text>().text = Port.ToString();
-		btnStatus.gameObject.transform.Find("Text").GetComponent<Text>().text = (IsActive) ? "Allow" : "Disallow";
-		gameObject.transform.Find("Activity").GetComponent<Text>().text = Activity;
-		btnStatus.gameObject.GetComponent<Image>().color = (IsActive) ? Color.green : Color.red;
-	}
+    public Button GetBtn() {
+        return this.btnStatus;
+    }
 }

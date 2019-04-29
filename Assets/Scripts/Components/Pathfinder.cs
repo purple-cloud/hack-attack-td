@@ -84,4 +84,8 @@ public class Pathfinder : MonoBehaviour {
         Debug.Log("New Place: " + this.SelectedComponent.name);
     }
 
+    // TODO Flyttes til GenericAttack sammens med name og ports lists init
+    public string GetAttackName() {
+        return this.name;
+    }
 }
