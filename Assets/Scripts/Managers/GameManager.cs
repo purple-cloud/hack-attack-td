@@ -343,6 +343,10 @@ public class GameManager : Singleton<GameManager> {
         this.informationPanel.SetActive(active);
     }
 
+    public void ShowInformationPanel() {
+        this.informationPanel.SetActive(!this.informationPanel.activeSelf);
+    }
+
     /// <summary>
     /// Shows or hides the module panel
     /// depending on the input param. true for showing

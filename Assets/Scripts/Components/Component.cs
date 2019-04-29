@@ -142,6 +142,14 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 			GameManager.Instance.SelectGameObject(gameObject);
 			GameManager.Instance.UpdateComputerPanel();
 		}
+
+        // If component being clicked is of type Firewall, show firewall panel
+        if (((Component) this.gameObject.GetComponent(typeof(Component))).GetType() == typeof(Firewall)) {
+
+            // TODO call method in firewall that then calls method in firewallmanager to show panel????
+
+            FirewallManager.Instance.ShowFirewallPanel((Firewall) this.gameObject.GetComponent(typeof(Firewall)));
+        }
 	}
 
 	void OnTriggerStay2D(Collider2D col) {

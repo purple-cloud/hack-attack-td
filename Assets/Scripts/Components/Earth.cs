@@ -19,7 +19,6 @@ public class Earth : Component {
     private IEnumerator coroutine;
 
     private void Start() {
-        // Some initialization stuff
         Name = "Earth";
         // Set true when you want earth spawner to be active
         if (false) {
@@ -52,11 +51,11 @@ public class Earth : Component {
             webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
         }
         // If condition is true, create document attack
-        else if (randomInt == 1 && (rand) < this.documentAttackProb) {
-            Debug.Log("Creating DocumentAttack...");
-            DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
-            documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
-        }
+        //else if (randomInt == 1 && (rand) < this.documentAttackProb) {
+        //    Debug.Log("Creating DocumentAttack...");
+        //    DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
+        //    documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        //}
 
         // TODO Only works if it finds a Computer component. Will use up computer resources and crash unity if not
         //WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
