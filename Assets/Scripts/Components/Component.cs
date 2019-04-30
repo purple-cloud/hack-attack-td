@@ -16,10 +16,10 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	[SerializeField]
 	private string[] outputObjectName;
 
-	[HideInInspector]
+	//[HideInInspector]
 	public List<GameObject> input;
 
-	[HideInInspector]
+	//[HideInInspector]
 	public List<GameObject> outputs;
 
 	#region PROPERTIES
@@ -72,6 +72,16 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// Getter & setter for the component initial price
     /// </summary>
     public int InitialPrice { get; set; }
+
+    /// <summary>
+    /// Getter & setter for the component backup price
+    /// </summary>
+    public int BackupPrice { get; set; }
+
+    /// <summary>
+    /// Getter & setter for the component backup restore price
+    /// </summary>
+    public int BackupRestorePrice { get; set; }
   
     /// <summary>
     /// Getter & setter for the component durability
@@ -101,6 +111,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerUp(PointerEventData eventData) {
+		// When event is caught with left mouse button pressed up
 		if (Defenses.CompController.Instance.IsPlacingStructure) {
 			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
 		}
@@ -132,6 +143,14 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 			GameManager.Instance.SelectGameObject(gameObject);
 			GameManager.Instance.UpdateComputerPanel();
 		}
+
+        // If component being clicked is of type Firewall, show firewall panel
+        if (((Component) this.gameObject.GetComponent(typeof(Component))).GetType() == typeof(Firewall)) {
+
+            // TODO call method in firewall that then calls method in firewallmanager to show panel????
+
+            FirewallManager.Instance.ShowFirewallPanel((Firewall) this.gameObject.GetComponent(typeof(Firewall)));
+        }
 	}
 
 	void OnTriggerStay2D(Collider2D col) {
@@ -223,6 +242,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                 this.SellValue = NextUpgrade.SellValue;
                 this.Encryption = NextUpgrade.Encryption;
                 this.Durability = NextUpgrade.Durability;
+                this.BackupPrice = NextUpgrade.BackupPrice;
+                this.BackupRestorePrice = NextUpgrade.BackupRestorePrice;
 
                 // Assign the value to the upgrade button
                 Debug.Log("this.Price: " + Price);
@@ -304,27 +325,49 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		return outputs.FindAll(obj => obj.GetComponent(typeof(Component)).GetType() == type).ToArray();
 	}
 
-	/// <summary>
-	/// Adds a new output to this structure.
-	/// </summary>
-	/// <param name="obj"></param>
-	public void AddOutput(GameObject obj) {
-		if (!outputs.Contains(obj)) {
-			outputs.Add(obj);
-			gameObject.GetComponent<LineHandler>().Add(obj);
-		}
-	}
 
-	/// <summary>
-	/// Removes the output object from this structure if it exists.
-	/// </summary>
-	/// <param name="obj">Output object</param>
-	/// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
-	public bool RemoveOutput(GameObject obj) {
+    /// <summary>
+    /// Adds a new input to the specified structure
+    /// </summary>
+    /// <param name="obj"></param>
+    public void AddInput(GameObject obj) {
+        if (!this.input.Contains(obj)) {
+            this.input.Add(obj);
+        }
+    }
+
+    /// <summary>
+    /// Removes the input object from this structure if it exists.
+    /// </summary>
+    /// <param name="obj">Input object</param>
+    /// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
+    public bool RemoveInput(GameObject obj) {
+        if (this.input.Contains(obj)) {
+            this.input.Remove(obj);
+        }
+        return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
+    }
+
+    /// <summary>
+    /// Adds a new output to this structure.
+    /// </summary>
+    /// <param name="obj"></param>
+    public void AddOutput(GameObject obj) {
+        if (!outputs.Contains(obj)) {
+            outputs.Add(obj);
+            gameObject.GetComponent<LineHandler>().Add(obj);
+        }
+    }
+
+    /// <summary>
+    /// Removes the output object from this structure if it exists.
+    /// </summary>
+    /// <param name="obj">Output object</param>
+    /// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
+    public bool RemoveOutput(GameObject obj) {
 		if (outputs.Contains(obj)) {
 			outputs.Remove(obj);
 		}
-
 		return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
 	}
 
@@ -349,11 +392,24 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// </summary>
 	/// <returns>All output components</returns>
 	public Component[] GetOutputComponents() {
-		return GetOutputComponents(typeof(Component));
+        List<Component> outputComps = new List<Component>();
+        foreach (GameObject obj in outputs) {
+            outputComps.Add(obj.GetComponent(typeof(Component)) as Component);
+        }
+        return outputComps.ToArray();
 	}
-	#endregion
 
-	public Image GetCanvasImage() {
+    #endregion
+
+    public Component[] GetInputComponents() {
+        List<Component> inputComps = new List<Component>();
+        foreach (GameObject obj in input) {
+            inputComps.Add(obj.GetComponent(typeof(Component)) as Component);
+        }
+        return inputComps.ToArray();
+    }
+
+    public Image GetCanvasImage() {
         return this.canvasImage;
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Defenses;
 
-public class Clone : MonoBehaviour, IPointerClickHandler {
+public class Clone : MonoBehaviour, IPointerDownHandler {
 	public GameObject defensePrefab;
 	public bool isDragging;
 
@@ -19,13 +19,14 @@ public class Clone : MonoBehaviour, IPointerClickHandler {
 	/// Tell the controller that the clone is ready to be placed.
 	/// </summary>
 	/// <param name="eventData"></param>
-	public void OnPointerClick(PointerEventData eventData) {
+	public void OnPointerDown(PointerEventData eventData) {
 		CompController.Instance.FinishPlacement();
+		CompController.Instance.setNewStructureOutput = true;
 	}
 
 	void Update() {
 		// Check if escape or right mouse is clicked and if the clone is on the display
-		if (Input.GetMouseButtonUp(1) || Input.GetButtonDown("Cancel")) {
+		if (Input.GetButtonDown("Cancel")) {
 			CompController.Instance.CancelPlacement();
 		}
 

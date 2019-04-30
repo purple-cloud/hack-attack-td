@@ -12,54 +12,54 @@ public class Earth : Component {
     [SerializeField]
     private GameObject[] listOfAttacks;
 
-    private float webAttackProb = 0.85f;
-
-    private float documentAttackProb = 0.3f;
+    private IEnumerator coroutine;
 
     private void Start() {
-        // Some initialization stuff
         Name = "Earth";
-        StartCoroutine(StartCountdown());
-    }
-
-    private IEnumerator StartCountdown() {
-        Debug.Log("In Countdown...");
-        // Default countdown time
-        yield return new WaitForSeconds(5.0f);
-        // Called after countdown of 10s (Lets user prepare himself)
-        StartCoroutine(StartSpawningAttacks());
-    }
-
-    private IEnumerator StartSpawningAttacks() {
-        Debug.Log("Starting to spawn attacks...");
-		// TODO This loop freezes the game
-        while (false) {
-            yield return new WaitForSeconds(5.0f);
-            // Create random attack
-            CreateRandomEnemy();
+        // Set true when you want earth spawner to be active
+        if (false) {
+            this.coroutine = StartSpawningAttacks(5.0f);
+            StartCoroutine(this.coroutine);
         }
+    }
 
+    private IEnumerator StartSpawningAttacks(float time) {
+        Debug.Log("Starting to spawn attacks...");
+        //yield return new WaitForSeconds(time);
+        while (true) { 
+            Debug.Log("Waiting...");
+            Debug.Log("Before: Current thread: " + System.Threading.Thread.CurrentThread);
+            yield return new WaitForSeconds(time);
+            CreateRandomEnemy();
+            Debug.Log("Done Waiting!");
+            Debug.Log("After: Current thread: " + System.Threading.Thread.CurrentThread);
+        }
     }
 
     private void CreateRandomEnemy() {
-        // TODO Set a condition which stops creation of enemy when true
         Debug.Log("Spawning random enemy");
-        int randomInt = 0; //UnityEngine.Random.Range(0, 2);
+        int randomInt = UnityEngine.Random.Range(0, 2);
         float rand = UnityEngine.Random.Range(0f, 1.0f);
-        Debug.Log("randomInt: " + randomInt);
-        Debug.Log("rand: " + rand);
         // If condition is true create Web Attack
-        //if (randomInt == 0 && (rand < this.webAttackProb)) {
-        //    Debug.Log("Creating WebAttack...");
-        //    WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
-        //    webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
-        //}
-        //// If condition is true, create document attack
-        //else if (randomInt == 1 && (rand) < this.documentAttackProb) {
-        //    Debug.Log("Creating DocumentAttack...");
-        //    DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
-        //    documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
-        //}
+        if (randomInt == 0 && (rand < UserBehaviourProfile.Instance.WebAttackProb)) {
+            Debug.Log("Creating WebAttack...");
+            WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
+            webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        }
+        // If condition is true, create document attack
+        else if (randomInt == 1 && (rand) < UserBehaviourProfile.Instance.DocumentAttackProb) {
+            Debug.Log("Creating DocumentAttack...");
+            DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
+            documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        }
+
+        // TODO Only works if it finds a Computer component. Will use up computer resources and crash unity if not
+        //WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
+        //webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+
+        //DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
+        //documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+
     }
 
     /* TODO Add ransom decision consequence and variable related stuff in this script */

@@ -45,7 +45,7 @@ public class BackupManager : Singleton<BackupManager> {
     }
 
     public void OpenPanel(Vector3 itemSlotPos) {
-        this.backupPanel.transform.position = new Vector3(itemSlotPos.x, (itemSlotPos.y + 50), 0);
+        this.backupPanel.transform.position = new Vector3(itemSlotPos.x, (itemSlotPos.y + 115), 0);
         this.backupPanel.SetActive(!(this.backupPanel.activeSelf));
     }
 
@@ -55,32 +55,49 @@ public class BackupManager : Singleton<BackupManager> {
     /// <param name="selectedBackup">selected backup component</param>
     /// <param name="objectToReplace">component to be replaced</param>
     public void ReplaceComponent(GameObject selectedBackup, GameObject objectToReplace) {
-        try {
-            Defenses.CompController.Instance.HighlightAllStructures(false);
-            if (this.BackupComponentSelected) {
-                // Get the type of the object to replace
-                System.Type type = ((Component) objectToReplace.GetComponent(typeof(Component))).GetType();
-                // Get input and output fields of the object to replace
-                System.Reflection.FieldInfo[] fields = type.GetFields();
-                // Add the input and output fields extracted above into the backup to be placed
-                foreach (System.Reflection.FieldInfo field in fields) {
-                    field.SetValue((Component) selectedBackup.GetComponent(typeof(Component)), field.GetValue((Component) objectToReplace.GetComponent(typeof(Component))));
-                }
-                // Add the selected backup to the canvas where the object to replace was
-                selectedBackup = Instantiate(selectedBackup);
-                // Set the selected backup position to that of the current component position
-                selectedBackup.transform.position = objectToReplace.transform.position;
-                // Destroy the object to replace from canvas
-                Destroy(objectToReplace);
-                // Set the selected backup in the object in canvas layer
-                selectedBackup.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
-                // Reset values
-                ResetAll();
-            }
-        } catch (Exception) {
-            Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
-        }
-    }
+		Defenses.CompController.Instance.HighlightAllStructures(false);
+		if (this.BackupComponentSelected) {
+			// Add the selected backup to the canvas where the object to replace was
+			selectedBackup = Instantiate(selectedBackup);
+
+			// Store the component for both backup and the object to replace
+			Component objectToReplaceComp = objectToReplace.GetComponent(typeof(Component)) as Component;
+			Component selectedBackupComp = selectedBackup.GetComponent(typeof(Component)) as Component;
+
+			selectedBackupComp.input = new List<GameObject>();
+
+			// Insert the new outputs (from the current component's input)
+			foreach (Component comp in objectToReplaceComp.GetInputComponents()) {
+				comp.RemoveOutput(objectToReplace);
+
+				// Link selectedBackups input to selectedBackups outputs input (which is selectedOutput)
+				Defenses.CompController.Instance.SetInputOutput(comp, selectedBackupComp);
+			}
+
+			// Mirror outputs
+			selectedBackupComp.outputs = objectToReplaceComp.outputs;
+
+			// Readjust the inputs for all components
+			Defenses.CompController.Instance.GenerateStructureInputs();
+
+			// Set the selected backup position to that of the current component position
+			selectedBackup.transform.position = objectToReplace.transform.position;
+      
+      // Subtract the cost of restoring backup from currency 
+      // TODO Needs adjustments, maybe create an own BackupRestore property in Component?
+      GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - ((Component) objectToReplace.GetComponent(typeof(Component))).BackupRestorePrice);
+
+			// Set the selected backup in the object in canvas layer
+			selectedBackup.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+			selectedBackup.transform.localScale = new Vector3(1f, 1f, 1f);
+
+
+			// Destroy the object to replace from canvas
+			Destroy(objectToReplace);
+			// Reset values
+			ResetAll();
+		}
+	}
 
     /// <summary>
     /// Resets all values and sets all inputs and outputs
@@ -91,8 +108,8 @@ public class BackupManager : Singleton<BackupManager> {
         this.BackupComponentSelected = false;
         this.BackuppedComponent = null;
         foreach (GameObject obj in this.listOfBackuppedComponents) {
-            ((Component) obj.GetComponent(typeof(Component))).input = null;
-            ((Component) obj.GetComponent(typeof(Component))).outputs = null;
+            ((Component) obj.GetComponent(typeof(Component))).input = new List<GameObject>();
+            ((Component) obj.GetComponent(typeof(Component))).outputs = new List<GameObject>();
         }
     }
 
@@ -135,7 +152,12 @@ public class BackupManager : Singleton<BackupManager> {
             }
             ((Component) clone.GetComponent(typeof(Component))).input = null;
             ((Component) clone.GetComponent(typeof(Component))).outputs = null;
-            AddBackupToListOfBackups(clone);
+
+			clone.GetComponent<LineHandler>().ResetHandler();
+			AddBackupToListOfBackups(clone);
+            // Subtract the cost of setting up backup from currency
+            // TODO Needs adjustments, maybe create an own BackupPrice property in Component?
+            GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - ((Component) gameObject.GetComponent(typeof(Component))).BackupPrice);
         } catch (Exception) {
             Debug.LogError("ERROR: ListOfBackuppedGameObjects reference not found. Please check project structure.");
             //TODO Make something to notify the user
@@ -156,6 +178,8 @@ public class BackupManager : Singleton<BackupManager> {
             ((BackupBarItemSlot) backupSlot.GetComponent(typeof(BackupBarItemSlot))).backuppedComponent = backupObject;
             // Set the backup slot image to be the same of backupObject
             ((BackupBarItemSlot) backupSlot.GetComponent(typeof(BackupBarItemSlot))).canvasImage.sprite = ((Component) backupObject.GetComponent(typeof(Component))).Sprite;
+            // Set the scaling of the backupslot
+            backupSlot.transform.localScale = new Vector3(1f, 1f, 1f);
         } catch (Exception) {
             Debug.LogError("ERROR: BackupSelection reference not found. Please Check project structure.");
             //TODO Make something to notify the user

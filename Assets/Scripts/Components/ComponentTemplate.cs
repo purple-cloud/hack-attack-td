@@ -21,7 +21,7 @@ public class ComponentTemplate : Component, IPointerClickHandler {
             // Fill in the appropriate parameters 
             // (string nameOfTheUpgrade, int priceForTheUpgrade, sprite spriteOfTheUpgradedComponent, int priceToRepair, int sellValue)
             // Example shown below:
-            new ComponentUpgrade("Nice Upgrade", 1000, this.listOfSprites[0], 100, 100)
+            new ComponentUpgrade("Nice Upgrade", 1000, this.listOfSprites[0], 100, 100, 100, 100)
         };
 
         // You also need to instantiate these fields

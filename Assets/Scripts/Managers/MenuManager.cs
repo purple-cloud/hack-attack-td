@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -14,5 +15,10 @@ public class MenuManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void PlayLevel1() {
+        // Loading Level 1 scene with its build index
+        SceneManager.LoadScene(1);
     }
 }
