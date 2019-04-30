@@ -29,7 +29,7 @@ public class Firewall : Component, IPointerClickHandler {
             };
             Name = "Shitty Firewall";
             ComponentLevel = 1;
-            Status = false;
+            Status = true;
             Sellable = true;
             RepairPrice = 50;
             SellValue = 50;

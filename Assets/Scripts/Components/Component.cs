@@ -146,8 +146,10 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {
 			GameManager.Instance.DeselectGameObject();
 		} else {
-			GameManager.Instance.SelectGameObject(gameObject);
-			GameManager.Instance.UpdateComputerPanel();
+            if (((Component) this.gameObject.GetComponent(typeof(Component))).GetType() != typeof(Earth) ) {
+                GameManager.Instance.SelectGameObject(gameObject);
+                GameManager.Instance.UpdateComputerPanel();
+            }
 		}
 
         // If component being clicked is of type Firewall, show firewall panel
