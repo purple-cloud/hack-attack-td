@@ -190,10 +190,26 @@ namespace Defenses {
                 foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
                     Component comp;
                     if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
-                        //if (comp.GetType() != typeof(Earth)) {
-                        //    comp.ShowHighlight(state);
-                        //}
                         comp.ShowHighlight(state);
+                    }
+                }
+            } catch (Exception) {
+                Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
+            }
+        }
+
+        /// <summary>
+        /// Highlights all backupable components
+        /// </summary>
+        /// <param name="state">true to highlight, false to not</param>
+        public void HighlightBackupableComponents(bool state) {
+            try {
+                foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
+                    Component comp;
+                    if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
+                        if (comp.GetType() != typeof(Earth)) {
+                            comp.ShowHighlight(state);
+                        }
                     }
                 }
             } catch (Exception) {
