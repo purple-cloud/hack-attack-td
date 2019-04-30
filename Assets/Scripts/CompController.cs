@@ -176,6 +176,11 @@ namespace Defenses {
 			output.AddInput(input.gameObject);
 		}
 
+		public void RemoveInputOutput(Component inputComp, Component outputComp) {
+			inputComp.RemoveOutput(outputComp.gameObject);
+			outputComp.RemoveInput(inputComp.gameObject);
+		}
+
 		/// <summary>
 		/// Highlights all structures on canvas.
 		/// </summary>
@@ -242,16 +247,53 @@ namespace Defenses {
 			Destroy(clone);
 		}
 
-		public Component ExtractComponent(GameObject obj) {
+		/// <summary>
+		/// Extract the component from the structure without the need of type casting.
+		/// </summary>
+		/// <param name="structure">The structure to get the component from</param>
+		/// <returns>Component of structure</returns>
+		public Component ExtractComponent(GameObject structure) {
 			Component comp = null;
 
 			try {
-				comp = obj.GetComponent(typeof(Component)) as Component;
+				comp = structure.GetComponent(typeof(Component)) as Component;
 			} catch (NullReferenceException nre) {
-				Debug.LogWarning("Component not found inside gameobject. (" + obj.name + ")");
+				Debug.LogWarning("Component not found inside gameobject. (" + structure.name + ")");
 			}
 
 			return comp;
+		}
+
+
+		/// <summary>
+		/// Retrives the component of structure and sends it to the other method below that will remove it.
+		/// </summary>
+		/// <param name="structure">The structure that will be removed</param>
+		/// <seealso cref="DeleteStructure(Component)"/>
+		public void DeleteStructure(GameObject structure) {
+			Component comp = ExtractComponent(structure);
+			DeleteStructure(comp);
+		}
+
+
+		/// <summary>
+		/// Deletes the structure and unlinks paths connected to it if they exists. This prevents disruptions
+		/// on the adjacent structure(s).
+		/// </summary>
+		/// <param name="comp">The component of the structure</param>
+		public void DeleteStructure(Component comp) {
+			foreach (Component inputComp in comp.GetInputComponents()) {
+				// Accesses the input components and removes its output, 'comp'
+				inputComp.RemoveOutput(comp.gameObject);
+			}
+
+			foreach (Component outputComp in comp.GetOutputComponents()) {
+				// Accesses the output components and removes its input, 'comp'
+				outputComp.RemoveInput(comp.gameObject);
+			}
+
+			// Safe to remove 
+			Destroy(comp.gameObject);
 		}
 	}
 }

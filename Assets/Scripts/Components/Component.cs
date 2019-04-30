@@ -345,7 +345,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         if (this.input.Contains(obj)) {
             this.input.Remove(obj);
         }
-        return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
+		return !input.Contains(obj);
     }
 
     /// <summary>
