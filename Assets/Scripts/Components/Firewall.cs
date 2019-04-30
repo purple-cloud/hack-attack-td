@@ -22,27 +22,31 @@ public class Firewall : Component, IPointerClickHandler {
     private List<FirewallPort> listOfFirewallPorts;
 
     public void Start() {
-        Upgrades = new ComponentUpgrade[] {
-            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200),
-            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200)
-		};
-        Name = "Shitty Firewall";
-        Status = false;
-        Sellable = true;
-        RepairPrice = 50;
-        SellValue = 50;
-        InitialPrice = 100;
-        Price = NextUpgrade.Price;
-        Sprite = firewallSprites[0];
-        // Sets virus immune to true
-        ImmuneToVirus = true;
+        if (AlreadyInitialized == false) {
+            Upgrades = new ComponentUpgrade[] {
+                new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200),
+                new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200)
+            };
+            Name = "Shitty Firewall";
+            ComponentLevel = 1;
+            Status = false;
+            Sellable = true;
+            RepairPrice = 50;
+            SellValue = 50;
+            InitialPrice = 100;
+            Price = NextUpgrade.Price;
+            Sprite = firewallSprites[0];
+            // Sets virus immune to true
+            ImmuneToVirus = true;
+            BackupPrice = 50;
+            BackupRestorePrice = 100;
 
-        BackupPrice = 50;
-        BackupRestorePrice = 100;
+            this.listOfFirewallPorts = new List<FirewallPort>();
 
-        this.listOfFirewallPorts = new List<FirewallPort>();
+            CreateGameObjects();
 
-        CreateGameObjects();
+            AlreadyInitialized = true;
+        }
     }
 
 	/// <summary>
