@@ -58,7 +58,7 @@ public class GenericAttack : Pathfinder {
                 //TODO Change this check to find the status of port in real firewall script (Wait for liban to finish firewall)
                 Firewall firewall = (Firewall) componentToScan;
                 FirewallPort firewallPort = firewall.GetPort(port);
-                firewallPort.Activity = GetAttackName();
+                firewallPort.Activity = string.Format("<color=#FF0000>" + GetAttackName() + "</color>");
                 bool portStatus = firewallPort.IsActive;
                 Debug.Log("Selected component is a firewall, port status: " + portStatus);
                 if (false == portStatus) {

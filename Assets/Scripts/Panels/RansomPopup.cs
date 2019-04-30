@@ -50,12 +50,16 @@ public class RansomPopup : Singleton<RansomPopup> {
     public void PayRansom() {
         GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - this.ransomPrice);
         ShowRansomPanel(false);
+        if (UserBehaviourProfile.Instance.DocumentAttackProb > 0.05f) {
+            UserBehaviourProfile.Instance.DocumentAttackProb = UserBehaviourProfile.Instance.DocumentAttackProb - 0.05f;
+        }
         Debug.Log("Ransom payed");
 
     }
     
     public void DeclineRansom() {
         ShowRansomPanel(false);
+        UserBehaviourProfile.Instance.DocumentAttackProb = UserBehaviourProfile.Instance.DocumentAttackProb + 0.10f;
         Debug.Log("Ransom declined");
     }
 
