@@ -12,10 +12,6 @@ public class Earth : Component {
     [SerializeField]
     private GameObject[] listOfAttacks;
 
-    private float webAttackProb = 0.85f;
-
-    private float documentAttackProb = 0.3f;
-
     private IEnumerator coroutine;
 
     private void Start() {
@@ -45,17 +41,17 @@ public class Earth : Component {
         int randomInt = UnityEngine.Random.Range(0, 2);
         float rand = UnityEngine.Random.Range(0f, 1.0f);
         // If condition is true create Web Attack
-        if (randomInt == 0 && (rand < this.webAttackProb)) {
+        if (randomInt == 0 && (rand < UserBehaviourProfile.Instance.WebAttackProb)) {
             Debug.Log("Creating WebAttack...");
             WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
             webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
         }
         // If condition is true, create document attack
-        //else if (randomInt == 1 && (rand) < this.documentAttackProb) {
-        //    Debug.Log("Creating DocumentAttack...");
-        //    DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
-        //    documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
-        //}
+        else if (randomInt == 1 && (rand) < UserBehaviourProfile.Instance.DocumentAttackProb) {
+            Debug.Log("Creating DocumentAttack...");
+            DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
+            documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        }
 
         // TODO Only works if it finds a Computer component. Will use up computer resources and crash unity if not
         //WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
