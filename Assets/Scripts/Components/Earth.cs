@@ -3,8 +3,9 @@ using System.Timers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Earth : Component {
+public class Earth : Component, IPointerClickHandler {
 
     [SerializeField]
     private GameObject initialGameObject;
@@ -56,7 +57,7 @@ public class Earth : Component {
         // TODO Only works if it finds a Computer component. Will use up computer resources and crash unity if not
         //WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
         //webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
-
+        
         //DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
         //documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
 
