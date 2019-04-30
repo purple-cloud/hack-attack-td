@@ -264,4 +264,16 @@ public class BackupManager : Singleton<BackupManager> {
         this.backupSelectionPanel.SetActive(!this.backupSelectionPanel.activeSelf);
     }
 
+	void Update() {
+		if (Input.GetButtonDown("Cancel")) {
+			Defenses.CompController.Instance.HighlightAllStructures(false);
+
+			// Clears variables from adding backup to pool
+			selectedGameObject = null;
+			BackupReady = false;
+
+			// Clears variables from replacing component from backup pool
+			BackuppedComponent = null;
+		}
+	}
 }
