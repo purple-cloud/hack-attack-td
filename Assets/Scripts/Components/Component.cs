@@ -102,6 +102,12 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// Getter & setter for components immunity for virus
     /// </summary>
     public bool ImmuneToVirus { get; set; }
+
+    /// <summary>
+    /// Getter & setter for checking if component is already initialized
+    /// </summary>
+    public bool AlreadyInitialized { get; set; }
+
 	#endregion
 
 	#region EVENTS
@@ -185,12 +191,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		foreach (GameObject output in outputs) {
 			lineHandler.AddList(output);
 		}
-
-		this.ComponentLevel = 1;
         this.Sellable = false;
         this.InitialPrice = 0;
         // Sets immune default to false;
         ImmuneToVirus = false;
+        AlreadyInitialized = false;
 	}
 
     /// <summary>
