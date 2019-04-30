@@ -40,7 +40,7 @@ public class BackupManager : Singleton<BackupManager> {
     }
 
     public void CancelBackup(GameObject backup) {
-        Defenses.CompController.Instance.HighlightAllStructures(false);
+        Defenses.CompController.Instance.HighlightBackupableComponents(false);
         Destroy(backup);
     }
 
@@ -55,7 +55,7 @@ public class BackupManager : Singleton<BackupManager> {
     /// <param name="selectedBackup">selected backup component</param>
     /// <param name="objectToReplace">component to be replaced</param>
     public void ReplaceComponent(GameObject selectedBackup, GameObject objectToReplace) {
-		Defenses.CompController.Instance.HighlightAllStructures(false);
+		Defenses.CompController.Instance.HighlightBackupableComponents(false);
 		if (this.BackupComponentSelected) {
 			// Add the selected backup to the canvas where the object to replace was
 			//selectedBackup = Instantiate(selectedBackup);
@@ -133,7 +133,7 @@ public class BackupManager : Singleton<BackupManager> {
     public void AddComponentToBackup() {
         this.ShowBackupPanel(false);
         this.BackupReady = true;
-        Defenses.CompController.Instance.HighlightAllStructures(true);
+        Defenses.CompController.Instance.HighlightBackupableComponents(true);
     }
 
     /// <summary>
@@ -146,7 +146,7 @@ public class BackupManager : Singleton<BackupManager> {
         this.backupSelectionPanel.SetActive(true);
         try {
             this.BackupReady = false;
-            Defenses.CompController.Instance.HighlightAllStructures(false);
+            Defenses.CompController.Instance.HighlightBackupableComponents(false);
             System.Type type = ((Component) gameObject.GetComponent(typeof(Component))).GetType();
             // TODO FIX this so it isnt instantiated and added to project structure folder
             if (GameObject.Find("ListOfBackuppedGameObjects").transform.childCount >= 7) {
