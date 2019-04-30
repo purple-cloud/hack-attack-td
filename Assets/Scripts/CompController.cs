@@ -185,9 +185,10 @@ namespace Defenses {
                 foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
                     Component comp;
                     if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
-                        if (comp.GetType() != typeof(Earth)) {
-                            comp.ShowHighlight(state);
-                        }
+                        //if (comp.GetType() != typeof(Earth)) {
+                        //    comp.ShowHighlight(state);
+                        //}
+                        comp.ShowHighlight(state);
                     }
                 }
             } catch (Exception) {
