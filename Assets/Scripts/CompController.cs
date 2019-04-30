@@ -14,8 +14,12 @@ namespace Defenses {
 		// The structures the new structure is being placed between
 		private GameObject targetStructure;
 
-        // New structure that is being placed
-        private GameObject newStructure;        
+		private GameObject targetStructure2;
+
+		// New structure that is being placed
+		private GameObject newStructure;
+
+		public bool setNewStructureOutput;
 
 		[SerializeField]
 		public GameObject emptyPrefab;
@@ -42,6 +46,7 @@ namespace Defenses {
 
 		private void Start() {
 			IsPlacingStructure = false;
+			setNewStructureOutput = false;
 			GenerateStructureInputs();
 		}
 
@@ -64,14 +69,26 @@ namespace Defenses {
 		/// <param name="obj">The reporting object.</param>
 		public void OnStructureClickEvent(GameObject obj) {
 			if (IsPlacingStructure) {
-				// Save the game object and enable dragging of the clone
-				targetStructure = obj;
-				EnableCloneDragging();
+				if (Input.GetMouseButtonUp(0)) {
+					// Save the game object and enable dragging of the clone
+					targetStructure = obj;
+					EnableCloneDragging();
+				} else {
+					if (targetStructure == null) {
+						// Grab input structure on first call
+						targetStructure = obj;
+					} else if (targetStructure != null && targetStructure2 == null) {
+						// Grab output structure on second call, turns on positition placement of structure
+						targetStructure2 = obj;
+						EnableCloneDragging();
+					}
+				}
 			}
 		}
 
 		/// <summary>
-		/// Enables clone dragging.
+		/// Enables clone dragging and attaches the clone prefab to mouse pointer. Once enabled, 
+		/// '"OnStructureClickEvent()" has left the control to the clone class.
 		/// </summary>
 		private void EnableCloneDragging() {
 			clone.GetComponent<Clone>().isDragging = true;
@@ -121,7 +138,15 @@ namespace Defenses {
 					GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
 				}
 
+				// targetStructure --> newStructure
 				SetInputOutput(targetStructure, newStructure);
+
+				// If targetStructure2 is defined, then user has chosen an output aswell
+				if (targetStructure2 != null) {
+					//  targetStructure --> newStructure --> targetStructure2
+					SetInputOutput(newStructure, targetStructure2);
+				}
+
 				Destroy(clone);
 				NullifyPlacementObejcts();
 			} catch (Exception) {
@@ -135,11 +160,10 @@ namespace Defenses {
 		/// <param name="input"></param>
 		/// <param name="output"></param>
 		public void SetInputOutput(GameObject input, GameObject output) {
-			Component inputCore = input.GetComponent(typeof(Component)) as Component;
-			Component outputCore = output.GetComponent(typeof(Component)) as Component;
+			Component inputComp = input.GetComponent(typeof(Component)) as Component;
+			Component outputComp = output.GetComponent(typeof(Component)) as Component;
 
-			inputCore.AddOutput(output.gameObject);
-			outputCore.input.Add(input);
+			SetInputOutput(inputComp, outputComp);
 		}
 
 		/// <summary>
@@ -149,7 +173,7 @@ namespace Defenses {
 		/// <param name="output"></param>
 		public void SetInputOutput(Component input, Component output) {
 			input.AddOutput(output.gameObject);
-			output.input.Add(input.gameObject);
+			output.AddInput(input.gameObject);
 		}
 
 		/// <summary>
@@ -198,8 +222,8 @@ namespace Defenses {
 		public void NullifyPlacementObejcts() {
 			clone = null;
 			targetStructure = null;
-			newStructure = null;
-			
+			targetStructure2 = null;
+
 			IsPlacingStructure = false;
 			HighlightAllStructures(false);
 		}
@@ -215,6 +239,18 @@ namespace Defenses {
 			NullifyPlacementObejcts();
 			DestroyAllClones();
 			Destroy(clone);
+		}
+
+		public Component ExtractComponent(GameObject obj) {
+			Component comp = null;
+
+			try {
+				comp = obj.GetComponent(typeof(Component)) as Component;
+			} catch (NullReferenceException nre) {
+				Debug.LogWarning("Component not found inside gameobject. (" + obj.name + ")");
+			}
+
+			return comp;
 		}
 	}
 }
