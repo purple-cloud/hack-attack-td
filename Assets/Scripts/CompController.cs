@@ -14,8 +14,12 @@ namespace Defenses {
 		// The structures the new structure is being placed between
 		private GameObject targetStructure;
 
-        // New structure that is being placed
-        private GameObject newStructure;        
+		private GameObject targetStructure2;
+
+		// New structure that is being placed
+		private GameObject newStructure;
+
+		public bool setNewStructureOutput;
 
 		[SerializeField]
 		public GameObject emptyPrefab;
@@ -42,6 +46,7 @@ namespace Defenses {
 
 		private void Start() {
 			IsPlacingStructure = false;
+			setNewStructureOutput = false;
 			GenerateStructureInputs();
 		}
 
@@ -64,14 +69,26 @@ namespace Defenses {
 		/// <param name="obj">The reporting object.</param>
 		public void OnStructureClickEvent(GameObject obj) {
 			if (IsPlacingStructure) {
-				// Save the game object and enable dragging of the clone
-				targetStructure = obj;
-				EnableCloneDragging();
+				if (Input.GetMouseButtonUp(0)) {
+					// Save the game object and enable dragging of the clone
+					targetStructure = obj;
+					EnableCloneDragging();
+				} else {
+					if (targetStructure == null) {
+						// Grab input structure on first call
+						targetStructure = obj;
+					} else if (targetStructure != null && targetStructure2 == null) {
+						// Grab output structure on second call, turns on positition placement of structure
+						targetStructure2 = obj;
+						EnableCloneDragging();
+					}
+				}
 			}
 		}
 
 		/// <summary>
-		/// Enables clone dragging.
+		/// Enables clone dragging and attaches the clone prefab to mouse pointer. Once enabled, 
+		/// '"OnStructureClickEvent()" has left the control to the clone class.
 		/// </summary>
 		private void EnableCloneDragging() {
 			clone.GetComponent<Clone>().isDragging = true;
@@ -121,7 +138,15 @@ namespace Defenses {
 					GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
 				}
 
+				// targetStructure --> newStructure
 				SetInputOutput(targetStructure, newStructure);
+
+				// If targetStructure2 is defined, then user has chosen an output aswell
+				if (targetStructure2 != null) {
+					//  targetStructure --> newStructure --> targetStructure2
+					SetInputOutput(newStructure, targetStructure2);
+				}
+
 				Destroy(clone);
 				NullifyPlacementObejcts();
 			} catch (Exception) {
@@ -135,11 +160,10 @@ namespace Defenses {
 		/// <param name="input"></param>
 		/// <param name="output"></param>
 		public void SetInputOutput(GameObject input, GameObject output) {
-			Component inputCore = input.GetComponent(typeof(Component)) as Component;
-			Component outputCore = output.GetComponent(typeof(Component)) as Component;
+			Component inputComp = input.GetComponent(typeof(Component)) as Component;
+			Component outputComp = output.GetComponent(typeof(Component)) as Component;
 
-			inputCore.AddOutput(output.gameObject);
-			outputCore.input.Add(input);
+			SetInputOutput(inputComp, outputComp);
 		}
 
 		/// <summary>
@@ -149,7 +173,12 @@ namespace Defenses {
 		/// <param name="output"></param>
 		public void SetInputOutput(Component input, Component output) {
 			input.AddOutput(output.gameObject);
-			output.input.Add(input.gameObject);
+			output.AddInput(input.gameObject);
+		}
+
+		public void RemoveInputOutput(Component inputComp, Component outputComp) {
+			inputComp.RemoveOutput(outputComp.gameObject);
+			outputComp.RemoveInput(inputComp.gameObject);
 		}
 
 		/// <summary>
@@ -157,6 +186,23 @@ namespace Defenses {
 		/// </summary>
 		/// <param name="state"></param>
 		public void HighlightAllStructures(bool state) {
+            try {
+                foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
+                    Component comp;
+                    if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
+                        comp.ShowHighlight(state);
+                    }
+                }
+            } catch (Exception) {
+                Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
+            }
+        }
+
+        /// <summary>
+        /// Highlights all backupable components
+        /// </summary>
+        /// <param name="state">true to highlight, false to not</param>
+        public void HighlightBackupableComponents(bool state) {
             try {
                 foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
                     Component comp;
@@ -198,8 +244,8 @@ namespace Defenses {
 		public void NullifyPlacementObejcts() {
 			clone = null;
 			targetStructure = null;
-			newStructure = null;
-			
+			targetStructure2 = null;
+
 			IsPlacingStructure = false;
 			HighlightAllStructures(false);
 		}
@@ -215,6 +261,55 @@ namespace Defenses {
 			NullifyPlacementObejcts();
 			DestroyAllClones();
 			Destroy(clone);
+		}
+
+		/// <summary>
+		/// Extract the component from the structure without the need of type casting.
+		/// </summary>
+		/// <param name="structure">The structure to get the component from</param>
+		/// <returns>Component of structure</returns>
+		public Component ExtractComponent(GameObject structure) {
+			Component comp = null;
+
+			try {
+				comp = structure.GetComponent(typeof(Component)) as Component;
+			} catch (NullReferenceException nre) {
+				Debug.LogWarning("Component not found inside gameobject. (" + structure.name + ")");
+			}
+
+			return comp;
+		}
+
+
+		/// <summary>
+		/// Retrives the component of structure and sends it to the other method below that will remove it.
+		/// </summary>
+		/// <param name="structure">The structure that will be removed</param>
+		/// <seealso cref="DeleteStructure(Component)"/>
+		public void DeleteStructure(GameObject structure) {
+			Component comp = ExtractComponent(structure);
+			DeleteStructure(comp);
+		}
+
+
+		/// <summary>
+		/// Deletes the structure and unlinks paths connected to it if they exists. This prevents disruptions
+		/// on the adjacent structure(s).
+		/// </summary>
+		/// <param name="comp">The component of the structure</param>
+		public void DeleteStructure(Component comp) {
+			foreach (Component inputComp in comp.GetInputComponents()) {
+				// Accesses the input components and removes its output, 'comp'
+				inputComp.RemoveOutput(comp.gameObject);
+			}
+
+			foreach (Component outputComp in comp.GetOutputComponents()) {
+				// Accesses the output components and removes its input, 'comp'
+				outputComp.RemoveInput(comp.gameObject);
+			}
+
+			// Safe to remove 
+			Destroy(comp.gameObject);
 		}
 	}
 }

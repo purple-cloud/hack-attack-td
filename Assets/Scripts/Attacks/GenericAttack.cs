@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class GenericAttack : Pathfinder {
 
-    private string name;
-
-    private int port;
-
     private bool isAttackable;
 
     private bool repeatAttack = false;
 
     public GenericAttack(Component initialComponent) : base(initialComponent) {
-
+        
     }
 
     private void Awake() {
@@ -25,7 +21,7 @@ public class GenericAttack : Pathfinder {
     /// </summary>
     public Component FindAttackableGameObject(System.Type component) {
         Component foundComponent = null;
-        int maxMoves = 10;
+        int maxMoves = 5;
         try {
             while (this.isAttackable != true) {
                 if (ScanComponent(SelectedComponent, component)) {
@@ -60,21 +56,23 @@ public class GenericAttack : Pathfinder {
                 componentFound = true;
             } else if (componentToScan.GetType() == typeof(Firewall)) {
                 //TODO Change this check to find the status of port in real firewall script (Wait for liban to finish firewall)
-                //Firewall firewall = (Firewall) componentToScan;
-                //bool portStatus = firewall.GetPort(this.port).IsActive;
-                //Debug.Log("Selected component is a firewall, port status: " + portStatus);
-                //if (!portStatus) {
-                //    if (componentToScan.GetType() == componentToFind.GetType()) {
-                //        componentFound = true;
-                //    }
-                //} else {
-                //    componentFound = false;
-                //    DeleteAttack();
-                //}
-            } else if (componentToScan.GetType() == typeof(Document)) {
-                componentFound = true;
-            } 
-            else {
+                Firewall firewall = (Firewall) componentToScan;
+                FirewallPort firewallPort = firewall.GetPort(port);
+                firewallPort.Activity = string.Format("<color=#FF0000>" + GetAttackName() + "</color>");
+                bool portStatus = firewallPort.IsActive;
+                Debug.Log("Selected component is a firewall, port status: " + portStatus);
+                if (firewall.Status) {
+                    if (false == portStatus) {
+                        if (componentToScan.GetType() == componentToFind.GetType()) {
+                            componentFound = true;
+                        }
+                    } else {
+                        Debug.Log("Firewall port closed");
+                        componentFound = false;
+                        DeleteAttack();
+                    }
+                }
+            } else {
                 Debug.Log("Component is of type: " + componentToScan.Name);
             }
         } catch (NullReferenceException nre) {
@@ -89,14 +87,6 @@ public class GenericAttack : Pathfinder {
     public void DeleteAttack() {
         Debug.Log("Deleting attack..");
         Destroy(this.gameObject);
-    }
-
-    /// <summary>
-    /// Returns the name of the attack. Could be domain, location etc.
-    /// </summary>
-    /// <returns>Returns the name of the attack</returns>
-    public string GenericAttackName() {
-        return this.name;
     }
 
 }

@@ -40,7 +40,7 @@ public class BackupManager : Singleton<BackupManager> {
     }
 
     public void CancelBackup(GameObject backup) {
-        Defenses.CompController.Instance.HighlightAllStructures(false);
+        Defenses.CompController.Instance.HighlightBackupableComponents(false);
         Destroy(backup);
     }
 
@@ -55,42 +55,54 @@ public class BackupManager : Singleton<BackupManager> {
     /// <param name="selectedBackup">selected backup component</param>
     /// <param name="objectToReplace">component to be replaced</param>
     public void ReplaceComponent(GameObject selectedBackup, GameObject objectToReplace) {
-		Defenses.CompController.Instance.HighlightAllStructures(false);
+		Defenses.CompController.Instance.HighlightBackupableComponents(false);
 		if (this.BackupComponentSelected) {
 			// Add the selected backup to the canvas where the object to replace was
-			selectedBackup = Instantiate(selectedBackup);
+			//selectedBackup = Instantiate(selectedBackup);
+
+            GameObject newObject = Instantiate(selectedBackup);
 
 			// Store the component for both backup and the object to replace
 			Component objectToReplaceComp = objectToReplace.GetComponent(typeof(Component)) as Component;
-			Component selectedBackupComp = selectedBackup.GetComponent(typeof(Component)) as Component;
+			Component selectedBackupComp = newObject.GetComponent(typeof(Component)) as Component;
 
 			selectedBackupComp.input = new List<GameObject>();
 
 			// Insert the new outputs (from the current component's input)
 			foreach (Component comp in objectToReplaceComp.GetInputComponents()) {
-				comp.RemoveOutput(objectToReplace);
+				Defenses.CompController.Instance.RemoveInputOutput(comp, objectToReplaceComp);
 
 				// Link selectedBackups input to selectedBackups outputs input (which is selectedOutput)
 				Defenses.CompController.Instance.SetInputOutput(comp, selectedBackupComp);
 			}
 
-			// Mirror outputs
-			selectedBackupComp.outputs = objectToReplaceComp.outputs;
+            System.Type type = ((Component) objectToReplace.GetComponent(typeof(Component))).GetType();
+            // Copy all the values of the component inside gameObject and add the to the clone
+            System.Reflection.PropertyInfo[] properties = type.GetProperties();
+            newObject.AddComponent(gameObject.GetComponents(typeof(Component)).GetType());
+            // Assign properties
+            for (int i = 0; i <= 17; i++) {
+                System.Reflection.PropertyInfo property = properties[i];
+                property.SetValue((Component) newObject.GetComponent(typeof(Component)), property.GetValue((Component) selectedBackup.GetComponent(typeof(Component))));
+            }
+
+            // Mirror outputs
+            selectedBackupComp.outputs = objectToReplaceComp.outputs;
 
 			// Readjust the inputs for all components
 			Defenses.CompController.Instance.GenerateStructureInputs();
 
-			// Set the selected backup position to that of the current component position
-			selectedBackup.transform.position = objectToReplace.transform.position;
-      
-      // Subtract the cost of restoring backup from currency 
-      // TODO Needs adjustments, maybe create an own BackupRestore property in Component?
-      GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - ((Component) objectToReplace.GetComponent(typeof(Component))).BackupRestorePrice);
+            // Set the selected backup position to that of the current component position
+            //selectedBackup.transform.position = objectToReplace.transform.position;
+
+            newObject.transform.position = objectToReplace.transform.position;
+
+            // Subtract the cost of restoring backup from currency 
+            GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - ((Component) objectToReplace.GetComponent(typeof(Component))).BackupRestorePrice);
 
 			// Set the selected backup in the object in canvas layer
-			selectedBackup.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
-			selectedBackup.transform.localScale = new Vector3(1f, 1f, 1f);
-
+			newObject.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+            newObject.transform.localScale = new Vector3(1f, 1f, 1f);
 
 			// Destroy the object to replace from canvas
 			Destroy(objectToReplace);
@@ -121,7 +133,7 @@ public class BackupManager : Singleton<BackupManager> {
     public void AddComponentToBackup() {
         this.ShowBackupPanel(false);
         this.BackupReady = true;
-        Defenses.CompController.Instance.HighlightAllStructures(true);
+        Defenses.CompController.Instance.HighlightBackupableComponents(true);
     }
 
     /// <summary>
@@ -134,7 +146,7 @@ public class BackupManager : Singleton<BackupManager> {
         this.backupSelectionPanel.SetActive(true);
         try {
             this.BackupReady = false;
-            Defenses.CompController.Instance.HighlightAllStructures(false);
+            Defenses.CompController.Instance.HighlightBackupableComponents(false);
             System.Type type = ((Component) gameObject.GetComponent(typeof(Component))).GetType();
             // TODO FIX this so it isnt instantiated and added to project structure folder
             if (GameObject.Find("ListOfBackuppedGameObjects").transform.childCount >= 7) {
@@ -252,4 +264,16 @@ public class BackupManager : Singleton<BackupManager> {
         this.backupSelectionPanel.SetActive(!this.backupSelectionPanel.activeSelf);
     }
 
+	void Update() {
+		if (Input.GetButtonDown("Cancel")) {
+			Defenses.CompController.Instance.HighlightAllStructures(false);
+
+			// Clears variables from adding backup to pool
+			selectedGameObject = null;
+			BackupReady = false;
+
+			// Clears variables from replacing component from backup pool
+			BackuppedComponent = null;
+		}
+	}
 }

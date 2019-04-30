@@ -8,8 +8,6 @@ using UnityEngine.EventSystems;
 /// Class representing the firewall component
 /// </summary>
 public class Firewall : Component, IPointerClickHandler {
-	[SerializeField]
-	private GameObject firewallPanel;
 
 	[SerializeField]
 	private GameObject firewallPanelRow;
@@ -21,32 +19,34 @@ public class Firewall : Component, IPointerClickHandler {
 	[SerializeField]
 	private FirewallPortDummy[] ports;
 
+    private List<FirewallPort> listOfFirewallPorts;
+
     public void Start() {
-        Upgrades = new ComponentUpgrade[] {
-            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200),
-            new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200)
-		};
-        Name = "Shitty Firewall";
-        Status = false;
-        Sellable = true;
-        RepairPrice = 50;
-        SellValue = 50;
-        InitialPrice = 100;
-        Price = NextUpgrade.Price;
-        Sprite = firewallSprites[0];
-        // Sets virus immune to true
-        ImmuneToVirus = true;
+        if (AlreadyInitialized == false) {
+            Upgrades = new ComponentUpgrade[] {
+                new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200),
+                new ComponentUpgrade("Awesome Firewall", 200, firewallSprites[1], 100, 100, 100, 200)
+            };
+            Name = "Shitty Firewall";
+            ComponentLevel = 1;
+            Status = true;
+            Sellable = true;
+            RepairPrice = 50;
+            SellValue = 50;
+            InitialPrice = 100;
+            Price = NextUpgrade.Price;
+            Sprite = firewallSprites[0];
+            // Sets virus immune to true
+            ImmuneToVirus = true;
+            BackupPrice = 50;
+            BackupRestorePrice = 100;
 
-        BackupPrice = 50;
-        BackupRestorePrice = 100;
+            this.listOfFirewallPorts = new List<FirewallPort>();
 
-        //firewallPanel = GameObject.Find(firewallPanelReference);
+            CreateGameObjects();
 
-        //if (firewallPanel == null) {
-        //	throw new System.Exception("Firewall has invalid reference to statistics panel. Please check the serialized fields.");
-        //}
-
-        //CreateGameObjects();
+            AlreadyInitialized = true;
+        }
     }
 
 	/// <summary>
@@ -56,43 +56,48 @@ public class Firewall : Component, IPointerClickHandler {
 		foreach (FirewallPortDummy fpd in ports) {
 			GameObject obj = Instantiate(firewallPanelRow) as GameObject;
 			FirewallPort fp = obj.AddComponent<FirewallPort>();
-
 			fp.Set(fpd.port, fpd.isActive);
-			obj.transform.SetParent(firewallPanel.transform);
 			((RectTransform) obj.transform).localScale = new Vector3(1, 1, 1);
+            this.listOfFirewallPorts.Add(fp);
+            fp.transform.SetParent(GameObject.Find("TemporaryLocation").transform);
 		}
 	}
 
+    // TODO Fix methods below to use listOfFirewallPorts instead
 
-	/// <summary>
-	/// Return the FirewallPort from the port integer.
-	/// </summary>
-	/// <param name="port">Integer of port to fetch</param>
-	/// <returns>FirewallPort from the port number</returns>
-	public FirewallPort GetPort(int port) {
-		FirewallPort fp = null;
+    /// <summary>
+    /// Return the FirewallPort from the port integer.
+    /// </summary>
+    /// <param name="port">Integer of port to fetch</param>
+    /// <returns>FirewallPort from the port number</returns>
+    public FirewallPort GetPort(int port) {
+        FirewallPort fp = null;
+        foreach (FirewallPort firewallPort in this.listOfFirewallPorts) {
+            // Filters out the other children that does not show firewall port (i.e. title of the panel on top)
+            if (firewallPort.Port == port) {
+                fp = firewallPort;
+            }
+        }
+        return fp;
+    }
 
-		foreach (Transform child in firewallPanel.transform) {
-			// Filters out the other children that does not show firewall port (i.e. title of the panel on top)
-			if (child.gameObject.name == (firewallPanelRow.name + "(Clone)")) {
-				if (child.gameObject.GetComponent<FirewallPort>().Port == port) {
-					fp = child.gameObject.GetComponent<FirewallPort>();
-				}
-			}
-		}
+    /// <summary>
+    /// Allow/disallow activity through a port.
+    /// </summary>
+    /// <param name="port">Port to alter</param>
+    /// <param name="newState">Allow/disallow activity</param>
+    public void AlterPortState(int port, bool newState) {
+        FirewallPort fp = GetPort(port);
+        fp.IsActive = newState;
+    }
 
-		return fp;
-	}
-
-	/// <summary>
-	/// Allow/disallow activity through a port.
-	/// </summary>
-	/// <param name="port">Port to alter</param>
-	/// <param name="newState">Allow/disallow activity</param>
-	public void AlterPortState(int port, bool newState) {
-		FirewallPort fp = GetPort(port);
-		fp.IsActive = newState;
-	}
+    /// <summary>
+    /// Returns the list of firewall ports
+    /// </summary>
+    /// <returns>the list of firewall ports</returns>
+    public List<FirewallPort> GetFirewallPorts() {
+        return this.listOfFirewallPorts;
+    }
 
 }
 

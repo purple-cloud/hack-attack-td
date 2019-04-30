@@ -324,7 +324,7 @@ public class GameManager : Singleton<GameManager> {
     /// </summary>
     public void SellComponent() {
         if (this.selectedComponent != null && this.selectedComponent.Sellable == true) {
-            Destroy(this.selectedGameObject);
+			Defenses.CompController.Instance.DeleteStructure(selectedComponent);
             // Add the sell value of the component to the global currency
             SetCurrency(GetCurrency() + this.selectedComponent.SellValue);
             // Close information panels
@@ -341,6 +341,10 @@ public class GameManager : Singleton<GameManager> {
     /// <param name="active">either true or false</param>
     public void ShowStats(bool active) {
         this.informationPanel.SetActive(active);
+    }
+
+    public void ShowInformationPanel() {
+        this.informationPanel.SetActive(!this.informationPanel.activeSelf);
     }
 
     /// <summary>

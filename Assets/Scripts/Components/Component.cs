@@ -102,6 +102,12 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// Getter & setter for components immunity for virus
     /// </summary>
     public bool ImmuneToVirus { get; set; }
+
+    /// <summary>
+    /// Getter & setter for checking if component is already initialized
+    /// </summary>
+    public bool AlreadyInitialized { get; set; }
+
 	#endregion
 
 	#region EVENTS
@@ -111,6 +117,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerUp(PointerEventData eventData) {
+		// When event is caught with left mouse button pressed up
 		if (Defenses.CompController.Instance.IsPlacingStructure) {
 			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
 		} else if (PathConnection.Instance.IsSelectingStructure) {
@@ -141,9 +148,19 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {
 			GameManager.Instance.DeselectGameObject();
 		} else {
-			GameManager.Instance.SelectGameObject(gameObject);
-			GameManager.Instance.UpdateComputerPanel();
+            if (((Component) this.gameObject.GetComponent(typeof(Component))).GetType() != typeof(Earth) ) {
+                GameManager.Instance.SelectGameObject(gameObject);
+                GameManager.Instance.UpdateComputerPanel();
+            }
 		}
+
+        // If component being clicked is of type Firewall, show firewall panel
+        if (((Component) this.gameObject.GetComponent(typeof(Component))).GetType() == typeof(Firewall)) {
+
+            // TODO call method in firewall that then calls method in firewallmanager to show panel????
+
+            FirewallManager.Instance.ShowFirewallPanel((Firewall) this.gameObject.GetComponent(typeof(Firewall)));
+        }
 	}
 
 	void OnTriggerStay2D(Collider2D col) {
@@ -178,12 +195,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		foreach (GameObject output in outputs) {
 			lineHandler.AddList(output);
 		}
-
-		this.ComponentLevel = 1;
         this.Sellable = false;
         this.InitialPrice = 0;
         // Sets immune default to false;
         ImmuneToVirus = false;
+        AlreadyInitialized = false;
 	}
 
     /// <summary>
@@ -319,6 +335,17 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	}
 
     /// <summary>
+    /// Adds a new output to this structure.
+    /// </summary>
+    /// <param name="obj"></param>
+    public void AddOutput(GameObject obj) {
+        if (!outputs.Contains(obj)) {
+            outputs.Add(obj);
+            gameObject.GetComponent<LineHandler>().Add(obj);
+        }
+    }
+
+    /// <summary>
     /// Removes the output object from this structure if it exists.
     /// </summary>
     /// <param name="obj">Output object</param>
@@ -382,17 +409,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 			this.input.Remove(obj);
 		}
 		return gameObject.GetComponent<LineHandler>().RemoveLine(obj);
-	}
-
-	/// <summary>
-	/// Adds a new output to this structure.
-	/// </summary>
-	/// <param name="obj"></param>
-	public void AddOutput(GameObject obj) {
-		if (!outputs.Contains(obj)) {
-			outputs.Add(obj);
-			gameObject.GetComponent<LineHandler>().Add(obj);
-		}
 	}
 
 	public Component[] GetInputComponents() {

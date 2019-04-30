@@ -1,8 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Pathfinder : MonoBehaviour {
+
+    // TODO Maybe extract these lists to another script
+
+    private string[] listOfAttackNames;
+
+    // TODO maybe make ports accessable and retrieved instead of adding manually here
+    private int[] listOfFirewallPorts;
+
+    private string name;
+
+    public int port;
 
     // A reference to the starting point for the pathfinder
     private Component initialComponent;
@@ -17,6 +29,7 @@ public class Pathfinder : MonoBehaviour {
 
     public Pathfinder(Component initialComponent) {
         this.initialComponent = initialComponent;
+        
     }
 
     /// <summary>
@@ -25,6 +38,12 @@ public class Pathfinder : MonoBehaviour {
      public void Init(Component initialComponent) {
         SelectedComponent = initialComponent;
         this.listOfAdjacentGameObjects = new List<Component>();
+        this.listOfAttackNames = new string[] { "microsoft update", "microsoft security", "microsoft service", "microsoft force update" };
+        this.listOfFirewallPorts = new int[] { 21, 22, 80 };
+
+        this.name = this.listOfAttackNames[UnityEngine.Random.Range(0, this.listOfAttackNames.Length)];
+        this.port = this.listOfFirewallPorts[UnityEngine.Random.Range(0, this.listOfFirewallPorts.Length)];
+        Debug.Log("Attack Name: " + this.name + ", Attack Port: " + this.port);
     }
 
     /// <summary>
@@ -65,4 +84,8 @@ public class Pathfinder : MonoBehaviour {
         Debug.Log("New Place: " + this.SelectedComponent.name);
     }
 
+    // TODO Flyttes til GenericAttack sammens med name og ports lists init
+    public string GetAttackName() {
+        return this.name;
+    }
 }
