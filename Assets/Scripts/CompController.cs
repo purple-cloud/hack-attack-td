@@ -259,7 +259,7 @@ namespace Defenses {
 
 			try {
 				comp = structure.GetComponent(typeof(Component)) as Component;
-			} catch (NullReferenceException nre) {
+			} catch (NullReferenceException) {
 				Debug.LogWarning("Component not found inside gameobject. (" + structure.name + ")");
 			}
 

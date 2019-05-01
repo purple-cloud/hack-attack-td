@@ -18,16 +18,23 @@ public class UserBehaviourProfile : Singleton<UserBehaviourProfile> {
 
     #region ENEMY
 
+    public float SpawnTime { get; set; }
+
     public float WebAttackProb { get; set; }
 
     public float DocumentAttackProb { get; set; }
+
+    public float DdosAttackProb { get; set; }
 
     #endregion
 
     private void Awake() {
         this.PlayerWillingToPay = 0;
         this.PlayerPayDenial = 0;
-        this.WebAttackProb = 0.85f;
-        this.DocumentAttackProb = 0.3f;
+        this.WebAttackProb = 0.75f;
+        this.DocumentAttackProb = 0.2f;
+        // TODO Uncomment when done
+        //this.DdosAttackProb = 0.14f;
+        this.SpawnTime = 15.0f;
     }
 }
