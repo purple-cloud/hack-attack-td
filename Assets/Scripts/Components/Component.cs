@@ -122,8 +122,10 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
 		}
 		// If user is choosing to select component to backup
-		else if (BackupManager.Instance.BackupReady) {
-			BackupManager.Instance.AddToBackupPool(gameObject);
+		else if (BackupManager.Instance.BackupReady && ((Component) gameObject.GetComponent(typeof(Component))).BackupPrice <= GameManager.Instance.GetCurrency()) {
+			if (((Component) gameObject.GetComponent(typeof(Component))).GetType() != typeof(Earth)) {
+                BackupManager.Instance.AddToBackupPool(gameObject);
+            }
 		}
 		// If user have pressed backupped component from backup selection panel
 		else if (BackupManager.Instance.BackupComponentSelected == true && BackupManager.Instance.BackupReady == false) {
@@ -227,8 +229,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     /// </summary>
     public void Repair() {
         try {
-            GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - RepairPrice);
-            this.Status = true;
+            if (GameManager.Instance.SubtractFromCurrency(RepairPrice) == false) {
+                Debug.Log("Not enough currency left...");
+            } else {
+                this.Status = true;
+            }
         } catch (NullReferenceException nre) {
             Debug.LogException(nre);
         }
@@ -242,21 +247,24 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         if (this.NextUpgrade != null) {
             try {
                 Debug.Log("Component Level: " + this.ComponentLevel);
-                GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - NextUpgrade.Price);
-                this.Sprite = NextUpgrade.Sprite;
-                this.Name = NextUpgrade.Name;
-                this.RepairPrice = NextUpgrade.RepairPrice;
-                this.SellValue = NextUpgrade.SellValue;
-                this.Encryption = NextUpgrade.Encryption;
-                this.Durability = NextUpgrade.Durability;
-                this.BackupPrice = NextUpgrade.BackupPrice;
-                this.BackupRestorePrice = NextUpgrade.BackupRestorePrice;
+                if (GameManager.Instance.SubtractFromCurrency(NextUpgrade.Price) == false) {
+                    Debug.Log("Not enough currency left...");
+                } else {
+                    this.Sprite = NextUpgrade.Sprite;
+                    this.Name = NextUpgrade.Name;
+                    this.RepairPrice = NextUpgrade.RepairPrice;
+                    this.SellValue = NextUpgrade.SellValue;
+                    this.Encryption = NextUpgrade.Encryption;
+                    this.Durability = NextUpgrade.Durability;
+                    this.BackupPrice = NextUpgrade.BackupPrice;
+                    this.BackupRestorePrice = NextUpgrade.BackupRestorePrice;
 
-                // Assign the value to the upgrade button
-                Debug.Log("this.Price: " + Price);
-                Debug.Log("this.NextUpgrade.Price" + NextUpgrade.Price);
-                ComponentLevel++;
-                // UpdateComputerPanel();
+                    // Assign the value to the upgrade button
+                    Debug.Log("this.Price: " + Price);
+                    Debug.Log("this.NextUpgrade.Price" + NextUpgrade.Price);
+                    ComponentLevel++;
+                    // UpdateComputerPanel();
+                }
             } catch (NullReferenceException nre) {
                 Debug.LogException(nre);
             }
@@ -265,9 +273,13 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
         }
     }
 
+    // TODO Currently not in use?????
 	public void Buy() {
         Debug.Log("Buying " + this.Name + " component...");
-        GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - this.InitialPrice);
+        // TODO This needs to be fixed where method is called 
+        if (GameManager.Instance.SubtractFromCurrency(this.InitialPrice) == false) {
+            Debug.Log("Not enough currency left...");
+        }
     }
 
     /*
@@ -296,13 +308,13 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// Creates a green border on all compatible combination of structures on the canvas (when an item is picked from the item slot).
 	/// </summary>
 	/// <param name="state">Controls if the game object will create or remove border.</param>
-	public void ShowHighlight(bool state) {
+	public void ShowHighlight(bool state, Color color) {
 		GameObject borderGO;
 		if (state == true) {
 			// Instantiates new game object under this game object and gives it a color
 			borderGO = Instantiate(CompController.Instance.highlightBorder as GameObject);
 			borderGO.name = "HighlightBorder";
-			borderGO.GetComponent<Image>().color = Color.green;
+			borderGO.GetComponent<Image>().color = color;
 			borderGO.transform.position = gameObject.transform.position;
 			borderGO.transform.SetParent(gameObject.transform);
 		} else {
