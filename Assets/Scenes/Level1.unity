@@ -6482,6 +6482,11 @@ PrefabInstance:
       propertyPath: isPlacable
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8515798797753365392, guid: 77c0193ab43411b418849ede39ff102f,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8515798797753365395, guid: 77c0193ab43411b418849ede39ff102f, type: 3}
     - {fileID: 3397042548970960305, guid: 77c0193ab43411b418849ede39ff102f, type: 3}

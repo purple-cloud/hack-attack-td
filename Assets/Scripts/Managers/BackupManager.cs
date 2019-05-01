@@ -40,7 +40,7 @@ public class BackupManager : Singleton<BackupManager> {
     }
 
     public void CancelBackup(GameObject backup) {
-        Defenses.CompController.Instance.HighlightBackupableComponents(false);
+        HighlightBackupableComponents(false);
         Destroy(backup);
     }
 
@@ -55,7 +55,7 @@ public class BackupManager : Singleton<BackupManager> {
     /// <param name="selectedBackup">selected backup component</param>
     /// <param name="objectToReplace">component to be replaced</param>
     public void ReplaceComponent(GameObject selectedBackup, GameObject objectToReplace) {
-		Defenses.CompController.Instance.HighlightBackupableComponents(false);
+		HighlightBackupableComponents(false);
 		if (this.BackupComponentSelected) {
 			// Add the selected backup to the canvas where the object to replace was
 			//selectedBackup = Instantiate(selectedBackup);
@@ -98,7 +98,10 @@ public class BackupManager : Singleton<BackupManager> {
             newObject.transform.position = objectToReplace.transform.position;
 
             // Subtract the cost of restoring backup from currency 
-            GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - ((Component) objectToReplace.GetComponent(typeof(Component))).BackupRestorePrice);
+            
+            if (GameManager.Instance.SubtractFromCurrency(((Component) objectToReplace.GetComponent(typeof(Component))).BackupRestorePrice) == false) {
+                Debug.Log("Not enough currency left...");
+            }
 
 			// Set the selected backup in the object in canvas layer
 			newObject.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
@@ -133,7 +136,7 @@ public class BackupManager : Singleton<BackupManager> {
     public void AddComponentToBackup() {
         this.ShowBackupPanel(false);
         this.BackupReady = true;
-        Defenses.CompController.Instance.HighlightBackupableComponents(true);
+        HighlightBackupableComponents(true);
     }
 
     /// <summary>
@@ -146,7 +149,7 @@ public class BackupManager : Singleton<BackupManager> {
         this.backupSelectionPanel.SetActive(true);
         try {
             this.BackupReady = false;
-            Defenses.CompController.Instance.HighlightBackupableComponents(false);
+            HighlightBackupableComponents(false);
             System.Type type = ((Component) gameObject.GetComponent(typeof(Component))).GetType();
             // TODO FIX this so it isnt instantiated and added to project structure folder
             if (GameObject.Find("ListOfBackuppedGameObjects").transform.childCount >= 7) {
@@ -168,8 +171,9 @@ public class BackupManager : Singleton<BackupManager> {
 			clone.GetComponent<LineHandler>().ResetHandler();
 			AddBackupToListOfBackups(clone);
             // Subtract the cost of setting up backup from currency
-            // TODO Needs adjustments, maybe create an own BackupPrice property in Component?
-            GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - ((Component) gameObject.GetComponent(typeof(Component))).BackupPrice);
+            if (GameManager.Instance.SubtractFromCurrency(((Component) gameObject.GetComponent(typeof(Component))).BackupPrice) == false) {
+                Debug.Log("Not enough currency left...");
+            }
         } catch (Exception) {
             Debug.LogError("ERROR: ListOfBackuppedGameObjects reference not found. Please check project structure.");
             //TODO Make something to notify the user
@@ -237,7 +241,30 @@ public class BackupManager : Singleton<BackupManager> {
                 Component comp;
                 if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
                     if (comp.GetType() == component.GetType()) {
-                        comp.ShowHighlight(condition);
+                        comp.ShowHighlight(condition, Color.green);
+                    }
+                }
+            }
+        } catch (Exception) {
+            Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
+        }
+    }
+
+    /// <summary>
+    /// Highlights all backupable components
+    /// </summary>
+    /// <param name="state">true to highlight, false to not</param>
+    public void HighlightBackupableComponents(bool state) {
+        try {
+            foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
+                Component comp;
+                if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
+                    if (comp.GetType() != typeof(Earth)) {
+                        if (comp.BackupPrice <= GameManager.Instance.GetCurrency()) {
+                            comp.ShowHighlight(state, Color.green);
+                        } else {
+                            comp.ShowHighlight(state, Color.red);
+                        }
                     }
                 }
             }

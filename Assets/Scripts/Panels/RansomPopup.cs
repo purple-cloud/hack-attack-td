@@ -48,13 +48,15 @@ public class RansomPopup : Singleton<RansomPopup> {
     }
 
     public void PayRansom() {
-        GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - this.ransomPrice);
-        ShowRansomPanel(false);
-        if (UserBehaviourProfile.Instance.DocumentAttackProb > 0.05f) {
-            UserBehaviourProfile.Instance.DocumentAttackProb = UserBehaviourProfile.Instance.DocumentAttackProb - 0.05f;
+        if (GameManager.Instance.SubtractFromCurrency(this.ransomPrice) == false) {
+            Debug.Log("Not enough currency left...");
+        } else {
+            ShowRansomPanel(false);
+            if (UserBehaviourProfile.Instance.DocumentAttackProb > 0.05f) {
+                UserBehaviourProfile.Instance.DocumentAttackProb = UserBehaviourProfile.Instance.DocumentAttackProb - 0.05f;
+            }
+            Debug.Log("Ransom payed");
         }
-        Debug.Log("Ransom payed");
-
     }
     
     public void DeclineRansom() {
