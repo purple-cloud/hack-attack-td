@@ -24,7 +24,7 @@ public class UserBehaviourProfile : Singleton<UserBehaviourProfile> {
 
     #endregion
 
-    private void Start() {
+    private void Awake() {
         this.PlayerWillingToPay = 0;
         this.PlayerPayDenial = 0;
         this.WebAttackProb = 0.85f;

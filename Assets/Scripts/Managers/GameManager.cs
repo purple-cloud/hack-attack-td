@@ -324,7 +324,7 @@ public class GameManager : Singleton<GameManager> {
     /// </summary>
     public void SellComponent() {
         if (this.selectedComponent != null && this.selectedComponent.Sellable == true) {
-            Destroy(this.selectedGameObject);
+			Defenses.CompController.Instance.DeleteStructure(selectedComponent);
             // Add the sell value of the component to the global currency
             SetCurrency(GetCurrency() + this.selectedComponent.SellValue);
             // Close information panels
