@@ -70,7 +70,7 @@ public class BackupManager : Singleton<BackupManager> {
 
 			// Insert the new outputs (from the current component's input)
 			foreach (Component comp in objectToReplaceComp.GetInputComponents()) {
-				Defenses.CompController.Instance.RemoveInputOutput(comp, objectToReplaceComp);
+				Defenses.CompController.RemoveInputOutput(comp, objectToReplaceComp);
 
 				// Link selectedBackups input to selectedBackups outputs input (which is selectedOutput)
 				Defenses.CompController.Instance.SetInputOutput(comp, selectedBackupComp);

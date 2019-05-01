@@ -11,28 +11,40 @@ using UnityEngine.UI;
 /// <summary>
 /// This is hooked up to the ModifyConnectionPanel.
 /// </summary>
-public class PathConnection : Singleton<PathConnection> {
+public class PathConnectionManager : Singleton<PathConnectionManager> {
 	public bool IsSelectingStructure { get; private set; }
 	public enum DirectionType { INPUT, OUTPUT };
 
 	// References assigned inside Unity Inspector
-	public GameObject connectionRowPrefab;
-	public GameObject connectionList;
+	[SerializeField]
+	private GameObject panel;
+
+	[SerializeField]
+	private GameObject connectionRowPrefab;
+
+	[SerializeField]
+	private GameObject connectionList;
 
 	// Panel variables
-	public Image topImage;
-	public Text topText;
+	[SerializeField]
+	private Image topImage;
 
-	public void ButtonPressed() {
+	[SerializeField]
+	private Text topText;
+
+	public void OpenPanelEvent() {
 		// Notifies components that the user is about to alter path connections
 		IsSelectingStructure = true;
 		CompController.Instance.HighlightAllStructures(true);
 	}
 
 	void Update() {
-		// Check if escape or right mouse is clicked
-		if (Input.GetMouseButtonUp(1) || Input.GetButtonDown("Cancel")) {
-			Clear();
+		// Check if escape or right mouse is clicked when selecting structure
+		if (IsSelectingStructure) {
+			if (Input.GetMouseButtonUp(1) || Input.GetButtonDown("Cancel")) {
+				Clear();
+				panel.SetActive(false);
+			}
 		}
 	}
 
@@ -51,6 +63,7 @@ public class PathConnection : Singleton<PathConnection> {
 	}
 
 	public void ShowComponentInputOutput(Component selectedComponent) {
+		ShowPanel();
 		Clear();
 
 		topImage.sprite = selectedComponent.GetCanvasImage().sprite;
@@ -58,29 +71,47 @@ public class PathConnection : Singleton<PathConnection> {
 
 		// Add all inputs of the selected components to the panel
 		foreach (Component inputComponent in selectedComponent.GetInputComponents()) {
-			AddRowToPanel(selectedComponent.GetCanvasImage(), DirectionType.INPUT, inputComponent.GetCanvasImage());
+			AddRowToPanel(selectedComponent, DirectionType.INPUT, inputComponent);
 		}
 
 		// Add all outputs of the selected components to the panel
 		foreach (Component outputComponent in selectedComponent.GetOutputComponents()) {
-			AddRowToPanel(selectedComponent.GetCanvasImage(), DirectionType.OUTPUT, outputComponent.GetCanvasImage());
+			AddRowToPanel(selectedComponent, DirectionType.OUTPUT, outputComponent);
 		}
 
 		FinishDisplaying();
 	}
 
-	private void AddRowToPanel(Image comp1Image, DirectionType direction, Image comp2Image) {
+	private void AddRowToPanel(Component comp1, DirectionType direction, Component comp2) {
 		// Instantiate new row for the panel and grab its layout
 		GameObject newConnectionRow = Instantiate(connectionRowPrefab);
 		ConnectionRowLayout rowLayout = newConnectionRow.GetComponent<ConnectionRowLayout>();
 
 		// Assign visuals
-		rowLayout.comp1Image.sprite = comp1Image.sprite;
-		rowLayout.comp2Image.sprite = comp2Image.sprite;
-		rowLayout.SetDirection(direction);
+		rowLayout.Assign(comp1, direction, comp2);
 
 		// Group it along the other connection rows
 		newConnectionRow.transform.SetParent(connectionList.transform);
 		newConnectionRow.transform.localScale = new Vector3(1, 1, 1);
+	}
+
+	private void ShowPanel() {
+		panel.SetActive(true);
+	}
+
+	public void UnlinkPath(Component inputTo, Component outputFrom) {
+		if (CanUnlink(inputTo, outputFrom)) {
+			inputTo.RemoveInput(outputFrom.gameObject);
+			outputFrom.RemoveOutput(inputTo.gameObject);
+
+			Clear();
+		} else {
+			Debug.Log("Can't unlink path: One of the components doesn't have" +
+				" more than one path.");
+		}
+	}
+
+	private bool CanUnlink(Component inputTo, Component outputFrom) {
+		return inputTo.input.Count > 1 && outputFrom.outputs.Count > 1;
 	}
 }

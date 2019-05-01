@@ -114,7 +114,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 24, y: 23.3}
+  m_SizeDelta: {x: 24, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1645028942353749347
 CanvasRenderer:
@@ -262,7 +262,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.45, y: 21.39}
-  m_SizeDelta: {x: 173.89, y: 30.71}
+  m_SizeDelta: {x: 173.89, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3473298574873780874
 CanvasRenderer:
@@ -310,6 +310,7 @@ MonoBehaviour:
   comp1Image: {fileID: 5765410546872557376}
   comp2Image: {fileID: 8865049853120725518}
   directionImage: {fileID: 3255533047793023966}
+  removeBtn: {fileID: 1234106321685567774}
 --- !u!1 &4773465252680485599
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,7 +346,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 24, y: 23.3}
+  m_SizeDelta: {x: 24, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1003414677498174725
 CanvasRenderer:
@@ -490,7 +491,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20.27, y: 17.95}
+  m_SizeDelta: {x: 20.27, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3169867579584909586
 CanvasRenderer:
@@ -744,7 +745,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 60.71, y: 26.88}
+  m_SizeDelta: {x: 60.71, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4125583106097327880
 CanvasRenderer:
