@@ -122,6 +122,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
 		} else if (PathConnectionManager.Instance.IsSelectingStructure) {
 			PathConnectionManager.Instance.ShowComponentInputOutput(this);
+		} else if (PathConnectionManager.Instance.IsSelectingStructureLink) {
+			PathConnectionManager.Instance.OnSelectingStructureLink(this);
 		}
 		 // If user is choosing to select component to backup
 		 else if (BackupManager.Instance.BackupReady) {
@@ -145,22 +147,23 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// the specified information from the clicked component and opens up the panel if its not open
 	/// </summary>
 	public void OnPointerClick(PointerEventData eventData) {
-		if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {
-			GameManager.Instance.DeselectGameObject();
-		} else {
-            if (((Component) this.gameObject.GetComponent(typeof(Component))).GetType() != typeof(Earth) ) {
-                GameManager.Instance.SelectGameObject(gameObject);
-                GameManager.Instance.UpdateComputerPanel();
-            }
+		if (!PathConnectionManager.Instance.IsSelectingStructure && 
+			!PathConnectionManager.Instance.IsSelectingStructureLink) {
+			if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {
+				GameManager.Instance.DeselectGameObject();
+			} else {
+				if (((Component) this.gameObject.GetComponent(typeof(Component))).GetType() != typeof(Earth)) {
+					GameManager.Instance.SelectGameObject(gameObject);
+					GameManager.Instance.UpdateComputerPanel();
+				}
+			}
+
+			// If component being clicked is of type Firewall, show firewall panel
+			if (((Component) this.gameObject.GetComponent(typeof(Component))).GetType() == typeof(Firewall)) {
+				// TODO call method in firewall that then calls method in firewallmanager to show panel????
+				FirewallManager.Instance.ShowFirewallPanel((Firewall) this.gameObject.GetComponent(typeof(Firewall)));
+			}
 		}
-
-        // If component being clicked is of type Firewall, show firewall panel
-        if (((Component) this.gameObject.GetComponent(typeof(Component))).GetType() == typeof(Firewall)) {
-
-            // TODO call method in firewall that then calls method in firewallmanager to show panel????
-
-            FirewallManager.Instance.ShowFirewallPanel((Firewall) this.gameObject.GetComponent(typeof(Firewall)));
-        }
 	}
 
 	void OnTriggerStay2D(Collider2D col) {

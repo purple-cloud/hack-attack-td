@@ -13,6 +13,8 @@ using UnityEngine.UI;
 /// </summary>
 public class PathConnectionManager : Singleton<PathConnectionManager> {
 	public bool IsSelectingStructure { get; private set; }
+	public bool IsSelectingStructureLink { get; private set; }
+
 	public enum DirectionType { INPUT, OUTPUT };
 
 	// References assigned inside Unity Inspector
@@ -32,18 +34,39 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	[SerializeField]
 	private Text topText;
 
+	private Component targetCompInputTo;
+	private Component targetCompOutputFrom;
+
 	public void OpenPanelEvent() {
 		// Notifies components that the user is about to alter path connections
 		IsSelectingStructure = true;
 		CompController.Instance.HighlightAllStructures(true);
 	}
 
+	public void LinkComponentsEvent() {
+		IsSelectingStructureLink = true;
+		CompController.Instance.HighlightAllStructures(true);
+	}
+
 	void Update() {
 		// Check if escape or right mouse is clicked when selecting structure
-		if (IsSelectingStructure) {
+		if (IsSelectingStructure || IsSelectingStructureLink) {
 			if (Input.GetMouseButtonUp(1) || Input.GetButtonDown("Cancel")) {
 				Clear();
 				panel.SetActive(false);
+			}
+		}
+	}
+
+	public void OnSelectingStructureLink(Component comp) {
+		if (IsSelectingStructureLink) {
+			if (targetCompOutputFrom == null) {
+				targetCompOutputFrom = comp;
+			} else if (targetCompOutputFrom != null && targetCompInputTo == null) {
+				targetCompInputTo = comp;
+				LinkComponents(targetCompOutputFrom, targetCompInputTo);
+			} else {
+				Debug.Log(this.name + ": something went wrong.");
 			}
 		}
 	}
@@ -54,11 +77,18 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 
 	private void Clear() {
 		IsSelectingStructure = false;
+		IsSelectingStructureLink = false;
+
+		targetCompOutputFrom = null;
+		targetCompInputTo = null;
+
 		CompController.Instance.HighlightAllStructures(false);
 
-		// Removes all connection rows
-		foreach (Transform connectionRow in connectionList.transform) {
-			Destroy(connectionRow.gameObject);
+		if (connectionList != null) {
+			// Removes all connection rows
+			foreach (Transform connectionRow in connectionList.transform) {
+				Destroy(connectionRow.gameObject);
+			}
 		}
 	}
 
@@ -99,6 +129,19 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 		panel.SetActive(true);
 	}
 
+
+	public void LinkComponents(Component inputTo, Component outputFrom) {
+		// Input and output cannot point to the same component
+		if (inputTo != outputFrom) {
+			CompController.Instance.SetInputOutput(outputFrom, inputTo);
+			Debug.Log("Components are linked!");
+		} else {
+			Debug.Log("Input and output can't be the same component.");
+		}
+
+		Clear();
+	}
+
 	public void UnlinkPath(Component inputTo, Component outputFrom) {
 		if (CanUnlink(inputTo, outputFrom)) {
 			inputTo.RemoveInput(outputFrom.gameObject);
@@ -112,6 +155,6 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	}
 
 	private bool CanUnlink(Component inputTo, Component outputFrom) {
-		return inputTo.input.Count > 1 && outputFrom.outputs.Count > 1;
+		return inputTo.input.Count > 1;
 	}
 }
