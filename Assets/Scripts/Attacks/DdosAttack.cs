@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DdosAttack : MonoBehaviour {
-    // Start is called before the first frame update
-    /*void Start()
+public class DdosAttack : GenericAttack {
+
+    //Start is called before the first frame update
+    void Start()
     {
-        
+        StartDdosAttack();
+        //if 
     }
 
     // Update is called once per frame
@@ -16,12 +18,20 @@ public class DdosAttack : MonoBehaviour {
     }
 
     public void StartDdosAttack() {
-        FindAttackableGameObject(); 
-        if(durability <= 0) {
+
+        WebAttack.AttackComponent(); 
+        if (durability <= 0) {
             repeatAttack = true; 
         } else {
             repeatAttack = false; 
         }
 
-    }*/
+        for(int i = 0; i = 20; i++) {
+            WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
+            webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        }
+
+        //ATTACK
+
+    }
 }
