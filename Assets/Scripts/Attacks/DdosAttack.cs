@@ -4,34 +4,26 @@ using UnityEngine;
 
 public class DdosAttack : GenericAttack {
 
-    //Start is called before the first frame update
-    void Start()
-    {
-        StartDdosAttack();
-        //if 
+
+    public DdosAttack(Component initialComponent) : base(initialComponent) {
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void Run(Component initialComponent) {
+        Init(initialComponent);
+        AttackComponent(FindAttackableGameObject(typeof(Computer)));
     }
 
-    public void StartDdosAttack() {
-
-        WebAttack.AttackComponent(); 
-        if (durability <= 0) {
-            repeatAttack = true; 
+    private void AttackComponent(Component component) {
+        if (component.GetType() == typeof(Computer) && component.Durability > 0) {
+            // Each attack does 10 dmg to the durability
+            component.Durability -= 10;
+            Debug.Log("Durability left: " + SelectedComponent.Durability);
         } else {
-            repeatAttack = false; 
+            Debug.Log("Couldnt find target component");
         }
-
-        for(int i = 0; i = 20; i++) {
-            WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
-            webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
-        }
-
-        //ATTACK
-
+        // Destroy Attack
+        DeleteAttack();
     }
 }
+   
