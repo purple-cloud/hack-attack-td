@@ -181,7 +181,7 @@ namespace Defenses {
 			output.AddInput(input.gameObject);
 		}
 
-		public void RemoveInputOutput(Component inputComp, Component outputComp) {
+		public static void RemoveInputOutput(Component inputComp, Component outputComp) {
 			inputComp.RemoveOutput(outputComp.gameObject);
 			outputComp.RemoveInput(inputComp.gameObject);
 		}
