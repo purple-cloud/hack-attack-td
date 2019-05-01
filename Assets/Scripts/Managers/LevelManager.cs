@@ -13,7 +13,7 @@ public class LevelManager : Singleton<LevelManager> {
         // Set the information panel title
         GameManager.Instance.informationPanelTitle.text = "Level 1 Information";
         // Set the information panel text
-        GameManager.Instance.informationPanelText.text = "In this level you will have to defend yourself from incoming attacks from the web. You have access to specific component features, firewall ports control and backup management tool.";
+        GameManager.Instance.informationPanelText.text = "In this level you will have to defend yourself and the classified document from incoming attacks from the web. You have access to specific component features, firewall ports control and backup management tool.";
     }
 
 }

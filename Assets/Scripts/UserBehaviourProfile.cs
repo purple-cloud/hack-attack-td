@@ -31,8 +31,8 @@ public class UserBehaviourProfile : Singleton<UserBehaviourProfile> {
     private void Awake() {
         this.PlayerWillingToPay = 0;
         this.PlayerPayDenial = 0;
-        this.WebAttackProb = 0.75f;
-        this.DocumentAttackProb = 0.2f;
+        this.WebAttackProb = 2.0f;
+        this.DocumentAttackProb = 2.0f;
         // TODO Uncomment when done
         //this.DdosAttackProb = 0.14f;
         this.SpawnTime = 15.0f;
