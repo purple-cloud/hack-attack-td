@@ -122,6 +122,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
 		} else if (PathConnectionManager.Instance.IsSelectingStructureLink) {
 			PathConnectionManager.Instance.OnSelectingStructureLink(this);
+		} else if (PathConnectionManager.Instance.IsSelectingStructure) {
+			PathConnectionManager.Instance.ShowComponentInputOutput(this);
 		}
 		 // If user is choosing to select component to backup
 		 else if (BackupManager.Instance.BackupReady) {
@@ -161,8 +163,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 				// TODO call method in firewall that then calls method in firewallmanager to show panel????
 				FirewallManager.Instance.ShowFirewallPanel((Firewall) this.gameObject.GetComponent(typeof(Firewall)));
 			}
-		} else {
-			PathConnectionManager.Instance.ShowComponentInputOutput(this);
 		}
 	}
 
