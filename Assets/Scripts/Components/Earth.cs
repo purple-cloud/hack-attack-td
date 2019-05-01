@@ -39,7 +39,7 @@ public class Earth : Component, IPointerClickHandler {
 
     private void CreateRandomEnemy() {
         Debug.Log("Spawning random enemy");
-        int randomInt = UnityEngine.Random.Range(0, 2);
+        int randomInt = UnityEngine.Random.Range(0, 3);
         float rand = UnityEngine.Random.Range(0f, 1.0f);
         // If condition is true create Web Attack
         if (randomInt == 0 && (rand < UserBehaviourProfile.Instance.WebAttackProb)) {
@@ -53,6 +53,20 @@ public class Earth : Component, IPointerClickHandler {
             DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
             documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
         }
+
+        else if (randomInt == 2 && (rand) < UserBehaviourProfile.Instance.DocumentAttackProb) {
+            Debug.Log("Creating DdosAttack...");
+            DdosAttack ddosAttack = (new GameObject("DdosAttack")).AddComponent<DdosAttack>();
+            ddosAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+        }
+
+        // TODO Only works if it finds a Computer component. Will use up computer resources and crash unity if not
+        //WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
+        //webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+
+        //DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
+        //documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+
     }
 
 }
