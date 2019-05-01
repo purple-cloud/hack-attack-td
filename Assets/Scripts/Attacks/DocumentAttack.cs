@@ -22,6 +22,7 @@ public class DocumentAttack : GenericAttack {
 
     private void AttackDocument(Component component) {
         this.document = component;
+        UserBehaviourProfile.Instance.SpawnTime = component.Encryption + 2;
         this.coroutine = InitializeDownload();
         StartCoroutine(this.coroutine);
     }

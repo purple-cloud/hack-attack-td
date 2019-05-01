@@ -17,8 +17,8 @@ public class Document : Component, IPointerClickHandler {
     private void Start() {
         if (AlreadyInitialized == false) {
             Upgrades = new ComponentUpgrade[] {
-                new ComponentUpgrade("Encrypted doucument", 100, documentSprites[1], 500f, 75, 150),
-                new ComponentUpgrade("Advanced encrypted document", 500, documentSprites[2], 1000f, 150, 300),
+                new ComponentUpgrade("Encrypted doucument", 100, documentSprites[1], 25.0f, 75, 150),
+                new ComponentUpgrade("Advanced encrypted document", 500, documentSprites[2], 50.0f, 150, 300),
             };
             Name = "Document";
             ComponentLevel = 1;
