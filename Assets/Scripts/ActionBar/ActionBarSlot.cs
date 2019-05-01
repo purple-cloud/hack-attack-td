@@ -42,6 +42,21 @@ public class ActionBarSlot : ItemSlot {
         }
     }
 
+    private void Update() {
+        // TODO Change this to switch case???
+        // TODO Fill in more components when added to action-bar
+        if (((Component) this.defensePrefab.GetComponent(typeof(Component))).GetType() == typeof(Firewall)) {
+            if (GameManager.Instance.GetCurrency() < 100) {
+                this.gameObject.GetComponent<Button>().enabled = false;
+                SetItemBorderColor(itemBorderColorInsufficientCurrency);
+                insufficientCurrency = true;
+            } else {
+                insufficientCurrency = false;
+                this.gameObject.GetComponent<Button>().enabled = true;
+            }
+        }
+    }
+
     /// <summary>
     /// Drag item or place item when clicking.
     /// </summary>

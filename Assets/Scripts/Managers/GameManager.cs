@@ -83,6 +83,8 @@ public class GameManager : Singleton<GameManager> {
     // Fix this
     private GameObject selectedGameObject;
 
+    private IEnumerator coroutine;
+
     /// <summary>
     /// if there is a current selected component,
     /// return it, and if not return null
@@ -130,8 +132,46 @@ public class GameManager : Singleton<GameManager> {
     /// </summary>
     public void SetCurrency(int value) {
         this.currency = value;
-        this.currencyText.text = "<color=#FDFF00>Resources: " + value.ToString() + "</color>";
+        ChangeCurrencyTextColor("#FDFF00", value);
         OnCurrencyChanged();
+    }
+
+    /// <summary>
+    /// Returns true if value was successfully 
+    /// subtracted from currency and false if not
+    /// </summary>
+    /// <param name="value">value to subtract</param>
+    /// <returns>true if value was successfully 
+    /// subtracted from currency and false if not</returns>
+    public bool SubtractFromCurrency(int value) {
+        if ((GetCurrency() - value) >= 0) {
+            SetCurrency(GetCurrency() - value);
+            return true;
+        } else {
+            this.coroutine = ChangeCurrencyTextColorSwap();
+            StartCoroutine(this.coroutine);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Called when coroutine is started and swaps
+    /// the currency text color to failure and back
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator ChangeCurrencyTextColorSwap() {
+        ChangeCurrencyTextColor("#FF0000", this.currency);
+        yield return new WaitForSeconds(2.0f);
+        ChangeCurrencyTextColor("#FDFF00", this.currency);
+    }
+
+    /// <summary>
+    /// Changes the currency text to specified color
+    /// </summary>
+    /// <param name="color">color of the currency text</param>
+    /// <param name="currency">currency to display</param>
+    private void ChangeCurrencyTextColor(string color, int currency) {
+        this.currencyText.text = "<color=" + color + ">Resources: " + currency + "</color>";
     }
 
     #endregion

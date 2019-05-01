@@ -2,26 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DdosAttack : MonoBehaviour {
-    // Start is called before the first frame update
-    /*void Start()
-    {
-        
+public class DdosAttack : GenericAttack {
+
+
+    public DdosAttack(Component initialComponent) : base(initialComponent) {
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void Run(Component initialComponent) {
+        Init(initialComponent);
+        AttackComponent(FindAttackableGameObject(typeof(Computer)));
     }
 
-    public void StartDdosAttack() {
-        FindAttackableGameObject(); 
-        if(durability <= 0) {
-            repeatAttack = true; 
+    private void AttackComponent(Component component) {
+        if (component.GetType() == typeof(Computer) && component.Durability > 0) {
+            // Each attack does 10 dmg to the durability
+            component.Durability -= 10;
+            Debug.Log("Durability left: " + SelectedComponent.Durability);
         } else {
-            repeatAttack = false; 
+            Debug.Log("Couldnt find target component");
         }
-
-    }*/
+        // Destroy Attack
+        DeleteAttack();
+    }
 }
+   

@@ -132,10 +132,15 @@ namespace Defenses {
 				// End maniac code
 				ResizeGameObject(newStructure, new Vector3(1, 1, 1));
 
+                // TODO Change this to switch case
 				// TODO Fill in more components when added to action-bar
 				if (this.newStructure.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
 					Debug.Log("Component is Firewall: Subtracting 100 from currency");
-					GameManager.Instance.SetCurrency(GameManager.Instance.GetCurrency() - 100);
+                    
+                    // TODO have to exit method and not buy the selected component to place
+                    if (GameManager.Instance.SubtractFromCurrency(100) == false) {
+                        Debug.Log("Not enough currency left...");
+                    }
 				}
 
 				// targetStructure --> newStructure
@@ -190,26 +195,7 @@ namespace Defenses {
                 foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
                     Component comp;
                     if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
-                        comp.ShowHighlight(state);
-                    }
-                }
-            } catch (Exception) {
-                Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
-            }
-        }
-
-        /// <summary>
-        /// Highlights all backupable components
-        /// </summary>
-        /// <param name="state">true to highlight, false to not</param>
-        public void HighlightBackupableComponents(bool state) {
-            try {
-                foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
-                    Component comp;
-                    if ((comp = child.gameObject.GetComponent(typeof(Component)) as Component) != null) {
-                        if (comp.GetType() != typeof(Earth)) {
-                            comp.ShowHighlight(state);
-                        }
+                        comp.ShowHighlight(state, Color.green);
                     }
                 }
             } catch (Exception) {
@@ -273,7 +259,7 @@ namespace Defenses {
 
 			try {
 				comp = structure.GetComponent(typeof(Component)) as Component;
-			} catch (NullReferenceException nre) {
+			} catch (NullReferenceException) {
 				Debug.LogWarning("Component not found inside gameobject. (" + structure.name + ")");
 			}
 
