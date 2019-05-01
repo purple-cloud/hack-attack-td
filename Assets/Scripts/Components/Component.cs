@@ -120,8 +120,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		// When event is caught with left mouse button pressed up
 		if (Defenses.CompController.Instance.IsPlacingStructure) {
 			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
-		} else if (PathConnectionManager.Instance.IsSelectingStructure) {
-			PathConnectionManager.Instance.ShowComponentInputOutput(this);
 		} else if (PathConnectionManager.Instance.IsSelectingStructureLink) {
 			PathConnectionManager.Instance.OnSelectingStructureLink(this);
 		}
@@ -163,6 +161,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 				// TODO call method in firewall that then calls method in firewallmanager to show panel????
 				FirewallManager.Instance.ShowFirewallPanel((Firewall) this.gameObject.GetComponent(typeof(Firewall)));
 			}
+		} else {
+			PathConnectionManager.Instance.ShowComponentInputOutput(this);
 		}
 	}
 

@@ -60,10 +60,10 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 
 	public void OnSelectingStructureLink(Component comp) {
 		if (IsSelectingStructureLink) {
-			if (targetCompOutputFrom == null) {
-				targetCompOutputFrom = comp;
-			} else if (targetCompOutputFrom != null && targetCompInputTo == null) {
+			if (targetCompInputTo == null) {
 				targetCompInputTo = comp;
+			} else if (targetCompInputTo != null && targetCompOutputFrom == null) {
+				targetCompOutputFrom = comp;
 				LinkComponents(targetCompOutputFrom, targetCompInputTo);
 			} else {
 				Debug.Log(this.name + ": something went wrong.");
@@ -90,11 +90,13 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 				Destroy(connectionRow.gameObject);
 			}
 		}
+
+		ShowPanel(false);
 	}
 
 	public void ShowComponentInputOutput(Component selectedComponent) {
-		ShowPanel();
 		Clear();
+		ShowPanel(true);
 
 		topImage.sprite = selectedComponent.GetCanvasImage().sprite;
 		topText.text = selectedComponent.GetType().ToString();
@@ -125,8 +127,8 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 		newConnectionRow.transform.localScale = new Vector3(1, 1, 1);
 	}
 
-	private void ShowPanel() {
-		panel.SetActive(true);
+	private void ShowPanel(bool state) {
+		panel.SetActive(state);
 	}
 
 
