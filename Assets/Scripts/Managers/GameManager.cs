@@ -21,6 +21,9 @@ public class GameManager : Singleton<GameManager> {
     [Header("Information Panel")]
 
     [SerializeField]
+    private GameObject levelInformationPanel;
+
+    [SerializeField]
     private GameObject informationPanel;
 
     [SerializeField]
@@ -28,6 +31,10 @@ public class GameManager : Singleton<GameManager> {
 
     [SerializeField]
     public Text informationPanelText;
+
+    public void CloseInformationPanel() {
+        this.levelInformationPanel.SetActive(false);
+    }
 
     #endregion
 
