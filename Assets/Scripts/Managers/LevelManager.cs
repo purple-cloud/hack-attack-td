@@ -9,7 +9,7 @@ public class LevelManager : Singleton<LevelManager> {
     /// </summary>
     private void Start() {
         // Set the initial player currency
-        GameManager.Instance.SetCurrency(1000);
+        GameManager.Instance.SetCurrency(800);
         // Set the information panel title
         GameManager.Instance.informationPanelTitle.text = "Level 1 Information";
         // Set the information panel text

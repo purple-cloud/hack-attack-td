@@ -14,17 +14,26 @@ public abstract class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public Image canvasImage;
 
     // Border color when the item slot is active (i.e. hovering over it, mouse clicking etc.)
-    internal Color itemBorderColorActive = new Color(0, 0, 1f);
+    internal Color itemBorderColorActive = new Color(0f, 0f, 1f);
 
     // Border color when the item slot is unfocused
-    internal Color itemBorderColorDefault = new Color(1f, 1f, 1f);	
+    internal Color itemBorderColorDefault = new Color(1f, 1f, 1f);
+
+    // Border color if player has insufficient amount of currency
+    internal Color itemBorderColorInsufficientCurrency = new Color(1f, 0f, 0f);
+
+    internal bool insufficientCurrency = false;
 
     /// <summary>
 	/// Set border color when mouse pointer is on the object.
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerEnter(PointerEventData eventData) {
-        SetItemBorderColor(this.itemBorderColorActive);
+        if (insufficientCurrency) {
+            SetItemBorderColor(this.itemBorderColorInsufficientCurrency);
+        } else {
+            SetItemBorderColor(this.itemBorderColorActive);
+        }
     }
 
     /// <summary>
@@ -32,7 +41,11 @@ public abstract class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerExit(PointerEventData eventData) {
-        SetItemBorderColor(this.itemBorderColorDefault);
+        if (insufficientCurrency) {
+            SetItemBorderColor(this.itemBorderColorInsufficientCurrency);
+        } else {
+            SetItemBorderColor(this.itemBorderColorDefault);
+        }
     }
 
     /// <summary>
