@@ -23,7 +23,7 @@ public class CountdownTimer : MonoBehaviour {
 
 			countdownTime -= Time.deltaTime;
 		} else {
-			// Do something
+            GameFinishedPanel.Instance.ShowGameFinishedPanel(true);
 		}
 	}
 }

@@ -35,4 +35,10 @@ public class Computer : Component, IPointerClickHandler {
 
     }
 
+    private void Update() {
+        if (Durability <= 0) {
+            GameFinishedPanel.Instance.ShowGameFinishedPanel(false);
+        }
+    }
+
 }
