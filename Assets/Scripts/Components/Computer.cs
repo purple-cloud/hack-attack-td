@@ -17,8 +17,8 @@ public class Computer : Component, IPointerClickHandler {
     private void Start() {
         if (AlreadyInitialized == false) {
             Upgrades = new ComponentUpgrade[] {
-                new ComponentUpgrade("Modern Laptop", 100, computerSprites[1], 100, 100, 500, 75, 150),
-                new ComponentUpgrade("Gaming Laptop", 500, computerSprites[2], 200, 200, 1000, 150, 300),
+                new ComponentUpgrade("Modern Laptop", 100, computerSprites[1], 100, 100, 250, 75, 150),
+                new ComponentUpgrade("Gaming Laptop", 500, computerSprites[2], 200, 200, 500, 150, 300),
             };
             Name = "Old Computer";
             ComponentLevel = 1;

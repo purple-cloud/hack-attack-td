@@ -255,7 +255,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
                     this.RepairPrice = NextUpgrade.RepairPrice;
                     this.SellValue = NextUpgrade.SellValue;
                     this.Encryption = NextUpgrade.Encryption;
-                    this.Durability = NextUpgrade.Durability;
+                    this.Durability += NextUpgrade.Durability;
                     this.BackupPrice = NextUpgrade.BackupPrice;
                     this.BackupRestorePrice = NextUpgrade.BackupRestorePrice;
 
