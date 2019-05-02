@@ -123,14 +123,8 @@ namespace Defenses {
 				newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
 				newStructure.name = clone.GetComponent<Clone>().defensePrefab.name;
 				newStructure.transform.position = clone.transform.position;
-
-				//TODO Unity is on some serious drugs. Please make sure that the child component in the defense prefab automatically instantaites the child (Image) object.
-				GameObject img = Instantiate(clone.GetComponent<Clone>().defensePrefab.transform.GetChild(0).gameObject) as GameObject;
-				img.transform.position = clone.transform.position;
-				img.transform.SetParent(newStructure.transform);
 				newStructure.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
-				// End maniac code
-				ResizeGameObject(newStructure, new Vector3(1, 1, 1));
+				newStructure.transform.localScale = new Vector3(1, 1, 1);
 
                 // TODO Change this to switch case
 				// TODO Fill in more components when added to action-bar
@@ -202,10 +196,6 @@ namespace Defenses {
                 Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
             }
         }
-
-		public void ResizeGameObject(GameObject obj, Vector3 v) {
-			((RectTransform) obj.transform).localScale = new Vector3(1, 1, 1);
-		}
 
 		//TODO Remove this.
 		/// <summary>
