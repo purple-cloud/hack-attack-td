@@ -182,15 +182,17 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	private void Awake() {
 		input = new List<GameObject>();
 
-		if (gameObject.GetComponent<LineHandler>() == null) {
-			gameObject.AddComponent<LineHandler>();
-		}
+		// Grab linehandler if it exists, or create a new one
+		LineHandler lineHandler = (gameObject.GetComponent<LineHandler>() != null) ? 
+			gameObject.GetComponent<LineHandler>() : gameObject.AddComponent<LineHandler>();
+		lineHandler.AddList(outputs.ToArray());
 
-		LineHandler lineHandler = gameObject.GetComponent<LineHandler>();
-		foreach (GameObject output in outputs) {
-			lineHandler.AddList(output);
-		}
-        this.Sellable = false;
+		// RigidBody is used for detecting collision between structures
+		Rigidbody2D rb2d = (gameObject.GetComponent<Rigidbody2D>() != null) ? 
+			gameObject.GetComponent<Rigidbody2D>() : gameObject.AddComponent<Rigidbody2D>();
+		rb2d.isKinematic = true;
+
+		this.Sellable = false;
         this.InitialPrice = 0;
         // Sets immune default to false;
         ImmuneToVirus = false;

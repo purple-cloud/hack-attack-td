@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class is created to bypass the limitation (one linerenderer per gameobject). Using this, you can create,
+/// remove and modify lines without much hassle.
+/// </summary>
 public class LineHandler : MonoBehaviour {
 	/// <summary>
 	/// First variable is the target output object, the next one is a reference to its object line drawer
@@ -77,7 +81,11 @@ public class LineHandler : MonoBehaviour {
 		}
 	}
 
-	public void Add(GameObject obj) {
+	/// <summary>
+	/// Add a line to each target structure from this gameobject.
+	/// </summary>
+	/// <param name="targetStructure">The structure to draw a line to</param>
+	public void Add(GameObject targetStructure) {
 		// Ensures that everything is set up
 		Init();
 
@@ -85,14 +93,19 @@ public class LineHandler : MonoBehaviour {
 		GameObject lineObj = Instantiate(CompController.Instance.emptyPrefab);
 
 		// Add and configure the line rendering for the single target object
-		lineObj.AddComponent<LineRenderer>().material = CompController.Instance.pathLineMaterial;
+		LineRenderer lr = lineObj.AddComponent<LineRenderer>();
+
+		lr.material = CompController.Instance.pathLineMaterial;
+		lr.startWidth = 10f;
+		lr.endWidth = 10f;
+
 		lineObj.transform.SetParent(lineObjectParent.transform);
 		lineObj.transform.position = componentCenterPoint;
 
 		// Sets the actual line (LineRenderer) to the anchor (or center) of the handler
 		lineObj.transform.localPosition = new Vector3(0, 0, 0);
 
-		targetObjs.Add(obj, lineObj);
+		targetObjs.Add(targetStructure, lineObj);
 	}
 
 
