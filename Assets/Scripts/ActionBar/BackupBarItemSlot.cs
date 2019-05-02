@@ -18,6 +18,7 @@ public class BackupBarItemSlot : ItemSlot {
     }
 
     public override void OnPointerUp(PointerEventData eventData) {
+        PricePanel.Instance.HidePricePanel();
         BackupManager.Instance.HighlightReplacableComponents(((Component) this.backuppedComponent.GetComponent(typeof(Component))), true);
         BackupManager.Instance.BackuppedComponent = this.backuppedComponent;
         BackupManager.Instance.BackupComponentSelected = true;
