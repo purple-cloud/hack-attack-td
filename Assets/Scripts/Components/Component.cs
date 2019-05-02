@@ -322,6 +322,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 			borderGO.GetComponent<Image>().color = color;
 			borderGO.transform.position = gameObject.transform.position;
 			borderGO.transform.SetParent(gameObject.transform);
+			borderGO.transform.localScale = new Vector3(1, 1, 1);
 		} else {
 			// Removes the border if it exists
 			if (gameObject.transform.Find("HighlightBorder") != null) {
