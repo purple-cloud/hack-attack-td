@@ -57,6 +57,7 @@ public class RansomPopup : Singleton<RansomPopup> {
             }
             Debug.Log("Ransom payed");
         }
+        UserBehaviourProfile.Instance.documentHacked = false;
     }
     
     public void DeclineRansom() {

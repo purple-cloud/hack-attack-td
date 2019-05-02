@@ -61,11 +61,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
     public int Price { get; set; }
 
     /// <summary>
-    /// Getter & setter for the component locked status
-    /// </summary>
-    public bool Locked { get; set; }
-
-    /// <summary>
     /// Getter & setter for the component initial price
     /// </summary>
     public int InitialPrice { get; set; }

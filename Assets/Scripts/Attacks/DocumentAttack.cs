@@ -42,8 +42,7 @@ public class DocumentAttack : GenericAttack {
     private void DownloadDocument() {
         // TODO add some condition to prevent download (defensive mechanism) also check document encryption level maybe?
         Debug.Log("Downloading Document Complete...");
-        this.document.Status = false;
-        this.document.Locked = true;
+        UserBehaviourProfile.Instance.documentHacked = true;
         // TODO Change image color to be red
         //Image image = SelectedComponent.GetComponent<Image>();
         //image.GetComponent<Image>().color = Color.red;
@@ -51,7 +50,9 @@ public class DocumentAttack : GenericAttack {
         // TODO add event in gamemanager for updating panel
 
         // Open Panel
-        RansomPopup.Instance.Set("Ransom Request", "Testing you for ransom", 30, 100);
+        RansomPopup.Instance.Set("Ransom Request", 
+            "I have taken control of your classified document. If you want it back you have to pay.", 
+            10, 100);
         RansomPopup.Instance.ShowRansomPanel(true);
         // Delete the attack
         DeleteAttack();
