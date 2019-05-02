@@ -13,9 +13,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	[SerializeField] // A reference to the image displayed in canvas
     private Image canvasImage;
 
-	[SerializeField]
-	private string[] outputObjectName;
-
 	//[HideInInspector]
 	public List<GameObject> input;
 
@@ -184,13 +181,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	/// </summary>
 	private void Awake() {
 		input = new List<GameObject>();
-
-		foreach (string outputString in outputObjectName) {
-			GameObject obj = GameObject.Find(outputString);
-			if (obj != null) {
-				outputs.Add(obj);
-			}
-		}
 
 		if (gameObject.GetComponent<LineHandler>() == null) {
 			gameObject.AddComponent<LineHandler>();
