@@ -4,24 +4,29 @@ using UnityEngine;
 
 public class WebAttack : GenericAttack {
 
+    private Component componentToAttack;
+
     public WebAttack(Component initialComponent) : base(initialComponent) {
 
     }
 
-    public void Run(Component initialComponent) {
+    public override void Run(Component initialComponent, System.Type type) {
         Init(initialComponent);
-        AttackComponent(FindAttackableGameObject(typeof(Computer)));
+        try {
+            if (FindAttackableGameObject(type).GetType() == type) {
+                this.componentToAttack = FindAttackableGameObject(type);
+                AttackComponent();
+            }
+        } catch (NullReferenceException) {
+            DeleteAttack();
+            Debug.Log("FindAttackableGameObject returns null.....");
+        }
     }
 
-    private void AttackComponent(Component component) {
-        if (component.GetType() == typeof(Computer)) {
-            // Each attack does 10 dmg to the durability
-            component.Durability -= 10;
-            Debug.Log("Durability left: " + SelectedComponent.Durability);
-            // TODO Update Module panel with new Computer Durability Values
-        } else {
-            Debug.Log("Couldnt find target component");
-        }
+    private void AttackComponent() {
+        // Each attack does 10 dmg to the durability
+        this.componentToAttack.Durability -= 10;
+        Debug.Log("Durability left: " + SelectedComponent.Durability);
         // Destroy Attack
         DeleteAttack();
     }

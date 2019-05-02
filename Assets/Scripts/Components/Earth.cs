@@ -20,16 +20,16 @@ public class Earth : Component, IPointerClickHandler {
         // Set true when you want earth spawner to be active
         if (true) {
             // Time needs to be dynamic
-            this.coroutine = StartSpawningAttacks(UserBehaviourProfile.Instance.SpawnTime);
+            this.coroutine = StartSpawningAttacks();
             StartCoroutine(this.coroutine);
         }
     }
 
-    private IEnumerator StartSpawningAttacks(float time) {
+    private IEnumerator StartSpawningAttacks() {
         Debug.Log("Starting to spawn attacks...");
         while (true) { 
             Debug.Log("Waiting...");
-            yield return new WaitForSeconds(time);
+            yield return new WaitForSeconds(UserBehaviourProfile.Instance.SpawnTime);
             CreateRandomEnemy();
             Debug.Log("Done Waiting!");
         }
@@ -42,16 +42,18 @@ public class Earth : Component, IPointerClickHandler {
         // If condition is true create Web Attack
         if (randomInt == 0 && (rand < UserBehaviourProfile.Instance.WebAttackProb)) {
             // TODO Might have to tweak spawn time value
-            UserBehaviourProfile.Instance.SpawnTime = 5.0f;
+            UserBehaviourProfile.Instance.SpawnTime = 3.0f;
             Debug.Log("Creating WebAttack...");
             WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
-            webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+            webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)), 
+                typeof(Computer));
         }
         // If condition is true, create document attack
         else if (randomInt == 1 && (rand) < UserBehaviourProfile.Instance.DocumentAttackProb) {
             Debug.Log("Creating DocumentAttack...");
             DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
-            documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
+            documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)), 
+                typeof(Document));
         }
         // if condition is true, create ddos attack
         // TODO Make it so Ddos attack is only available from level 2 and onwards

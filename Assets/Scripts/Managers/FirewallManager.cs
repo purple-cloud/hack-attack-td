@@ -14,7 +14,7 @@ public class FirewallManager : Singleton<FirewallManager> {
         foreach (FirewallPort firewallPort in firewall.GetFirewallPorts()) {
             Button portStatusBtn = firewallPort.GetBtn();
             firewallPort.transform.Find("Port").GetComponent<Text>().text = firewallPort.Port.ToString();
-            portStatusBtn.gameObject.transform.Find("Text").GetComponent<Text>().text = (firewallPort.IsActive) ? "Allow" : "Disallow";
+            portStatusBtn.gameObject.transform.Find("Text").GetComponent<Text>().text = (firewallPort.IsActive) ? "Active" : "Disabled";
             firewallPort.transform.Find("Activity").GetComponent<Text>().text = firewallPort.Activity;
             portStatusBtn.gameObject.GetComponent<Image>().color = (firewallPort.IsActive) ? Color.green : Color.red;
 
@@ -45,7 +45,7 @@ public class FirewallManager : Singleton<FirewallManager> {
     }
 
     public void UpdateStatus(FirewallPort firewallPort) {
-        firewallPort.GetBtn().gameObject.transform.Find("Text").GetComponent<Text>().text = (firewallPort.IsActive) ? "Allow" : "Disallow";
+        firewallPort.GetBtn().gameObject.transform.Find("Text").GetComponent<Text>().text = (firewallPort.IsActive) ? "Active" : "Disabled";
         firewallPort.GetBtn().gameObject.GetComponent<Image>().color = (firewallPort.IsActive) ? Color.green : Color.red;
     }
 

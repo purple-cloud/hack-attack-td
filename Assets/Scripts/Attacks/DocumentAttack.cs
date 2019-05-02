@@ -15,14 +15,21 @@ public class DocumentAttack : GenericAttack {
 
     }
 
-    public void Run(Component initialComponent) {
+    public override void Run(Component initialComponent, System.Type type) {
         Init(initialComponent);
-        AttackDocument(FindAttackableGameObject(typeof(Document)));
+        try {
+            if (FindAttackableGameObject(type).GetType() == type) {
+                this.document = FindAttackableGameObject(type);
+                AttackDocument();
+            }
+        } catch (NullReferenceException) {
+            DeleteAttack();
+            Debug.Log("FindAttackableGameObject returns null.....");
+        }
     }
 
-    private void AttackDocument(Component component) {
-        this.document = component;
-        UserBehaviourProfile.Instance.SpawnTime = component.Encryption + 2;
+    private void AttackDocument() {
+        UserBehaviourProfile.Instance.SpawnTime = this.document.Encryption + 2;
         this.coroutine = InitializeDownload();
         StartCoroutine(this.coroutine);
     }
@@ -48,10 +55,6 @@ public class DocumentAttack : GenericAttack {
         RansomPopup.Instance.ShowRansomPanel(true);
         // Delete the attack
         DeleteAttack();
-    }
-
-    private void DemandRansom() {
-        // TODO Demand ransom from user (Use popup?)
     }
 
 }
