@@ -50,10 +50,14 @@ public class Earth : Component, IPointerClickHandler {
         }
         // If condition is true, create document attack
         else if (randomInt == 1 && (rand) < UserBehaviourProfile.Instance.DocumentAttackProb) {
-            Debug.Log("Creating DocumentAttack...");
-            DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
-            documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)), 
-                typeof(Document));
+            if (UserBehaviourProfile.Instance.documentHacked == false) {
+                Debug.Log("Creating DocumentAttack...");
+                DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
+                documentAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)),
+                    typeof(Document));
+            } else {
+                Debug.Log("Document has already been taken control of...");
+            }
         }
         // if condition is true, create ddos attack
         // TODO Make it so Ddos attack is only available from level 2 and onwards

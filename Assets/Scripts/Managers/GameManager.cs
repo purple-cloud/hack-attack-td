@@ -298,19 +298,22 @@ public class GameManager : Singleton<GameManager> {
 
         // Custom visual settings for document component
         if (this.selectedComponent.GetComponent(typeof(Component)).GetType() == typeof(Document)) {
-            if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price <= GetCurrency() && this.selectedComponent.Locked == false) {
+            if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price <= GetCurrency() && UserBehaviourProfile.Instance.documentHacked == false) {
+                this.selectedComponent.Status = true;
                 this.upgradeButton.interactable = true;
                 this.upgradeButton.GetComponent<Image>().color = Color.green;
                 this.txtPrice.color = Color.white;
                 this.txtPrice.text = "Encryption (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
                 // Comment here
-            } else if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price > GetCurrency() && this.selectedComponent.Locked == false) {
+            } else if (this.selectedComponent.NextUpgrade != null && this.selectedComponent.NextUpgrade.Price > GetCurrency() && UserBehaviourProfile.Instance.documentHacked == false) {
+                this.selectedComponent.Status = true;
                 this.upgradeButton.interactable = false;
                 this.upgradeButton.GetComponent<Image>().color = Color.grey;
                 this.txtPrice.color = Color.black;
                 this.txtPrice.text = "Encryption (Cost: " + this.selectedComponent.NextUpgrade.Price + ")";
                 // Comment here
-            } else if (this.selectedComponent.Locked == true) {
+            } else if (UserBehaviourProfile.Instance.documentHacked == true) {
+                this.selectedComponent.Status = false;
                 this.repairButton.interactable = false;
                 this.repairButton.GetComponent<Image>().color = Color.grey;
                 this.repairText.text = "R̴̯̿͜͝e̴̢̔p̵̨̭̾̏á̵̪͈i̷̥̰͋ȑ̸̩̖ ̷͚̪̇̂(̴͍͋C̷͖̜̀ọ̵̙̀s̷̙̙̄̑t̴̨͝)̵͙̍͝";

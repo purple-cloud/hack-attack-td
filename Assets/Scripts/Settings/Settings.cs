@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Settings : MonoBehaviour {
 
@@ -34,6 +35,14 @@ public class Settings : MonoBehaviour {
     /// </summary>
     public void OnMouseDown () {
         this.settingsPanel.SetActive (!this.settingsPanel.activeSelf);
+    }
+
+    public void ExitLevel() {
+        SceneManager.LoadScene(0);
+    }
+
+    public void RetryLevel() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 }

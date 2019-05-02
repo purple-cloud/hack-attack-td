@@ -10,6 +10,8 @@ public class UserBehaviourProfile : Singleton<UserBehaviourProfile> {
 
     #region PLAYER
 
+    public bool documentHacked;
+
     public float PlayerWillingToPay { get; set; }
 
     public float PlayerPayDenial { get; set; }
@@ -29,6 +31,7 @@ public class UserBehaviourProfile : Singleton<UserBehaviourProfile> {
     #endregion
 
     private void Awake() {
+        this.documentHacked = false;
         this.PlayerWillingToPay = 0;
         this.PlayerPayDenial = 0;
         this.WebAttackProb = 2.0f;
