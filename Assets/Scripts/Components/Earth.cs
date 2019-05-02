@@ -18,7 +18,7 @@ public class Earth : Component, IPointerClickHandler {
     private void Start() {
         Name = "Earth";
         // Set true when you want earth spawner to be active
-        if (true) {
+        if (false) {
             // Time needs to be dynamic
             this.coroutine = StartSpawningAttacks();
             StartCoroutine(this.coroutine);

@@ -298,7 +298,7 @@ public class BackupManager : Singleton<BackupManager> {
 			// Clears variables from adding backup to pool
 			selectedGameObject = null;
 			BackupReady = false;
-
+            PricePanel.Instance.HidePricePanel();
 			// Clears variables from replacing component from backup pool
 			BackuppedComponent = null;
 		}

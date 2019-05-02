@@ -13,6 +13,12 @@ public abstract class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
     [SerializeField]
     public Image canvasImage;
 
+    [SerializeField] // The actual defensive structure representing the item in the itemslot
+    public GameObject defensePrefab;
+
+    [HideInInspector] // A reference to the actual backupped component 
+    public GameObject backuppedComponent;
+
     // Border color when the item slot is active (i.e. hovering over it, mouse clicking etc.)
     internal Color itemBorderColorActive = new Color(0f, 0f, 1f);
 
@@ -34,6 +40,15 @@ public abstract class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         } else {
             SetItemBorderColor(this.itemBorderColorActive);
         }
+        // Show Price Panel
+        if ((this).GetType() == typeof(ActionBarSlot)) {
+            if (((Component) this.defensePrefab.GetComponent(typeof(Component))).GetType() == typeof(Firewall)) {
+                PricePanel.Instance.ShowPricePanel("Defense Cost:", 100, new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 115, gameObject.transform.position.z));
+            }
+        } else if ((this).GetType() == typeof(BackupBarItemSlot)) {
+            Component component = ((Component) this.backuppedComponent.GetComponent(typeof(Component)));
+            PricePanel.Instance.ShowPricePanel("Restore Cost:", component.BackupRestorePrice, new Vector3(gameObject.transform.position.x + 180, gameObject.transform.position.y, gameObject.transform.position.z));
+        }
     }
 
     /// <summary>
@@ -46,6 +61,7 @@ public abstract class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         } else {
             SetItemBorderColor(this.itemBorderColorDefault);
         }
+        PricePanel.Instance.HidePricePanel();
     }
 
     /// <summary>
