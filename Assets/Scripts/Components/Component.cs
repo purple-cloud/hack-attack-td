@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Contains the most basic functions for all structures such as base, firewall, etc...
 /// </summary>
-public abstract class Component : MonoBehaviour, IPointerUpHandler {
+public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler {
 
 	[SerializeField] // A reference to the image displayed in canvas
     private Image canvasImage;
@@ -133,14 +133,32 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 		}
 	}
 
-	/// <summary>
-	/// Currently this method needs to be called for each component
-	/// 
-	/// When the component is clicked it checks if the GameManagers selected component = this component,
-	/// and if so closes the information panel. If not it updates the information panel with
-	/// the specified information from the clicked component and opens up the panel if its not open
-	/// </summary>
-	public void OnPointerClick(PointerEventData eventData) {
+    /// <summary>
+    /// When hovering over ...... TODO Fill this
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerEnter(PointerEventData eventData) {
+        if (BackupManager.Instance.BackupReady && ((Component) gameObject.GetComponent(typeof(Component))).BackupPrice <= GameManager.Instance.GetCurrency()) {
+
+            if (((Component) gameObject.GetComponent(typeof(Component))).GetType() != typeof(Earth)) {
+
+                PricePanel.Instance.ShowPricePanel("Backup Cost:", ((Component) gameObject.GetComponent(typeof(Component))).BackupPrice, new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 115, gameObject.transform.position.z));
+            }
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData) {
+        PricePanel.Instance.HidePricePanel();
+    }
+
+    /// <summary>
+    /// Currently this method needs to be called for each component
+    /// 
+    /// When the component is clicked it checks if the GameManagers selected component = this component,
+    /// and if so closes the information panel. If not it updates the information panel with
+    /// the specified information from the clicked component and opens up the panel if its not open
+    /// </summary>
+    public void OnPointerClick(PointerEventData eventData) {
 		if (!PathConnectionManager.Instance.IsSelectingStructure && 
 			!PathConnectionManager.Instance.IsSelectingStructureLink) {
 			if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {

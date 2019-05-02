@@ -6,9 +6,6 @@ using UnityEngine.UI;
 
 public class BackupBarItemSlot : ItemSlot {
 
-    // A reference to the actual backupped component 
-    public GameObject backuppedComponent;
-
     private void Update() {
         if (((Component) this.backuppedComponent.GetComponent(typeof(Component))).BackupRestorePrice > GameManager.Instance.GetCurrency()) {
             this.gameObject.GetComponent<Button>().enabled = false;

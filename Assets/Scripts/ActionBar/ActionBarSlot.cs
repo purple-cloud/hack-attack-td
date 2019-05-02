@@ -4,10 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ActionBarSlot : ItemSlot {
-    
-    [SerializeField] // The actual defensive structure representing the item in the itemslot
-    private GameObject defensePrefab;	
+public class ActionBarSlot : ItemSlot, IPointerEnterHandler {
 
     [SerializeField] // Checks if the itemslot is placable
     private bool isPlacable = false;
@@ -70,5 +67,4 @@ public class ActionBarSlot : ItemSlot {
             SetItemBorderColor(itemBorderColorActive);
         }
     }
-
 }
