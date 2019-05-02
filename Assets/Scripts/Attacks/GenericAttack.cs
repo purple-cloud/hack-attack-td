@@ -2,18 +2,14 @@
 using System.Collections;
 using UnityEngine;
 
-public class GenericAttack : Pathfinder {
+public abstract class GenericAttack : Pathfinder {
 
     private bool isAttackable;
 
-    private bool repeatAttack = false;
+    protected bool shouldDestroy;
 
     public GenericAttack(Component initialComponent) : base(initialComponent) {
         
-    }
-
-    private void Awake() {
-        this.isAttackable = false;
     }
 
     /// <summary>
@@ -22,8 +18,10 @@ public class GenericAttack : Pathfinder {
     public Component FindAttackableGameObject(System.Type component) {
         Component foundComponent = null;
         int maxMoves = 5;
+        this.isAttackable = false;
+        this.shouldDestroy = false;
         try {
-            while (this.isAttackable != true) {
+            while (this.isAttackable == false && this.shouldDestroy == false) {
                 if (ScanComponent(SelectedComponent, component)) {
                     this.isAttackable = true;
                     foundComponent = SelectedComponent;
@@ -62,14 +60,14 @@ public class GenericAttack : Pathfinder {
                 bool portStatus = firewallPort.IsActive;
                 Debug.Log("Selected component is a firewall, port status: " + portStatus);
                 if (firewall.Status) {
-                    if (false == portStatus) {
-                        if (componentToScan.GetType() == componentToFind.GetType()) {
+                    if (portStatus == false) {
+                        if (componentToScan.GetType() == componentToFind) {
                             componentFound = true;
                         }
                     } else {
                         Debug.Log("Firewall port closed");
                         componentFound = false;
-                        DeleteAttack();
+                        shouldDestroy = true;
                     }
                 }
             } else {
@@ -81,12 +79,14 @@ public class GenericAttack : Pathfinder {
         return componentFound;
     }
 
+    public abstract void Run(Component initialComponent, System.Type type);
+
     /// <summary>
     /// deletes this attack object
     /// </summary>
     public void DeleteAttack() {
         Debug.Log("Deleting attack..");
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
 }
