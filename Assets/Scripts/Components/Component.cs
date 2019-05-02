@@ -13,9 +13,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	[SerializeField] // A reference to the image displayed in canvas
     private Image canvasImage;
 
-	[SerializeField]
-	private string[] outputObjectName;
-
 	//[HideInInspector]
 	public List<GameObject> input;
 
@@ -185,13 +182,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 	private void Awake() {
 		input = new List<GameObject>();
 
-		foreach (string outputString in outputObjectName) {
-			GameObject obj = GameObject.Find(outputString);
-			if (obj != null) {
-				outputs.Add(obj);
-			}
-		}
-
 		if (gameObject.GetComponent<LineHandler>() == null) {
 			gameObject.AddComponent<LineHandler>();
 		}
@@ -322,6 +312,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler {
 			borderGO.GetComponent<Image>().color = color;
 			borderGO.transform.position = gameObject.transform.position;
 			borderGO.transform.SetParent(gameObject.transform);
+			borderGO.transform.localScale = new Vector3(1, 1, 1);
 		} else {
 			// Removes the border if it exists
 			if (gameObject.transform.Find("HighlightBorder") != null) {
