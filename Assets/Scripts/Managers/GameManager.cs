@@ -188,7 +188,12 @@ public class GameManager : Singleton<GameManager> {
     /// any of the Update methods is called the first time.
     /// </summary>
     private void Start() {
-        
+		// Close all panels when user press cancel/escape
+		EventManager.onCancel += () => {
+			informationPanel.SetActive(false);
+			DeselectGameObject();
+			ShowStats(false);
+		};
     }
 
     /// <summary>
