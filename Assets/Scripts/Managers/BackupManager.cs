@@ -33,7 +33,18 @@ public class BackupManager : Singleton<BackupManager> {
         this.listOfBackuppedComponents = new List<GameObject>();
         this.BackupComponentSelected = false;
         this.BackupReady = false;
-    }
+
+		EventManager.onCancel += () => {
+			Defenses.CompController.Instance.HighlightAllStructures(false);
+
+			// Clears variables from adding backup to pool
+			selectedGameObject = null;
+			BackupReady = false;
+			PricePanel.Instance.HidePricePanel();
+			// Clears variables from replacing component from backup pool
+			BackuppedComponent = null;
+		};
+	}
 
     public void InitBackup(GameObject componentToBackup) {
         this.selectedGameObject = componentToBackup;
@@ -290,17 +301,4 @@ public class BackupManager : Singleton<BackupManager> {
         ShowBackupPanel(false);
         this.backupSelectionPanel.SetActive(!this.backupSelectionPanel.activeSelf);
     }
-
-	void Update() {
-		if (Input.GetButtonDown("Cancel")) {
-			Defenses.CompController.Instance.HighlightAllStructures(false);
-
-			// Clears variables from adding backup to pool
-			selectedGameObject = null;
-			BackupReady = false;
-            PricePanel.Instance.HidePricePanel();
-			// Clears variables from replacing component from backup pool
-			BackuppedComponent = null;
-		}
-	}
 }

@@ -13,6 +13,9 @@ public class Clone : MonoBehaviour, IPointerDownHandler {
 	/// </summary>
 	void Start() {
 		CompController.Instance.InitClone(gameObject);
+
+		// When escape is pressed, cancel placement of the clone
+		EventManager.onCancel += CompController.Instance.CancelPlacement;
 	}
 
 	/// <summary>
@@ -25,11 +28,6 @@ public class Clone : MonoBehaviour, IPointerDownHandler {
 	}
 
 	void Update() {
-		// Check if escape or right mouse is clicked and if the clone is on the display
-		if (Input.GetButtonDown("Cancel")) {
-			CompController.Instance.CancelPlacement();
-		}
-
 		if (isDragging) {
 			// Snap the clone object to the mouse
 			gameObject.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
