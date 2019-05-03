@@ -96,8 +96,8 @@ public class LineHandler : MonoBehaviour {
 		LineRenderer lr = lineObj.AddComponent<LineRenderer>();
 
 		lr.material = CompController.Instance.pathLineMaterial;
-		lr.startWidth = 10f;
-		lr.endWidth = 10f;
+		lr.startWidth = 100;
+		lr.endWidth = 100;
 
 		lineObj.transform.SetParent(lineObjectParent.transform);
 		lineObj.transform.position = componentCenterPoint;
