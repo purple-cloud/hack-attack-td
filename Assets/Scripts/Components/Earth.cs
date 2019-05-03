@@ -3,6 +3,7 @@ using System.Timers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 
 public class Earth : Component, IPointerClickHandler {
@@ -18,7 +19,7 @@ public class Earth : Component, IPointerClickHandler {
     private void Start() {
         Name = "Earth";
         // Set true when you want earth spawner to be active
-        if (false) {
+        if (false && SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Tutorial")) {
             // Time needs to be dynamic
             this.coroutine = StartSpawningAttacks();
             StartCoroutine(this.coroutine);
