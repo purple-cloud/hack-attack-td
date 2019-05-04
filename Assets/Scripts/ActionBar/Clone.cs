@@ -14,8 +14,15 @@ public class Clone : MonoBehaviour, IPointerDownHandler {
 	void Start() {
 		CompController.Instance.InitClone(gameObject);
 
-		// When escape is pressed, cancel placement of the clone
+		// When escape is pressed, cancel placement of the structure 
 		EventManager.onCancel += CompController.Instance.CancelPlacement;
+
+		// When canvas is pressed AND structure is not being placed, cancel placement
+		EventManager.onCanvasClick += () => {
+			if (!isDragging) {
+				CompController.Instance.CancelPlacement();
+			}
+		};
 	}
 
 	/// <summary>

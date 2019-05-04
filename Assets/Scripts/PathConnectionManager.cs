@@ -212,7 +212,8 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	}
 
 	void Start() {
-		// Interrupt linking structures and hide the panel when cancel event is triggered
+		// Interrupt linking structures and hide the panel
 		EventManager.onCancel += Clear;
+		EventManager.onCanvasClick += Clear;
 	}
 }
