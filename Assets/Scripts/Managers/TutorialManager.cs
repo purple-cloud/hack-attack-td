@@ -193,6 +193,7 @@ public class TutorialManager : MonoBehaviour {
     private void TwelfthTask() {
         this.tutorialTxt.text = "You are now ready to start defending yourself against real attacks. You can access the settings menu in the top right corner. Click Next level when you are ready. We recommend that you try and click around in the interface before jumping onwards.";
         ChangeBtnState(this.nextBtn);
+        Settings.Instance.ChangeConcedeAndNextLevel();
     }
 
     private void NextStep() {

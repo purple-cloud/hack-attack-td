@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class Settings : MonoBehaviour {
+public class Settings : Singleton<Settings> {
 
     [SerializeField]
     private GameObject settingsPanel;
@@ -25,16 +25,24 @@ public class Settings : MonoBehaviour {
     private Button concedeBtn;
 
     [SerializeField]
+    private Button nextLevelBtn;
+
+    [SerializeField]
     private Slider musicSlider;
 
     [SerializeField]
     private Slider soundSlider;
 
     /// <summary>
-    /// On mouseClick open settings menu
+    /// Displays the settings panel
     /// </summary>
-    public void OnMouseDown () {
+    public void ShowSettingsPanel () {
         this.settingsPanel.SetActive (!this.settingsPanel.activeSelf);
+    }
+
+    public void ChangeConcedeAndNextLevel() {
+        this.concedeBtn.gameObject.SetActive(!this.concedeBtn.gameObject.activeSelf);
+        this.nextLevelBtn.gameObject.SetActive(!this.nextLevelBtn.gameObject.activeSelf);
     }
 
     public void ExitLevel() {
@@ -43,6 +51,10 @@ public class Settings : MonoBehaviour {
 
     public void RetryLevel() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void NextLevel() {
+        SceneManager.LoadScene(1);
     }
 
 }
