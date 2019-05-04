@@ -1528,7 +1528,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Welcome to the tutorial
+  m_Text: Welcome to the tutorial!
 --- !u!222 &421800978
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2573,13 +2573,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'In this tutorial you will learn the basics for protecting your system.
-    You will learn how to setup defense mechanism, how to alter connections between
-    the components in your system and more.
-
-
-    Information will be displayed in the top left corner. After doing the specified
-    action you can press ok and you will be given a next task.'
+  m_Text: "In this tutorial you will learn the basics for protecting your system.
+    You will learn how to setup defense mechanisms, how to alter the connections between
+    components in your system and more.\r\n\nInformation will be displayed in the
+    top left corner. After doing the specified action, press next and the next task
+    will appear.\u201D\r\n"
 --- !u!222 &622323204
 CanvasRenderer:
   m_ObjectHideFlags: 0
