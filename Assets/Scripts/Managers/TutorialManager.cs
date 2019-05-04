@@ -123,28 +123,28 @@ public class TutorialManager : MonoBehaviour {
 
     private void TutorialInit() {
         ShowTutorialPanel(true);
-        this.tutorialTxt.text = "For starters we can see we have a computer, a document and the internet. All these are connected together via inputs and outputs";
+        this.tutorialTxt.text = "This is your system. \n\nAt the moment, it consists of a computer with a connection to the Internet, and a document. ";
     }
 
     private void FirstTask() {
         this.firewallSlot.SetActive(true);
         HighlightComponent(this.firewallSlot, true);
-        this.tutorialTxt.text = "To extend your system with another component, simply choose what component from the actionbar you would like to place and left click one of the highlighted components you want to extend from, and then click anywhere on the map. (You can cancel placement anytime by pressing the ESC key) Press Next to continue.";
+        this.tutorialTxt.text = "Your system is exposed to threats from the Internet. \n\nYou need defenses. \n\nThey can be added from the action bar. ";
     }
 
     private void SecondTask() {
-        this.tutorialTxt.text = "You might want to place a firewall between your computer and the internet to protect yourself. To do this, choose firewall from actionbar. RIGHT CLICK computer and then RIGHT CLICK internet. After this you can then choose where you want to place the firewall in the map. Press Next to continue.";
+        this.tutorialTxt.text = "Add a firewall. \n\n 1.LEFT CLICK the firewall in the action bar \n 2.RIGHT CLICK the computer \n 3.RIGHT CLICK the Internet (the earth)\n 4.LEFT CLICK to add the firewall anywhere you’d like\nRemember, you can cancel the addition anytime by pressing ESC!";
     }
 
     private void ThirdTask() {
         HighlightComponent(this.firewallSlot, false);
         this.modifyPathBtn.SetActive(true);
         HighlightComponent(this.modifyPathBtn, true);
-        this.tutorialTxt.text = "Now we have two connections from the internet to our computer. This isn't really optimal. To remove our direct connection from the internet to our computer first click the highlighted button in the top right corner...";
+        this.tutorialTxt.text = "Now there are two connections from the Internet to your computer. This is not optimal. \n\nTo remove the direct connection from the Internet to the computer, click the highlighted button in the top right corner, and delete the unwanted connection by pressing X. ";
         this.readyToMoveOn = true;
         ChangeBtnState(this.nextBtn);
     }
-
+    //slett fourth task! 
     private void FourthTask() {
         HighlightComponent(this.modifyPathBtn, false);
         ChangeBtnState(this.nextBtn);
@@ -153,12 +153,12 @@ public class TutorialManager : MonoBehaviour {
     }
 
     private void FifthTask() {
-        this.tutorialTxt.text = "Our system is now a lot more secure. Our firewall can be configured by clicking it and choosing to enable traffic through our different ports or disable the traffic. Press Next to continue.";
+        this.tutorialTxt.text = "The system is now more secure. \n\nThe firewall can be configured trough the firewall panel, that appears when you select the firewall.Here you can choose to enable or disable traffic.\n\nYou can inspect the traffic from the panel. ";
     }
 
     private void SixthTask() {
         this.addPathBtn.SetActive(true);
-        this.tutorialTxt.text = "Another thing which is nice to be aware of is that you can create your own connections between existing components. This can be done by clicking the highlighed button in the top right corner...";
+        this.tutorialTxt.text = "You can create your own connections between existing components by clicking the highlighted button in the top right corner. ";
         HighlightComponent(this.addPathBtn, true);
         this.readyToMoveOn = true;
         ChangeBtnState(this.nextBtn);
@@ -168,30 +168,30 @@ public class TutorialManager : MonoBehaviour {
         HighlightComponent(this.addPathBtn, false);
         ChangeBtnState(this.nextBtn);
         this.readyToMoveOn = false;
-        this.tutorialTxt.text = "Now you can click on the two components you want to connect. (If you already have deleted the connection from the internet to the computer you can establish a new connection there. After that you can delete it again) (You can cancel path connecting anytime by pressing the ESC key). Press Next to continue.";
+        this.tutorialTxt.text = "Click the two components you want to connect. \n\nIf you already have deleted the connection from the internet to the computer you can establish a new connection there. After that you can delete it again\n\nYou can cancel path connecting anytime by pressing the ESC";
     }
 
     private void EightTask() {
-        this.tutorialTxt.text = "Now you have come so far it's time to take backup. You can take backup of each individual component in the system. By taking backup you store all its states and functionality. Press Next to start.";
+        this.tutorialTxt.text = "It’s time to take a backup. \n\nYou can take a backup of each individual component in the system. \n\nBy taking backup of a component, you store the state and the functionality. ";
     }
 
     private void NinthTask() {
         this.backupSlot.SetActive(true);
         HighlightComponent(this.backupSlot, true);
-        this.tutorialTxt.text = "To take backup, first click on the backup slot in the actionbar. Then select 'Backup Component', and click the component you would like to take backup of (You can cancel backup by pressing the ESC key). Press Next to continue.";
+        this.tutorialTxt.text = "To take a backup, first click backup on the action bar. \n\nThen select “Backup component” and click the component you would like to backup. \n\nThe backup can be cancelled by pressing the ESC key. ";
     }
 
     private void TenthTask() {
         HighlightComponent(this.backupSlot, false);
-        this.tutorialTxt.text = "If you took a backup you will see it in a panel that pops up. This is your backup management panel. Here you can store up to 6 individual backups. If you choose to add one more after having 6, the oldest backup will be deleted. Choose wisely which components are important. Press Next to continue.";
+        this.tutorialTxt.text = "This is your backup management panel. \n\nYou can store up to 6 individual backups. If you add a 7th, the oldest backup will be deleted. \n\nChoose wisely. ";
     }
 
     private void EleventhTask() {
-        this.tutorialTxt.text = "To restore a backup, simply click the backup you want and then select where to place it. You can only replace components of the same type as the backup itself. Press Next to continue.";
+        this.tutorialTxt.text = "To restore a backup, click the backup you want and select where to place it. \n\nYou can only replace components of the same type as the backup itself.";
     }
 
     private void TwelfthTask() {
-        this.tutorialTxt.text = "You are now ready to start defending yourself against real attacks. You can access the settings menu in the top right corner. Click Next level when you are ready. We recommend that you try and click around in the interface before jumping onwards.";
+        this.tutorialTxt.text = "You are now ready to start defending yourself against real attacks! \n\nYou can access the settings menu in the top right corner. \n\nClick Next level when you are ready. \n\nWe recommend that you try and click around in the interface before jumping onwards.";
         ChangeBtnState(this.nextBtn);
         Settings.Instance.ChangeConcedeAndNextLevel();
     }
