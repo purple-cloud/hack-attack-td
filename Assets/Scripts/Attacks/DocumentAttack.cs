@@ -37,17 +37,18 @@ public class DocumentAttack : GenericAttack {
     private IEnumerator InitializeDownload() {
         yield return new WaitForSeconds(this.document.Encryption);
         DownloadDocument();
-    }
+	}
 
     private void DownloadDocument() {
         // TODO add some condition to prevent download (defensive mechanism) also check document encryption level maybe?
         Debug.Log("Downloading Document Complete...");
         UserBehaviourProfile.Instance.documentHacked = true;
-        // TODO Change image color to be red
-        //Image image = SelectedComponent.GetComponent<Image>();
-        //image.GetComponent<Image>().color = Color.red;
-        //SelectedComponent.SetCanvasImage(image);
-        // TODO add event in gamemanager for updating panel
+		// TODO Change image color to be red
+		//Image image = SelectedComponent.GetComponent<Image>();
+		//image.GetComponent<Image>().color = Color.red;
+		//SelectedComponent.SetCanvasImage(image);
+
+		EventManager.TriggerRefreshPanelEvent();
 
         // Open Panel
         RansomPopup.Instance.Set("Ransom Request", 

@@ -6,11 +6,12 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// Contains all of the custom events needed among scripts.
 /// </summary>
-public class EventManager : MonoBehaviour {
+public class EventManager : Singleton<EventManager> {
 	#region DELEGATES
 
 	public delegate void Cancel();
 	public delegate void CanvasClick();
+	public delegate void RefreshPanel();
 
 	#endregion
 
@@ -24,9 +25,16 @@ public class EventManager : MonoBehaviour {
 	/// </summary>
 	public static event CanvasClick onCanvasClick;
 
+	/// <summary>
+	/// Event triggered by other classes to let them know that changes has happened and they need to update their
+	/// object contents.
+	/// </summary>
+	public static event RefreshPanel onRefreshPanel;
+
+	private bool refreshPanelEventIsTriggered = false;
+
 	void OnGUI() {
-		if (Input.GetButtonDown("Cancel") || 
-			( !EventSystem.current.IsPointerOverGameObject())) {
+		if (Input.GetButtonDown("Cancel")) {
 			// Notify all subscribed classes when user wishes to cancel either by pressing escape, or
 			// clicking on a non-occupied area on canvas
 			onCancel?.Invoke();
@@ -38,5 +46,21 @@ public class EventManager : MonoBehaviour {
 				onCanvasClick?.Invoke();
 			}
 		}
+	}
+
+	void Update() {
+		// Ask classes to update panels 
+		if (Instance.refreshPanelEventIsTriggered) {
+			onRefreshPanel?.Invoke();
+			Instance.refreshPanelEventIsTriggered = false;
+		}
+	}
+
+	/// <summary>
+	/// Every panel subscribed to onRefreshPanel will be asked to update their contents. This method is executed 
+	/// by other classes.
+	/// </summary>
+	public static void TriggerRefreshPanelEvent() {
+		Instance.refreshPanelEventIsTriggered = true;
 	}
 }

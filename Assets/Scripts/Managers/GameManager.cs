@@ -191,6 +191,8 @@ public class GameManager : Singleton<GameManager> {
 		// Close all panels when user press cancel/escape, or presses on an empty space.
 		EventManager.onCancel += ClosePanels;
 		EventManager.onCanvasClick += ClosePanels;
+
+		EventManager.onRefreshPanel += UpdateComputerPanel;
 	}
 
 	/// <summary>

@@ -58,12 +58,18 @@ public class RansomPopup : Singleton<RansomPopup> {
             Debug.Log("Ransom payed");
         }
         UserBehaviourProfile.Instance.documentHacked = false;
+
+		// Refresh panel after payment
+		EventManager.TriggerRefreshPanelEvent();
     }
     
     public void DeclineRansom() {
         ShowRansomPanel(false);
         UserBehaviourProfile.Instance.DocumentAttackProb = UserBehaviourProfile.Instance.DocumentAttackProb + 0.10f;
         Debug.Log("Ransom declined");
+
+		// Refresh panel after rejection payment request
+		EventManager.TriggerRefreshPanelEvent();
     }
 
     public void ShowRansomPanel(bool active) {
