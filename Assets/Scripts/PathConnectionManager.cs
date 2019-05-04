@@ -211,14 +211,9 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 		ShowPanel(false);
 	}
 
-	void Update() {
-		// Checks if the user has the panel open or is linking structures
-		if (IsSelectingStructure || IsSelectingStructureLink) {
-			// Check if escape or right mouse is clicked
-			if (Input.GetMouseButtonUp(1) || Input.GetButtonDown("Cancel")) {
-				// Interrupt linking structures and hide the panel
-				Clear();
-			}
-		}
+	void Start() {
+		// Interrupt linking structures and hide the panel
+		EventManager.onCancel += Clear;
+		EventManager.onCanvasClick += Clear;
 	}
 }

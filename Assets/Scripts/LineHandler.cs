@@ -30,10 +30,11 @@ public class LineHandler : MonoBehaviour {
 			if (targetObjs.Count > 0) {
 				// Draw lines if component has one or more outputs
 				foreach (KeyValuePair<GameObject, GameObject> lineObj in targetObjs) {
-					//TODO Instead of iterating over dead gameobjects, remove them
 					// Ensure there aren't any destroyed objects being referenced to
 					if (lineObj.Key != null) {
 						DrawLine(lineObj);
+					} else {
+						targetObjs.Remove(lineObj.Key);
 					}
 				}
 			}
@@ -96,8 +97,8 @@ public class LineHandler : MonoBehaviour {
 		LineRenderer lr = lineObj.AddComponent<LineRenderer>();
 
 		lr.material = CompController.Instance.pathLineMaterial;
-		lr.startWidth = 10f;
-		lr.endWidth = 10f;
+		lr.startWidth = 100;
+		lr.endWidth = 100;
 
 		lineObj.transform.SetParent(lineObjectParent.transform);
 		lineObj.transform.position = componentCenterPoint;
