@@ -40,6 +40,23 @@ public class TutorialManager : MonoBehaviour {
     [SerializeField]
     private GameObject backupSlot;
 
+    [SerializeField]
+    private GameObject predefinedLocationForFirstFirewall;
+
+    [SerializeField]
+    private GameObject predefinedLocationForSecondFirewall;
+
+    [Header("Components")]
+
+    [SerializeField]
+    private GameObject earth;
+
+    [SerializeField]
+    private GameObject computer;
+
+    [SerializeField]
+    private GameObject document;
+
     #endregion
 
     #region VARIABLES
@@ -48,9 +65,22 @@ public class TutorialManager : MonoBehaviour {
 
     private int state;
 
+    private bool firewallSlotState = false;
+
+    private bool backupSlotState = false;
+
+    private bool computerState = false;
+
+    private bool internetState = false;
+
+    private bool inbetweenStructPlacement = false;
+
     #endregion
 
     private void Start() {
+        UserBehaviourProfile.Instance.tutorialLvl = true;
+        Defenses.CompController.Instance.canPlaceTutorialStruct = false;
+
         this.readyToMoveOn = false;
         this.state = 0;
         this.nextBtn.onClick.AddListener(NextStep);
@@ -63,40 +93,56 @@ public class TutorialManager : MonoBehaviour {
         this.addPathBtn.SetActive(false);
         this.firewallSlot.SetActive(false);
         this.backupSlot.SetActive(false);
+
+        // Init restricted access event trigger
+        this.firewallSlot.GetComponent<Button>().onClick.AddListener(FireFirewallEventTrigger);
+        this.backupSlot.GetComponent<Button>().onClick.AddListener(FireBackupEventTrigger);
+        this.computer.GetComponent<Button>().onClick.AddListener(FireComputerEventTrigger);
+        this.earth.GetComponent<Button>().onClick.AddListener(FireInternetEventTrigger);
+        this.predefinedLocationForFirstFirewall.GetComponent<Button>().onClick.AddListener(PlaceFirewallComponentOnSpecifiedLocation);
+        this.predefinedLocationForSecondFirewall.GetComponent<Button>().onClick.AddListener(PlaceFirewallComponentOnSpecifiedLocation);
+
+        // Catches component placed event
+        EventManager.onComponentPlaced += PlaceFirewallComponentOnSpecifiedLocation;
+
+        // Disable component clickable
+        ChangeComponentClickableState(this.computer, false);
+        ChangeComponentClickableState(this.earth, false);
+        ChangeComponentClickableState(this.document, false);
     }
 
     private void StateMachine() {
-        switch (state) {
+        switch (this.state) {
             case 1:
                 FirstTask();
                 break;
 
             case 2:
-                SecondTask();
+                NewSecondTask();
                 break;
 
             case 3:
-                ThirdTask();
+                NewThirdTask();
                 break;
 
             case 4:
-                FourthTask();
+                NewFourthTask();
                 break;
 
             case 5:
-                FifthTask();
+                NewFifthTask();
                 break;
 
             case 6:
-                SixthTask();
+                NewSixthTask();
                 break;
 
             case 7:
-                SeventhTask();
+                NewSeventhTask();
                 break;
 
             case 8:
-                EightTask();
+                NewEightTask();
                 break;
 
             case 9:
@@ -121,16 +167,116 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
+    private void FireFirewallEventTrigger() {
+        if (this.firewallSlotState) {
+            NextStep();
+        }
+    }
+
+    private void FireComputerEventTrigger() {
+        if (this.computerState && this.inbetweenStructPlacement == false) {
+            NextStep();
+        } else if (this.computerState && this.inbetweenStructPlacement) {
+            // Check what mouse btn is pressed
+            if (Input.GetMouseButtonUp(1)) {
+                NextStep();
+            }
+        }
+    }
+
+    private void FireInternetEventTrigger() {
+        if (this.internetState && this.inbetweenStructPlacement == false) {
+            NextStep();
+        } else if (this.internetState && this.inbetweenStructPlacement) {
+            // Check what mouse btn is pressed
+            if (Input.GetMouseButtonDown(1)) {
+                Debug.Log("Right Mouse Click..");
+                NextStep();
+            }
+        }
+    }
+
+    private void FireBackupEventTrigger() {
+        if (this.backupSlotState) {
+            NextStep();
+        }
+    }
+
+    public void PlaceFirewallComponentOnSpecifiedLocation() {
+        Defenses.CompController.Instance.canPlaceTutorialStruct = true;
+        NextStep();
+    }
+
     private void TutorialInit() {
         ShowTutorialPanel(true);
         this.tutorialTxt.text = "For starters we can see we have a computer, a document and the internet. All these are connected together via inputs and outputs";
     }
 
     private void FirstTask() {
+        ChangeBtnState(this.nextBtn);
+        this.firewallSlotState = true;
+        // TODO Add Stop here and wait for firewall panel to be clicked
         this.firewallSlot.SetActive(true);
         HighlightComponent(this.firewallSlot, true);
-        this.tutorialTxt.text = "To extend your system with another component, simply choose what component from the actionbar you would like to place and left click one of the highlighted components you want to extend from, and then click anywhere on the map. (You can cancel placement anytime by pressing the ESC key) Press Next to continue.";
+        this.tutorialTxt.text = "To extend your system with another component, (this is just an example) click the highlighted FirewallSlot in your actionbar";
     }
+
+    private void NewSecondTask() {
+        this.firewallSlotState = false;
+        this.computerState = true;
+        ChangeComponentClickableState(this.computer, true);
+        HighlightComponent(this.firewallSlot, false);
+        // Highlight computer component
+        HighlightComponent(this.computer, true);
+        this.tutorialTxt.text = "Now LEFT CLICK on the hightlighted computer";
+    }
+
+    private void NewThirdTask() {
+        ChangeComponentClickableState(this.computer, false);
+        this.computerState = false;
+        HighlightComponent(this.computer, false);
+        HighlightComponent(this.predefinedLocationForFirstFirewall, true);
+        this.predefinedLocationForFirstFirewall.SetActive(true);
+        this.tutorialTxt.text = "Now LEFT CLICK the highlighted area in the canvas";
+    }
+
+    private void NewFourthTask() {
+        Defenses.CompController.Instance.canPlaceTutorialStruct = false;
+        HighlightComponent(this.predefinedLocationForFirstFirewall, false);
+        this.predefinedLocationForFirstFirewall.SetActive(false);
+        this.tutorialTxt.text = "WELL DONE! Now you can try and place a firewall between to existing components. First LEFT CLICK on the firewall slot again";
+        this.firewallSlotState = true;
+        HighlightComponent(this.firewallSlot, true);
+        this.inbetweenStructPlacement = true;
+    }
+
+    private void NewFifthTask() {
+        this.firewallSlotState = false;
+        HighlightComponent(this.firewallSlot, false);
+        this.tutorialTxt.text = "Now comes the really important task. To place a defense between to existing components you have to use the RIGHT CLICK mouse button. First RIGHT CLICK on the internet.";
+        this.internetState = true;
+        ChangeComponentClickableState(this.earth, true);
+        HighlightComponent(this.earth, true);
+    }
+
+    private void NewSixthTask() {
+        ChangeComponentClickableState(this.earth, false);
+        HighlightComponent(this.earth, false);
+        this.internetState = false;
+        this.tutorialTxt.text = "Now RIGHT CLICK the computer";
+        ChangeComponentClickableState(this.computer, true);
+        HighlightComponent(this.computer, true);
+    }
+
+    private void NewSeventhTask() {
+        this.tutorialTxt.text = "Now LEFT CLICK the highlighted area in the canvas";
+    }
+
+    private void NewEightTask() {
+        this.inbetweenStructPlacement = false;
+    }
+
+
 
     private void SecondTask() {
         this.tutorialTxt.text = "You might want to place a firewall between your computer and the internet to protect yourself. To do this, choose firewall from actionbar. RIGHT CLICK computer and then RIGHT CLICK internet. After this you can then choose where you want to place the firewall in the map. Press Next to continue.";
@@ -230,11 +376,21 @@ public class TutorialManager : MonoBehaviour {
             borderGO.transform.SetParent(objectToHighlight.transform);
             if (objectToHighlight == this.firewallSlot || objectToHighlight == this.backupSlot) {
                 borderGO.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+            } else if (objectToHighlight == this.computer || objectToHighlight == this.earth || objectToHighlight == this.document) {
+                borderGO.transform.localScale = new Vector3(1f, 1f, 1f);
             }
         } else {
             if (objectToHighlight.transform.Find("HighlightBorder") != null) {
                 Destroy(objectToHighlight.transform.Find("HighlightBorder").gameObject);
             }
+        }
+    }
+
+    private void ChangeComponentClickableState(GameObject obj, bool clickableState) {
+        if (clickableState) {
+            obj.GetComponent<Button>().enabled = true;
+        } else {
+            obj.GetComponent<Button>().enabled = false;
         }
     }
 

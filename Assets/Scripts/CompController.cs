@@ -28,8 +28,10 @@ namespace Defenses {
 		public GameObject highlightBorder;
 
 		[HideInInspector] // A reference to the current clone (created from the item slot)
-        public GameObject clone;				
-		
+        public GameObject clone;
+
+        public bool canPlaceTutorialStruct = true;
+
 		/// <summary>
 		/// An indication on if a structure is in the progress of being placed.
 		/// This variable is only altered by the action bar elements.
@@ -102,7 +104,9 @@ namespace Defenses {
 		public void InitClone(GameObject clone) {
 			this.clone = clone;
 			IsPlacingStructure = true;
-			HighlightAllStructures(true);
+            if (UserBehaviourProfile.Instance.tutorialLvl != true) {
+                HighlightAllStructures(true);
+            }
 		}
 
 		/// <summary>
@@ -112,42 +116,46 @@ namespace Defenses {
 		/// </summary>
 		public void FinishPlacement() {
 			try {
-				// If there is a collision between component and the new structure, cancel placement
-				if (CollisionDetected) {
-					Debug.Log("You cannot place components over each other.");
-					CollisionDetected = false;
-					CancelPlacement();
-					return;
-				}
-
-				newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
-				newStructure.name = clone.GetComponent<Clone>().defensePrefab.name;
-				newStructure.transform.position = clone.transform.position;
-				newStructure.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
-				newStructure.transform.localScale = new Vector3(1, 1, 1);
-
-                // TODO Change this to switch case
-				// TODO Fill in more components when added to action-bar
-				if (this.newStructure.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
-					Debug.Log("Component is Firewall: Subtracting 100 from currency");
-                    
-                    // TODO have to exit method and not buy the selected component to place
-                    if (GameManager.Instance.SubtractFromCurrency(100) == false) {
-                        Debug.Log("Not enough currency left...");
+				if (canPlaceTutorialStruct) {
+                    // If there is a collision between component and the new structure, cancel placement
+                    if (CollisionDetected) {
+                        Debug.Log("You cannot place components over each other.");
+                        CollisionDetected = false;
+                        CancelPlacement();
+                        return;
                     }
-				}
 
-				// targetStructure --> newStructure
-				SetInputOutput(targetStructure, newStructure);
+                    newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
+                    newStructure.name = clone.GetComponent<Clone>().defensePrefab.name;
+                    newStructure.transform.position = clone.transform.position;
+                    newStructure.transform.SetParent(GameObject.Find("ObjectsInCanvas").transform);
+                    newStructure.transform.localScale = new Vector3(1, 1, 1);
 
-				// If targetStructure2 is defined, then user has chosen an output aswell
-				if (targetStructure2 != null) {
-					//  targetStructure --> newStructure --> targetStructure2
-					SetInputOutput(newStructure, targetStructure2);
-				}
+                    // TODO Change this to switch case
+                    // TODO Fill in more components when added to action-bar
+                    if (this.newStructure.GetComponent(typeof(Component)).GetType() == typeof(Firewall)) {
+                        Debug.Log("Component is Firewall: Subtracting 100 from currency");
 
-				Destroy(clone);
-				NullifyPlacementObejcts();
+                        // TODO have to exit method and not buy the selected component to place
+                        if (GameManager.Instance.SubtractFromCurrency(100) == false) {
+                            Debug.Log("Not enough currency left...");
+                        }
+                    }
+
+                    // targetStructure --> newStructure
+                    SetInputOutput(targetStructure, newStructure);
+
+                    // If targetStructure2 is defined, then user has chosen an output aswell
+                    if (targetStructure2 != null) {
+                        //  targetStructure --> newStructure --> targetStructure2
+                        SetInputOutput(newStructure, targetStructure2);
+                    }
+
+                    Destroy(clone);
+                    NullifyPlacementObejcts();
+
+                    EventManager.TriggerComponentPlacedEvent();
+                }
 			} catch (Exception) {
 				Debug.LogError("ERROR: ObjectsInCanvas reference not found. Please check project structure.");
 			}

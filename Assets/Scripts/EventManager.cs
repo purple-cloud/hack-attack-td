@@ -12,6 +12,7 @@ public class EventManager : Singleton<EventManager> {
 	public delegate void Cancel();
 	public delegate void CanvasClick();
 	public delegate void RefreshPanel();
+    public delegate void ComponentPlaced();
 
 	#endregion
 
@@ -31,7 +32,10 @@ public class EventManager : Singleton<EventManager> {
 	/// </summary>
 	public static event RefreshPanel onRefreshPanel;
 
+    public static event ComponentPlaced onComponentPlaced;
+
 	private bool refreshPanelEventIsTriggered = false;
+	private bool componentPlacedEventIsTriggered = false;
 
 	void OnGUI() {
 		if (Input.GetButtonDown("Cancel")) {
@@ -54,6 +58,11 @@ public class EventManager : Singleton<EventManager> {
 			onRefreshPanel?.Invoke();
 			Instance.refreshPanelEventIsTriggered = false;
 		}
+
+        if (Instance.componentPlacedEventIsTriggered) {
+            onComponentPlaced?.Invoke();
+            Instance.componentPlacedEventIsTriggered = false;
+        }
 	}
 
 	/// <summary>
@@ -63,4 +72,12 @@ public class EventManager : Singleton<EventManager> {
 	public static void TriggerRefreshPanelEvent() {
 		Instance.refreshPanelEventIsTriggered = true;
 	}
+
+    public static void TriggerComponentPlacedEvent() {
+        Instance.componentPlacedEventIsTriggered = true;
+    }
+
+    public static void ClearOnCanvasClickSubscribers() {
+        onCanvasClick = null;
+    }
 }

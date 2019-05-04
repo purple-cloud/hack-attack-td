@@ -111,7 +111,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
 	public void OnPointerUp(PointerEventData eventData) {
 		// When event is caught with left mouse button pressed up
 		if (Defenses.CompController.Instance.IsPlacingStructure) {
-			Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
+            if (gameObject.GetComponent<Button>().enabled) {
+                Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
+            }
 		} else if (PathConnectionManager.Instance.IsSelectingStructureLink) {
 			PathConnectionManager.Instance.OnSelectingStructureLink(this);
 		} else if (PathConnectionManager.Instance.IsSelectingStructure) {
