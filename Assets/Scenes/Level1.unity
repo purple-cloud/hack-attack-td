@@ -2740,7 +2740,7 @@ PrefabInstance:
     - target: {fileID: 7457158232741604823, guid: 86cd932185e8b1d47aed8557e6a0332f,
         type: 3}
       propertyPath: outputs.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7457158232741604823, guid: 86cd932185e8b1d47aed8557e6a0332f,
         type: 3}
@@ -3317,7 +3317,7 @@ MonoBehaviour:
   highlightBorder: {fileID: 21692251796054221, guid: 0b49c55e03bc35f4d9d27746bdff9b93,
     type: 3}
   clone: {fileID: 9137473958989017960, guid: 4da3d8f3dae931843849dae91fbf1daf, type: 3}
-  pathLineMaterial: {fileID: 2100000, guid: 8861b2e96c9daac44a4195e17de6beec, type: 2}
+  pathLineMaterial: {fileID: 2100000, guid: 13d969750ad3fd24e993644b371b5e0a, type: 2}
   clonePrefab: {fileID: 9137473958989017960, guid: 4da3d8f3dae931843849dae91fbf1daf,
     type: 3}
 --- !u!4 &831879549
@@ -7614,6 +7614,12 @@ MonoBehaviour:
   m_Spacing: {x: 10, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!1 &1827504062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7457158232741604821, guid: 86cd932185e8b1d47aed8557e6a0332f,
+    type: 3}
+  m_PrefabInstance: {fileID: 675254439}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1842769903
 GameObject:
   m_ObjectHideFlags: 0
@@ -9016,10 +9022,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasImage: {fileID: 3019921276251778676}
-  input:
-  - {fileID: 0}
+  input: []
   outputs:
-  - {fileID: 1006079858}
+  - {fileID: 1827504062}
   computerSprites:
   - {fileID: 21300000, guid: 9cf6eba6186716fcbb1f504b158d8afd, type: 3}
   - {fileID: 21300000, guid: cd81ba4d51a01474fbe60bea521a6c48, type: 3}
@@ -9188,7 +9193,7 @@ PrefabInstance:
     - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
         type: 3}
       propertyPath: outputs.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
         type: 3}
@@ -9217,5 +9222,10 @@ PrefabInstance:
       propertyPath: input.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6982975713653299593, guid: 020fc6827cda52f45b44ff66f37ff4fd,
+        type: 3}
+      propertyPath: outputs.Array.data[0]
+      value: 
+      objectReference: {fileID: 3019921277151792664}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 020fc6827cda52f45b44ff66f37ff4fd, type: 3}
