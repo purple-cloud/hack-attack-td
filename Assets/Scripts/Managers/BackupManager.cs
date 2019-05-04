@@ -34,16 +34,19 @@ public class BackupManager : Singleton<BackupManager> {
         this.BackupComponentSelected = false;
         this.BackupReady = false;
 
-		EventManager.onCancel += () => {
-			Defenses.CompController.Instance.HighlightAllStructures(false);
+		EventManager.onCancel += Cancel;
+		EventManager.onCanvasClick += Cancel;
+	}
 
-			// Clears variables from adding backup to pool
-			selectedGameObject = null;
-			BackupReady = false;
-			PricePanel.Instance.HidePricePanel();
-			// Clears variables from replacing component from backup pool
-			BackuppedComponent = null;
-		};
+	private void Cancel() {
+		Defenses.CompController.Instance.HighlightAllStructures(false);
+
+		// Clears variables from adding backup to pool
+		selectedGameObject = null;
+		BackupReady = false;
+		PricePanel.Instance.HidePricePanel();
+		// Clears variables from replacing component from backup pool
+		BackuppedComponent = null;
 	}
 
     public void InitBackup(GameObject componentToBackup) {

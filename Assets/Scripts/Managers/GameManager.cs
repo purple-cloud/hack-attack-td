@@ -188,18 +188,24 @@ public class GameManager : Singleton<GameManager> {
     /// any of the Update methods is called the first time.
     /// </summary>
     private void Start() {
-		// Close all panels when user press cancel/escape
-		EventManager.onCancel += () => {
-			informationPanel.SetActive(false);
-			DeselectGameObject();
-			ShowStats(false);
-		};
-    }
+		// Close all panels when user press cancel/escape, or presses on an empty space.
+		EventManager.onCancel += ClosePanels;
+		EventManager.onCanvasClick += ClosePanels;
+	}
 
-    /// <summary>
-    /// When the currency changes
-    /// </summary>
-    public void OnCurrencyChanged() {
+	/// <summary>
+	/// Closes all panels visible on screen.
+	/// </summary>
+	private void ClosePanels() {
+		informationPanel.SetActive(false);
+		DeselectGameObject();
+		ShowStats(false);
+	}
+
+	/// <summary>
+	/// When the currency changes
+	/// </summary>
+	public void OnCurrencyChanged() {
         Changed?.Invoke();
     }
 
