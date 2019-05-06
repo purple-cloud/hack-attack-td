@@ -257,7 +257,11 @@ public class TutorialManager : MonoBehaviour {
         this.internetState = true;
         ChangeComponentClickableState(this.earth, true);
         HighlightComponent(this.earth, true);
-    }
+
+		// Waits for component being right clicked before proceeding
+		// TODO Check what component has been pressed before doing next step
+		EventManager.onRightClickComponent += NextStep;
+	}
 
     private void NewSixthTask() {
         ChangeComponentClickableState(this.earth, false);
@@ -269,7 +273,9 @@ public class TutorialManager : MonoBehaviour {
     }
 
     private void NewSeventhTask() {
-        this.tutorialTxt.text = "Now LEFT CLICK the highlighted area in the canvas";
+		// After the two previous tasks has been done, unsubscribe
+		EventManager.onRightClickComponent -= NextStep;
+		this.tutorialTxt.text = "Now LEFT CLICK the highlighted area in the canvas";
     }
 
     private void NewEightTask() {

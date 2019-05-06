@@ -13,6 +13,7 @@ public class EventManager : Singleton<EventManager> {
 	public delegate void CanvasClick();
 	public delegate void RefreshPanel();
     public delegate void ComponentPlaced();
+	public delegate void RightClickComponent();
 
 	#endregion
 
@@ -34,8 +35,14 @@ public class EventManager : Singleton<EventManager> {
 
     public static event ComponentPlaced onComponentPlaced;
 
+	/// <summary>
+	/// When a component has been right clicked, regardless of its state. 
+	/// </summary>
+	public static event RightClickComponent onRightClickComponent;
+
 	private bool refreshPanelEventIsTriggered = false;
 	private bool componentPlacedEventIsTriggered = false;
+	private bool rightClickComponentEventIsTriggered = false;
 
 	void OnGUI() {
 		if (Input.GetButtonDown("Cancel")) {
@@ -63,6 +70,12 @@ public class EventManager : Singleton<EventManager> {
             onComponentPlaced?.Invoke();
             Instance.componentPlacedEventIsTriggered = false;
         }
+
+		// Trigger 'onRightClickComponent' event
+		if (Instance.rightClickComponentEventIsTriggered) {
+			onRightClickComponent?.Invoke();
+			Instance.rightClickComponentEventIsTriggered = false;
+		}
 	}
 
 	/// <summary>
@@ -76,6 +89,14 @@ public class EventManager : Singleton<EventManager> {
     public static void TriggerComponentPlacedEvent() {
         Instance.componentPlacedEventIsTriggered = true;
     }
+
+	/// <summary>
+	/// Once a component has been right clicked, trigger the event internally.
+	/// <seealso cref="Component.OnPointerUp(PointerEventData)"/>
+	/// </summary>
+	public static void TriggerRightClickOnComponentEvent() {
+		Instance.rightClickComponentEventIsTriggered = true;
+	}
 
     public static void ClearOnCanvasClickSubscribers() {
         onCanvasClick = null;

@@ -109,6 +109,11 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerUp(PointerEventData eventData) {
+		// If component has been right clicked, trigger the event
+		if (Input.GetMouseButtonUp(1)) {
+			EventManager.TriggerRightClickOnComponentEvent();
+		}
+
 		// When event is caught with left mouse button pressed up
 		if (Defenses.CompController.Instance.IsPlacingStructure) {
             if (gameObject.GetComponent<Button>().enabled) {
