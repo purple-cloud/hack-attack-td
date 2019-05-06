@@ -101,7 +101,9 @@ public class BackupManager : Singleton<BackupManager> {
             }
 
             // Mirror outputs
-            selectedBackupComp.outputs = objectToReplaceComp.outputs;
+			foreach (Component comp in objectToReplaceComp.GetOutputComponents()) {
+				selectedBackupComp.AddOutput(comp.gameObject);
+			}
 
 			// Readjust the inputs for all components
 			Defenses.CompController.Instance.GenerateStructureInputs();
@@ -150,7 +152,9 @@ public class BackupManager : Singleton<BackupManager> {
     public void AddComponentToBackup() {
         this.ShowBackupPanel(false);
         this.BackupReady = true;
-        HighlightBackupableComponents(true);
+        if (UserBehaviourProfile.Instance.tutorialLvl == false) {
+            HighlightBackupableComponents(true);
+        }
     }
 
     /// <summary>

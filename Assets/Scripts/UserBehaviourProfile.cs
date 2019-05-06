@@ -8,6 +8,10 @@ using UnityEngine;
 /// </summary>
 public class UserBehaviourProfile : Singleton<UserBehaviourProfile> {
 
+    public bool tutorialLvl = false;
+
+    public bool IsPlacingTutorialStructure = false;
+
     #region PLAYER
 
     public bool documentHacked;

@@ -51,8 +51,11 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	/// This is used by the 'ModifyPathConnection' prefab.
 	/// </summary>
 	public void OpenPanelEvent() {
+        FirewallManager.Instance.ShowFirewallPanel(false);
 		IsSelectingStructure = true;
-		CompController.Instance.HighlightAllStructures(true);
+        if (UserBehaviourProfile.Instance.tutorialLvl == false) {
+            CompController.Instance.HighlightAllStructures(true);
+        }
 	}
 
 	/// <summary>
