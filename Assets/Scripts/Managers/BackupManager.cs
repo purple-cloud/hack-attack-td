@@ -101,7 +101,9 @@ public class BackupManager : Singleton<BackupManager> {
             }
 
             // Mirror outputs
-            selectedBackupComp.outputs = objectToReplaceComp.outputs;
+			foreach (Component comp in objectToReplaceComp.GetOutputComponents()) {
+				selectedBackupComp.AddOutput(comp.gameObject);
+			}
 
 			// Readjust the inputs for all components
 			Defenses.CompController.Instance.GenerateStructureInputs();
