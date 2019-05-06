@@ -85,17 +85,17 @@ public class TutorialManager : MonoBehaviour {
         Defenses.CompController.Instance.canPlaceTutorialStruct = false;
 
         this.readyToMoveOn = false;
-        this.state = 7;
+        this.state = 0;
         this.nextBtn.onClick.AddListener(NextStep);
         this.prevBtn.onClick.AddListener(PrevStep);
         this.tutorialInfoBtn.onClick.AddListener(TutorialInit);
         GameManager.Instance.SetCurrency(100000);
 
         // Disable all access to restricted buttons
-        this.modifyPathBtn.SetActive(true);
-        this.addPathBtn.SetActive(true);
-        this.firewallSlot.SetActive(true);
-        this.backupSlot.SetActive(true);
+        this.modifyPathBtn.SetActive(false);
+        this.addPathBtn.SetActive(false);
+        this.firewallSlot.SetActive(false);
+        this.backupSlot.SetActive(false);
 
         // Init restricted access event trigger
         this.modifyPathBtn.GetComponent<Button>().onClick.AddListener(NextStep);
@@ -124,67 +124,59 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case 2:
-                NewSecondTask();
+                SecondTask();
                 break;
 
             case 3:
-                NewThirdTask();
+                ThirdTask();
                 break;
 
             case 4:
-                NewFourthTask();
+                FourthTask();
                 break;
 
             case 5:
-                NewFifthTask();
+                FifthTask();
                 break;
 
             case 6:
-                NewSixthTask();
+                SixthTask();
                 break;
 
             case 7:
-                NewSeventhTask();
+                SeventhTask();
                 break;
 
             case 8:
-                NewEightTask();
+                EightTask();
                 break;
 
             case 9:
-                NewNinthTask();
+                NinthTask();
                 break;
 
             case 10:
-                NewTenthTask();
+                TenthTask();
                 break;
 
             case 11:
-                NewEleventhTask();
+                EleventhTask();
                 break;
 
             case 12:
-                NewTwelfthTask();
+                TwelfthTask();
                 break;
 
             case 13:
-                NewThirteenthTask();
+                ThirteenthTask();
                 break;
 
             case 14:
-                NewFourteenthTask();
+                FourteenthTask();
                 break;
 
             case 15:
-                NewFifteenthTask();
-                break;
-
-            case 16:
-                NewSixteenthTask();
-                break;
-
-            case 17:
-                NewSeventeenthTask();
+                FifteenthTask();
                 break;
 
             default:
@@ -248,7 +240,7 @@ public class TutorialManager : MonoBehaviour {
         this.tutorialTxt.text = "To extend your system with another component, (this is just an example) click the highlighted FirewallSlot in your actionbar";
     }
 
-    private void NewSecondTask() {
+    private void SecondTask() {
         this.firewallSlotState = false;
         this.computerState = true;
         ChangeComponentClickableState(this.computer, true);
@@ -258,16 +250,16 @@ public class TutorialManager : MonoBehaviour {
         this.tutorialTxt.text = "Now LEFT CLICK on the hightlighted computer";
     }
 
-    private void NewThirdTask() {
+    private void ThirdTask() {
         ChangeComponentClickableState(this.computer, false);
         this.computerState = false;
         HighlightComponent(this.computer, false);
-        HighlightComponent(this.predefinedLocationForFirstFirewall, true);
         this.predefinedLocationForFirstFirewall.SetActive(true);
+        HighlightComponent(this.predefinedLocationForFirstFirewall, true);
         this.tutorialTxt.text = "Now LEFT CLICK the highlighted area in the canvas";
     }
 
-    private void NewFourthTask() {
+    private void FourthTask() {
         Defenses.CompController.Instance.canPlaceTutorialStruct = false;
         HighlightComponent(this.predefinedLocationForFirstFirewall, false);
         this.predefinedLocationForFirstFirewall.SetActive(false);
@@ -278,7 +270,7 @@ public class TutorialManager : MonoBehaviour {
         this.internetState = true;
     }
 
-    private void NewFifthTask() {
+    private void FifthTask() {
         this.firewallSlotState = false;
         HighlightComponent(this.firewallSlot, false);
         this.tutorialTxt.text = "Now comes the really important task. To place a defense between to existing components you have to use the RIGHT CLICK mouse button. First RIGHT CLICK on the internet.";
@@ -290,7 +282,7 @@ public class TutorialManager : MonoBehaviour {
 		EventManager.onRightClickComponent += NextStep;
 	}
 
-    private void NewSixthTask() {
+    private void SixthTask() {
         ChangeComponentClickableState(this.earth, false);
         HighlightComponent(this.earth, false);
         this.internetState = false;
@@ -302,25 +294,29 @@ public class TutorialManager : MonoBehaviour {
 
     // TODO FIX THIS AFTER RIGHT BUTTON LISTEN EVENT IS FIXED!!
 
-    private void NewSeventhTask() {
+    private void SeventhTask() {
         this.computerState = false;
         ChangeComponentClickableState(this.computer, false);
         HighlightComponent(this.computer, false);
+        this.predefinedLocationForSecondFirewall.SetActive(true);
+        HighlightComponent(this.predefinedLocationForSecondFirewall, true);
         this.tutorialTxt.text = "Now LEFT CLICK the highlighted area in the canvas";
 		// After the two previous tasks has been done, unsubscribe
 		EventManager.onRightClickComponent -= NextStep;
-		this.tutorialTxt.text = "Now LEFT CLICK the highlighted area in the canvas";
     }
 
 
     // ARON WORKING ON ATM (06/05)
-    private void NewEightTask() {
+    private void EightTask() {
+        HighlightComponent(this.predefinedLocationForSecondFirewall, false);
+        this.predefinedLocationForSecondFirewall.SetActive(false);
         this.inbetweenStructPlacement = false;
         this.tutorialTxt.text = "Well done, you are now relatively secure against attacks from the internet. Now you need to remove the direct connection from the internet to the computer. To do this, click the hightlighted button in the top right corner.";
+        this.modifyPathBtn.SetActive(true);
         HighlightComponent(this.modifyPathBtn, true);
     }
 
-    private void NewNinthTask() {
+    private void NinthTask() {
         HighlightComponent(this.modifyPathBtn, false);
         this.modifyPathBtn.GetComponent<Button>().enabled = false;
         this.tutorialTxt.text = "Now click the internet";
@@ -329,23 +325,22 @@ public class TutorialManager : MonoBehaviour {
         ChangeComponentClickableState(this.earth, true);
     }
 
-    private void NewTenthTask() {
+    private void TenthTask() {
         this.internetState = false;
         HighlightComponent(this.earth, false);
         ChangeComponentClickableState(this.earth, false);
-        // TODO uncomment this after finishing game
-        // ChangeBtnState(this.nextBtn);
         this.tutorialTxt.text = "Now you can see the different connections for the selected component in the panel in the bottom right. We wish to keep the connection to the firewall, but delete the direct connection to the computer. Click the 'X' button on the right of the displayed connection. Press NEXT after you have done this.";
-
+        ChangeBtnState(this.nextBtn);
     }
 
-    private void NewEleventhTask() {
-        //ChangeBtnState(this.nextBtn);
+    private void EleventhTask() {
+        this.addPathBtn.SetActive(true);
         HighlightComponent(this.addPathBtn, true);
         this.tutorialTxt.text = "You can also create a new connection between existing components by clicking the '+'button highlighted in the top right corner. Now you can select two compoents by right clicking them and a connection will automatically be established. Press NEXT after you have tried this out.";
     }
 
-    private void NewTwelfthTask() {
+    private void TwelfthTask() {
+        ChangeBtnState(this.nextBtn);
         this.addPathBtn.GetComponent<Button>().enabled = false;
         HighlightComponent(this.addPathBtn, false);
         HighlightComponent(this.backupSlot, true);
@@ -353,7 +348,7 @@ public class TutorialManager : MonoBehaviour {
         this.backupSlot.SetActive(true);
     }
 
-    private void NewThirteenthTask() {
+    private void ThirteenthTask() {
         this.addBackupBtn.GetComponent<Button>().enabled = false;
         HighlightComponent(this.backupSlot, false);
         this.computerState = true;
@@ -362,22 +357,31 @@ public class TutorialManager : MonoBehaviour {
         this.tutorialTxt.text = "Now click the computer component to take a backup of it";
     }
 
-    private void NewFourteenthTask() {
+    private void FourteenthTask() {
         this.computerState = false;
         ChangeComponentClickableState(this.computer, false);
         HighlightComponent(this.computer, false);
         this.tutorialTxt.text = "You have successfully taken a backup! You can replace components in the system of the same type as you have backup of. Try it! Click the backup you just created and replace it with the highlighted computer in the system. Press NEXT when you are done";
+        ChangeBtnState(this.nextBtn);
     }
 
-    private void NewFifteenthTask() {
-        this.tutorialTxt.text = "You have successfully completed the tutorial. We encourage you to test different features out now to get familiar with the game mechanics. You can also upgrade, encrypt, repair and sell components that support this. To continue to the first level of the game open settings (the settings icon on top right) and click 'Next Level'. You can also exit to the main menu by pressing 'Concede'";
-        ChangeComponentClickableState(this.computer, true);
-        ChangeComponentClickableState(this.earth, true);
-        ChangeComponentClickableState(this.document, true);
+    private void FifteenthTask() {
+        Settings.Instance.ChangeConcedeAndNextLevel();
+        ChangeBtnState(this.nextBtn);
+        this.tutorialTxt.text = "You have successfully completed the tutorial. We encourage you to test different features out now to get familiar with the game mechanics. You can also upgrade, encrypt, repair and sell components that support this. To continue to the first level of the game open settings (the settings icon on top right) and click 'Next Level'.";
+        UserBehaviourProfile.Instance.tutorialLvl = false;
+        if (this.computer != null) {
+            ChangeComponentClickableState(this.computer, true);
+        }
+        if (this.earth != null) {
+            ChangeComponentClickableState(this.earth, true);
+        }
+        if (this.document != null) {
+            ChangeComponentClickableState(this.document, true);
+        }
         this.addBackupBtn.GetComponent<Button>().enabled = true;
         this.modifyPathBtn.GetComponent<Button>().enabled = true;
         this.addPathBtn.GetComponent<Button>().enabled = true;
-        Settings.Instance.ChangeConcedeAndNextLevel();
     }
 
     private void NextStep() {
