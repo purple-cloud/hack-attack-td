@@ -3317,6 +3317,7 @@ MonoBehaviour:
   highlightBorder: {fileID: 21692251796054221, guid: 0b49c55e03bc35f4d9d27746bdff9b93,
     type: 3}
   clone: {fileID: 9137473958989017960, guid: 4da3d8f3dae931843849dae91fbf1daf, type: 3}
+  canPlaceTutorialStruct: 1
   pathLineMaterial: {fileID: 2100000, guid: 13d969750ad3fd24e993644b371b5e0a, type: 2}
   clonePrefab: {fileID: 9137473958989017960, guid: 4da3d8f3dae931843849dae91fbf1daf,
     type: 3}
@@ -3855,6 +3856,48 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 6982975714543507197}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1006079860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006079858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &1007176225
 GameObject:
   m_ObjectHideFlags: 0
@@ -4204,6 +4247,7 @@ MonoBehaviour:
   fullscreenBtn: {fileID: 1608833583}
   helpBtn: {fileID: 500734781}
   concedeBtn: {fileID: 2001268584}
+  nextLevelBtn: {fileID: 0}
   musicSlider: {fileID: 1868193969}
   soundSlider: {fileID: 1782972830}
 --- !u!1 &1113493375
@@ -4784,6 +4828,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a2063ece099d544abf0370da8fba4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialLvl: 0
+  IsPlacingTutorialStructure: 0
   documentHacked: 0
 --- !u!1 &1252999435
 GameObject:
