@@ -150,7 +150,9 @@ public class BackupManager : Singleton<BackupManager> {
     public void AddComponentToBackup() {
         this.ShowBackupPanel(false);
         this.BackupReady = true;
-        HighlightBackupableComponents(true);
+        if (UserBehaviourProfile.Instance.tutorialLvl == false) {
+            HighlightBackupableComponents(true);
+        }
     }
 
     /// <summary>

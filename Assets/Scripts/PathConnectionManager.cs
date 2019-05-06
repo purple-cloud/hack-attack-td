@@ -53,7 +53,9 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	public void OpenPanelEvent() {
         FirewallManager.Instance.ShowFirewallPanel(false);
 		IsSelectingStructure = true;
-		CompController.Instance.HighlightAllStructures(true);
+        if (UserBehaviourProfile.Instance.tutorialLvl == false) {
+            CompController.Instance.HighlightAllStructures(true);
+        }
 	}
 
 	/// <summary>

@@ -41,6 +41,9 @@ public class TutorialManager : MonoBehaviour {
     private GameObject backupSlot;
 
     [SerializeField]
+    private GameObject addBackupBtn;
+
+    [SerializeField]
     private GameObject predefinedLocationForFirstFirewall;
 
     [SerializeField]
@@ -82,21 +85,24 @@ public class TutorialManager : MonoBehaviour {
         Defenses.CompController.Instance.canPlaceTutorialStruct = false;
 
         this.readyToMoveOn = false;
-        this.state = 0;
+        this.state = 7;
         this.nextBtn.onClick.AddListener(NextStep);
         this.prevBtn.onClick.AddListener(PrevStep);
         this.tutorialInfoBtn.onClick.AddListener(TutorialInit);
         GameManager.Instance.SetCurrency(100000);
 
         // Disable all access to restricted buttons
-        this.modifyPathBtn.SetActive(false);
-        this.addPathBtn.SetActive(false);
-        this.firewallSlot.SetActive(false);
-        this.backupSlot.SetActive(false);
+        this.modifyPathBtn.SetActive(true);
+        this.addPathBtn.SetActive(true);
+        this.firewallSlot.SetActive(true);
+        this.backupSlot.SetActive(true);
 
         // Init restricted access event trigger
+        this.modifyPathBtn.GetComponent<Button>().onClick.AddListener(NextStep);
+
         this.firewallSlot.GetComponent<Button>().onClick.AddListener(FireFirewallEventTrigger);
-        this.backupSlot.GetComponent<Button>().onClick.AddListener(FireBackupEventTrigger);
+        this.addBackupBtn.GetComponent<Button>().onClick.AddListener(NextStep);
+        //this.backupSlot.GetComponent<Button>().onClick.AddListener(FireBackupEventTrigger);
         this.computer.GetComponent<Button>().onClick.AddListener(FireComputerEventTrigger);
         this.earth.GetComponent<Button>().onClick.AddListener(FireInternetEventTrigger);
         this.predefinedLocationForFirstFirewall.GetComponent<Button>().onClick.AddListener(PlaceFirewallComponentOnSpecifiedLocation);
@@ -146,19 +152,39 @@ public class TutorialManager : MonoBehaviour {
                 break;
 
             case 9:
-                NinthTask();
+                NewNinthTask();
                 break;
 
             case 10:
-                TenthTask();
+                NewTenthTask();
                 break;
 
             case 11:
-                EleventhTask();
+                NewEleventhTask();
                 break;
 
             case 12:
-                TwelfthTask();
+                NewTwelfthTask();
+                break;
+
+            case 13:
+                NewThirteenthTask();
+                break;
+
+            case 14:
+                NewFourteenthTask();
+                break;
+
+            case 15:
+                NewFifteenthTask();
+                break;
+
+            case 16:
+                NewSixteenthTask();
+                break;
+
+            case 17:
+                NewSeventeenthTask();
                 break;
 
             default:
@@ -185,6 +211,7 @@ public class TutorialManager : MonoBehaviour {
     }
 
     private void FireInternetEventTrigger() {
+        Debug.Log("Firing internet event trigger");
         if (this.internetState && this.inbetweenStructPlacement == false) {
             NextStep();
         } else if (this.internetState && this.inbetweenStructPlacement) {
@@ -248,13 +275,13 @@ public class TutorialManager : MonoBehaviour {
         this.firewallSlotState = true;
         HighlightComponent(this.firewallSlot, true);
         this.inbetweenStructPlacement = true;
+        this.internetState = true;
     }
 
     private void NewFifthTask() {
         this.firewallSlotState = false;
         HighlightComponent(this.firewallSlot, false);
         this.tutorialTxt.text = "Now comes the really important task. To place a defense between to existing components you have to use the RIGHT CLICK mouse button. First RIGHT CLICK on the internet.";
-        this.internetState = true;
         ChangeComponentClickableState(this.earth, true);
         HighlightComponent(this.earth, true);
 
@@ -268,88 +295,93 @@ public class TutorialManager : MonoBehaviour {
         HighlightComponent(this.earth, false);
         this.internetState = false;
         this.tutorialTxt.text = "Now RIGHT CLICK the computer";
+        this.computerState = true;
         ChangeComponentClickableState(this.computer, true);
         HighlightComponent(this.computer, true);
     }
 
+    // TODO FIX THIS AFTER RIGHT BUTTON LISTEN EVENT IS FIXED!!
+
     private void NewSeventhTask() {
+        this.computerState = false;
+        ChangeComponentClickableState(this.computer, false);
+        HighlightComponent(this.computer, false);
+        this.tutorialTxt.text = "Now LEFT CLICK the highlighted area in the canvas";
 		// After the two previous tasks has been done, unsubscribe
 		EventManager.onRightClickComponent -= NextStep;
 		this.tutorialTxt.text = "Now LEFT CLICK the highlighted area in the canvas";
     }
 
+
+    // ARON WORKING ON ATM (06/05)
     private void NewEightTask() {
         this.inbetweenStructPlacement = false;
-    }
-
-
-
-    private void SecondTask() {
-        this.tutorialTxt.text = "You might want to place a firewall between your computer and the internet to protect yourself. To do this, choose firewall from actionbar. RIGHT CLICK computer and then RIGHT CLICK internet. After this you can then choose where you want to place the firewall in the map. Press Next to continue.";
-    }
-
-    private void ThirdTask() {
-        HighlightComponent(this.firewallSlot, false);
-        this.modifyPathBtn.SetActive(true);
+        this.tutorialTxt.text = "Well done, you are now relatively secure against attacks from the internet. Now you need to remove the direct connection from the internet to the computer. To do this, click the hightlighted button in the top right corner.";
         HighlightComponent(this.modifyPathBtn, true);
-        this.tutorialTxt.text = "Now we have two connections from the internet to our computer. This isn't really optimal. To remove our direct connection from the internet to our computer first click the highlighted button in the top right corner...";
-        this.readyToMoveOn = true;
-        ChangeBtnState(this.nextBtn);
     }
 
-    private void FourthTask() {
+    private void NewNinthTask() {
         HighlightComponent(this.modifyPathBtn, false);
-        ChangeBtnState(this.nextBtn);
-        this.readyToMoveOn = false;
-        this.tutorialTxt.text = "Now click on the highlighted internet and find the connection that goes from the internet to the computer and delete it. This can be done by pressing the x symbol to the right of the connection (You can cancel modification anytime by pressing the ESC key). Press Next to continue.";
+        this.modifyPathBtn.GetComponent<Button>().enabled = false;
+        this.tutorialTxt.text = "Now click the internet";
+        this.internetState = true;
+        HighlightComponent(this.earth, true);
+        ChangeComponentClickableState(this.earth, true);
     }
 
-    private void FifthTask() {
-        this.tutorialTxt.text = "Our system is now a lot more secure. Our firewall can be configured by clicking it and choosing to enable traffic through our different ports or disable the traffic. Press Next to continue.";
+    private void NewTenthTask() {
+        this.internetState = false;
+        HighlightComponent(this.earth, false);
+        ChangeComponentClickableState(this.earth, false);
+        // TODO uncomment this after finishing game
+        // ChangeBtnState(this.nextBtn);
+        this.tutorialTxt.text = "Now you can see the different connections for the selected component in the panel in the bottom right. We wish to keep the connection to the firewall, but delete the direct connection to the computer. Click the 'X' button on the right of the displayed connection. Press NEXT after you have done this.";
+
     }
 
-    private void SixthTask() {
-        this.addPathBtn.SetActive(true);
-        this.tutorialTxt.text = "Another thing which is nice to be aware of is that you can create your own connections between existing components. This can be done by clicking the highlighed button in the top right corner...";
+    private void NewEleventhTask() {
+        //ChangeBtnState(this.nextBtn);
         HighlightComponent(this.addPathBtn, true);
-        this.readyToMoveOn = true;
-        ChangeBtnState(this.nextBtn);
+        this.tutorialTxt.text = "You can also create a new connection between existing components by clicking the '+'button highlighted in the top right corner. Now you can select two compoents by right clicking them and a connection will automatically be established. Press NEXT after you have tried this out.";
     }
 
-    private void SeventhTask() {
+    private void NewTwelfthTask() {
+        this.addPathBtn.GetComponent<Button>().enabled = false;
         HighlightComponent(this.addPathBtn, false);
-        ChangeBtnState(this.nextBtn);
-        this.readyToMoveOn = false;
-        this.tutorialTxt.text = "Now you can click on the two components you want to connect. (If you already have deleted the connection from the internet to the computer you can establish a new connection there. After that you can delete it again) (You can cancel path connecting anytime by pressing the ESC key). Press Next to continue.";
-    }
-
-    private void EightTask() {
-        this.tutorialTxt.text = "Now you have come so far it's time to take backup. You can take backup of each individual component in the system. By taking backup you store all its states and functionality. Press Next to start.";
-    }
-
-    private void NinthTask() {
-        this.backupSlot.SetActive(true);
         HighlightComponent(this.backupSlot, true);
-        this.tutorialTxt.text = "To take backup, first click on the backup slot in the actionbar. Then select 'Backup Component', and click the component you would like to take backup of (You can cancel backup by pressing the ESC key). Press Next to continue.";
+        this.tutorialTxt.text = "Now it is time to take backup of a component. First click the highlighted backupslot, then click the 'Backup Component' button";
+        this.backupSlot.SetActive(true);
     }
 
-    private void TenthTask() {
+    private void NewThirteenthTask() {
+        this.addBackupBtn.GetComponent<Button>().enabled = false;
         HighlightComponent(this.backupSlot, false);
-        this.tutorialTxt.text = "If you took a backup you will see it in a panel that pops up. This is your backup management panel. Here you can store up to 6 individual backups. If you choose to add one more after having 6, the oldest backup will be deleted. Choose wisely which components are important. Press Next to continue.";
+        this.computerState = true;
+        ChangeComponentClickableState(this.computer, true);
+        HighlightComponent(this.computer, true);
+        this.tutorialTxt.text = "Now click the computer component to take a backup of it";
     }
 
-    private void EleventhTask() {
-        this.tutorialTxt.text = "To restore a backup, simply click the backup you want and then select where to place it. You can only replace components of the same type as the backup itself. Press Next to continue.";
+    private void NewFourteenthTask() {
+        this.computerState = false;
+        ChangeComponentClickableState(this.computer, false);
+        HighlightComponent(this.computer, false);
+        this.tutorialTxt.text = "You have successfully taken a backup! You can replace components in the system of the same type as you have backup of. Try it! Click the backup you just created and replace it with the highlighted computer in the system. Press NEXT when you are done";
     }
 
-    private void TwelfthTask() {
-        this.tutorialTxt.text = "You are now ready to start defending yourself against real attacks. You can access the settings menu in the top right corner. Click Next level when you are ready. We recommend that you try and click around in the interface before jumping onwards.";
-        ChangeBtnState(this.nextBtn);
+    private void NewFifteenthTask() {
+        this.tutorialTxt.text = "You have successfully completed the tutorial. We encourage you to test different features out now to get familiar with the game mechanics. You can also upgrade, encrypt, repair and sell components that support this. To continue to the first level of the game open settings (the settings icon on top right) and click 'Next Level'. You can also exit to the main menu by pressing 'Concede'";
+        ChangeComponentClickableState(this.computer, true);
+        ChangeComponentClickableState(this.earth, true);
+        ChangeComponentClickableState(this.document, true);
+        this.addBackupBtn.GetComponent<Button>().enabled = true;
+        this.modifyPathBtn.GetComponent<Button>().enabled = true;
+        this.addPathBtn.GetComponent<Button>().enabled = true;
         Settings.Instance.ChangeConcedeAndNextLevel();
     }
 
     private void NextStep() {
-        if (this.state <= 12) {
+        if (this.state <= 15) {
             Debug.Log("Next step...");
             this.state++;
             StateMachine();
