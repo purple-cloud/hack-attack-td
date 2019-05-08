@@ -17,7 +17,7 @@ public abstract class GenericAttack : Pathfinder {
     /// </summary>
     public Component FindAttackableGameObject(System.Type component) {
         Component foundComponent = null;
-        int maxMoves = 5;
+        int maxMoves = 10;
         this.isAttackable = false;
         this.shouldDestroy = false;
         try {
@@ -28,7 +28,7 @@ public abstract class GenericAttack : Pathfinder {
                 } else {
                     if (maxMoves <= 0) {
                         Debug.Log("Couldnt find target component");
-                        DeleteAttack();
+                        this.shouldDestroy = true;
                     } else {
                         maxMoves--;
                         MoveToNextOutput();

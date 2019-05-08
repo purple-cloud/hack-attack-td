@@ -38,8 +38,8 @@ public class UserBehaviourProfile : Singleton<UserBehaviourProfile> {
         this.documentHacked = false;
         this.PlayerWillingToPay = 0;
         this.PlayerPayDenial = 0;
-        this.WebAttackProb = 2.0f;
-        this.DocumentAttackProb = 2.0f;
+        this.WebAttackProb = 0.9f;
+        this.DocumentAttackProb = 0.6f;
         // TODO Uncomment when done
         //this.DdosAttackProb = 0.14f;
         this.SpawnTime = 15.0f;

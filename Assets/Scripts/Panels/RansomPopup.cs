@@ -52,8 +52,8 @@ public class RansomPopup : Singleton<RansomPopup> {
             Debug.Log("Not enough currency left...");
         } else {
             ShowRansomPanel(false);
-            if (UserBehaviourProfile.Instance.DocumentAttackProb > 0.05f) {
-                UserBehaviourProfile.Instance.DocumentAttackProb = UserBehaviourProfile.Instance.DocumentAttackProb - 0.05f;
+            if (UserBehaviourProfile.Instance.DocumentAttackProb > 0.15f) {
+                UserBehaviourProfile.Instance.DocumentAttackProb = UserBehaviourProfile.Instance.DocumentAttackProb - 0.15f;
             }
             Debug.Log("Ransom payed");
         }

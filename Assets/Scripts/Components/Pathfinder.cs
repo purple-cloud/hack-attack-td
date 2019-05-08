@@ -63,10 +63,9 @@ public class Pathfinder : MonoBehaviour {
         foreach (Component comp in SelectedComponent.GetOutputComponents()) {
             this.listOfAdjacentGameObjects.Add(comp);
         }
-        //this.listOfAdjacentGameObjects.AddRange(SelectedComponent.GetOutputComponents());
         // See if list containing all outputs is bigger then 1
         if (this.listOfAdjacentGameObjects.Count > 1) {
-            selectedOutput = this.listOfAdjacentGameObjects[UnityEngine.Random.Range(0, this.listOfAdjacentGameObjects.Count - 1)];
+            selectedOutput = this.listOfAdjacentGameObjects[UnityEngine.Random.Range(0, this.listOfAdjacentGameObjects.Count)];
         } else if (this.listOfAdjacentGameObjects.Count == 0) {
             Destroy(this.gameObject);
         } else {

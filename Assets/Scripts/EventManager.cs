@@ -62,8 +62,10 @@ public class EventManager : Singleton<EventManager> {
 	void Update() {
 		// Ask classes to update panels 
 		if (Instance.refreshPanelEventIsTriggered) {
-			onRefreshPanel?.Invoke();
-			Instance.refreshPanelEventIsTriggered = false;
+            if (GameManager.Instance.modulePanel.activeSelf) {
+                onRefreshPanel?.Invoke();
+                Instance.refreshPanelEventIsTriggered = false;
+            }
 		}
 
         if (Instance.componentPlacedEventIsTriggered) {

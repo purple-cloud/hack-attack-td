@@ -43,7 +43,7 @@ public class GameManager : Singleton<GameManager> {
     [Header("Module Panel")]
 
     [SerializeField] // A reference to the panel object
-    private GameObject modulePanel;
+    public GameObject modulePanel;
 
     [SerializeField] // A reference to the panel image
     private Image panelImage;
@@ -199,9 +199,11 @@ public class GameManager : Singleton<GameManager> {
 	/// Closes all panels visible on screen.
 	/// </summary>
 	private void ClosePanels() {
-		informationPanel.SetActive(false);
-		DeselectGameObject();
-		ShowStats(false);
+        if  (informationPanel != null) {
+            informationPanel.SetActive(false);
+            DeselectGameObject();
+            ShowStats(false);
+        }
 	}
 
 	/// <summary>

@@ -19,7 +19,7 @@ public class Earth : Component, IPointerClickHandler {
     private void Start() {
         Name = "Earth";
         // Set true when you want earth spawner to be active
-        if (false && SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Tutorial")) {
+        if (true && SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Tutorial")) {
             // Time needs to be dynamic
             this.coroutine = StartSpawningAttacks();
             StartCoroutine(this.coroutine);
@@ -34,6 +34,7 @@ public class Earth : Component, IPointerClickHandler {
             CreateRandomEnemy();
             Debug.Log("Done Waiting!");
         }
+        CreateRandomEnemy();
     }
 
     private void CreateRandomEnemy() {
@@ -46,11 +47,12 @@ public class Earth : Component, IPointerClickHandler {
             UserBehaviourProfile.Instance.SpawnTime = 3.0f;
             Debug.Log("Creating WebAttack...");
             WebAttack webAttack = (new GameObject("WebAttack")).AddComponent<WebAttack>();
-            webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)), 
+            webAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)),
                 typeof(Computer));
         }
         // If condition is true, create document attack
-        else if (randomInt == 1 && (rand) < UserBehaviourProfile.Instance.DocumentAttackProb) {
+        if (randomInt == 1 && (rand) < UserBehaviourProfile.Instance.DocumentAttackProb) {
+            Debug.Log("Preparing to create Document Attack...");
             if (UserBehaviourProfile.Instance.documentHacked == false) {
                 Debug.Log("Creating DocumentAttack...");
                 DocumentAttack documentAttack = (new GameObject("DocumentAttack")).AddComponent<DocumentAttack>();
@@ -60,16 +62,6 @@ public class Earth : Component, IPointerClickHandler {
                 Debug.Log("Document has already been taken control of...");
             }
         }
-        // if condition is true, create ddos attack
-        // TODO Make it so Ddos attack is only available from level 2 and onwards
-        //else if (randomInt == 2 && (rand) < UserBehaviourProfile.Instance.DdosAttackProb) {
-        //    // TODO Might have to add some modificators inside DdosAttack script that modifies the time it needs to execute
-        //    UserBehaviourProfile.Instance.SpawnTime = 5.0f;
-        //    Debug.Log("Creating DdosAttack...");
-        //    DdosAttack ddosAttack = (new GameObject("DdosAttack")).AddComponent<DdosAttack>();
-        //    ddosAttack.Run((Component) this.initialGameObject.GetComponent(typeof(Component)));
-        //}
     }
-
 }
 

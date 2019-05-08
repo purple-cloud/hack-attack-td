@@ -25,7 +25,7 @@ public class WebAttack : GenericAttack {
 
     private void AttackComponent() {
         // Each attack does 10 dmg to the durability
-        this.componentToAttack.Durability -= 10;
+        this.componentToAttack.Durability -= 50;
         Debug.Log("Durability left: " + SelectedComponent.Durability);
         // Destroy Attack
         DeleteAttack();
