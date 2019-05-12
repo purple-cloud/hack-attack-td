@@ -4,19 +4,17 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// Used in tutorial lvl for the highlighted 
-/// predefined firewall placable location
+/// Used in tutorial lvl for the highlighted predefined firewall placable location.
+/// When in placing a component in tutorial, the player will be restricted to only placed inside
+/// the area of this gameobject.
 /// </summary>
-public class Box : MonoBehaviour {
+public class PlacementIndication : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision) {
         Defenses.CompController.Instance.canPlaceTutorialStruct = true;
-        Debug.Log("enter");
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
         Defenses.CompController.Instance.canPlaceTutorialStruct = false;
-        Debug.Log("sads");
     }
-
 }
