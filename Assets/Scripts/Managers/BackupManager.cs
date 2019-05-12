@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class <c>BackupManager</c> handles all backup-related features in the game. All from
+/// creating a backup, restoring a backup and handling all backup-related panels
+/// </summary>
 public class BackupManager : Singleton<BackupManager> {
 
     [SerializeField] // A reference to the backup popup panel
@@ -38,6 +42,9 @@ public class BackupManager : Singleton<BackupManager> {
 		EventManager.onCanvasClick += Cancel;
 	}
 
+    /// <summary>
+    /// Cancels backup creation and restoring
+    /// </summary>
 	private void Cancel() {
 		Defenses.CompController.Instance.HighlightAllStructures(false);
 
@@ -58,6 +65,10 @@ public class BackupManager : Singleton<BackupManager> {
         Destroy(backup);
     }
 
+    /// <summary>
+    /// Opens the backup menu selection panel
+    /// </summary>
+    /// <param name="itemSlotPos"></param>
     public void OpenPanel(Vector3 itemSlotPos) {
         this.backupPanel.transform.position = new Vector3(itemSlotPos.x, (itemSlotPos.y + 115), 0);
         this.backupPanel.SetActive(!(this.backupPanel.activeSelf));
@@ -71,9 +82,6 @@ public class BackupManager : Singleton<BackupManager> {
     public void ReplaceComponent(GameObject selectedBackup, GameObject objectToReplace) {
 		HighlightBackupableComponents(false);
 		if (this.BackupComponentSelected) {
-			// Add the selected backup to the canvas where the object to replace was
-			//selectedBackup = Instantiate(selectedBackup);
-
             GameObject newObject = Instantiate(selectedBackup);
 
 			// Store the component for both backup and the object to replace
@@ -109,12 +117,9 @@ public class BackupManager : Singleton<BackupManager> {
 			Defenses.CompController.Instance.GenerateStructureInputs();
 
             // Set the selected backup position to that of the current component position
-            //selectedBackup.transform.position = objectToReplace.transform.position;
-
             newObject.transform.position = objectToReplace.transform.position;
 
             // Subtract the cost of restoring backup from currency 
-            
             if (GameManager.Instance.SubtractFromCurrency(((Component) objectToReplace.GetComponent(typeof(Component))).BackupRestorePrice) == false) {
                 Debug.Log("Not enough currency left...");
             }

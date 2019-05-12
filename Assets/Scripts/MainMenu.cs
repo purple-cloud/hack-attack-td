@@ -3,17 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
-{
-    public void PlayGame() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+/// <summary>
+/// Class <c>MainMenu</c> handles the main menu actions
+/// </summary>
+public class MainMenu : MonoBehaviour {
+
+    /// <summary>
+    /// Loads the level 1 scene
+    /// </summary>
+    public void PlayLevel1() {
+        SceneManager.LoadScene(1);
     }
 
-    public void QuitGame() {
+    /// <summary>
+    /// Loads the tutorial scene
+    /// </summary>
+    public void PlayTutorial() {
+        SceneManager.LoadScene(2);
+    }
 
-        Debug.Log("QUIT!");
+    /// <summary>
+    /// Quits the game
+    /// </summary>
+    public void QuitGame() {
         Application.Quit();
     }
 
-    
 }

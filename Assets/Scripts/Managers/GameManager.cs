@@ -7,6 +7,10 @@ using UnityEngine.UI;
 // Delegate for the currency changed event
 public delegate void CurrencyChanged();
 
+/// <summary>
+/// Class <c>GameManager</c> handles all currency related features, the currently selected components
+/// and it control the information panel and the module panel that displays component specific information
+/// </summary>
 public class GameManager : Singleton<GameManager> {
 
     #region EVENTS
@@ -16,22 +20,25 @@ public class GameManager : Singleton<GameManager> {
 
     #endregion
 
-    #region STATS_PANEL
+    #region LEVEL_INFORMATION_PANEL
 
     [Header("Information Panel")]
 
-    [SerializeField]
+    [SerializeField] // Reference to the level information panel
     private GameObject levelInformationPanel;
 
-    [SerializeField]
+    [SerializeField] // Reference to the background panel
     private GameObject informationPanel;
 
-    [SerializeField]
+    [SerializeField] // Reference to the information panel title
     public Text informationPanelTitle;
 
-    [SerializeField]
+    [SerializeField] // Reference to the information panel text
     public Text informationPanelText;
 
+    /// <summary>
+    /// Closes the level information panel
+    /// </summary>
     public void CloseInformationPanel() {
         this.levelInformationPanel.SetActive(false);
     }
@@ -69,10 +76,10 @@ public class GameManager : Singleton<GameManager> {
     [SerializeField] // A reference to the upgrade text price
     private Text txtPrice;
 
-    [SerializeField]
+    [SerializeField] // A reference to the sell button
     private Button sellButton;
 
-    [SerializeField]
+    [SerializeField] // A reference to the sell button text
     private Text sellText;
     
     [Header("Miscellaneous")]
@@ -106,6 +113,10 @@ public class GameManager : Singleton<GameManager> {
         }
     }
 
+    /// <summary>
+    /// if there is a current selected game object,
+    /// return it, and if not return null
+    /// </summary>
     public GameObject GetSelectedGameObject {
         get {
             if (this.selectedGameObject != null) {
@@ -243,7 +254,7 @@ public class GameManager : Singleton<GameManager> {
 
     /// <summary>
     /// Updates the stats panel information and styling 
-    /// depending on what component was clicked and if the 
+    /// depending on what component was clicked, its state and if the 
     /// user have enough currency to buy/upgrade etc..
     /// </summary>
     public void UpdateComputerPanel() {

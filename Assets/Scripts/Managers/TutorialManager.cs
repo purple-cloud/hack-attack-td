@@ -3,61 +3,64 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class <c>TutorialManager</c> 
+/// </summary>
 public class TutorialManager : MonoBehaviour {
 
     #region SERIALIZED FIELDS
 
     [Header("Tutorial Panel")]
 
-    [SerializeField]
+    [SerializeField] // Reference to the tutorial panel
     private GameObject tutorialPanel;
 
-    [SerializeField]
+    [SerializeField] // Reference to the tutorial panel text
     private Text tutorialTxt;
 
-    [SerializeField]
+    [SerializeField] // Reference to the tutorial panel next button
     private Button nextBtn;
 
-    [SerializeField]
+    [SerializeField] // Reference to the tutorial panel previous button
     private Button prevBtn;
 
     [Header("Level Information Panel")]
 
-    [SerializeField]
+    [SerializeField] // A reference to the full covering information panel button
     private Button tutorialInfoBtn;
 
     [Header("Restricted Access")]
 
-    [SerializeField]
+    [SerializeField] // A reference to the modify path button
     private GameObject modifyPathBtn;
 
-    [SerializeField]
+    [SerializeField] // A reference to the add path button
     private GameObject addPathBtn;
 
-    [SerializeField]
+    [SerializeField] // A reference to the firewall action bar slot
     private GameObject firewallSlot;
 
-    [SerializeField]
+    [SerializeField] // A reference to the backup action bar 
     private GameObject backupSlot;
 
-    [SerializeField]
+    [SerializeField] // A reference to the add backup menu selection on backup menu popup
     private GameObject addBackupBtn;
 
-    [SerializeField]
+    [SerializeField] // A reference to the predefined location to place the first firewall
     private GameObject predefinedLocationForFirstFirewall;
 
-    [SerializeField]
+    [SerializeField] // A reference to the predefined location to place the second firewall
     private GameObject predefinedLocationForSecondFirewall;
 
     [Header("Components")]
 
-    [SerializeField]
+    [SerializeField] // A reference to the earth component
     private GameObject earth;
 
-    [SerializeField]
+    [SerializeField] // A reference to the computer component
     private GameObject computer;
 
-    [SerializeField]
+    [SerializeField] // A reference to the document component
     private GameObject document;
 
     #endregion
@@ -70,8 +73,6 @@ public class TutorialManager : MonoBehaviour {
 
     private bool firewallSlotState = false;
 
-    private bool backupSlotState = false;
-
     private bool computerState = false;
 
     private bool internetState = false;
@@ -80,6 +81,10 @@ public class TutorialManager : MonoBehaviour {
 
     #endregion
 
+    /// <summary>
+    /// Initializes the tutorial level. Sets default values and disables/enables 
+    /// appropriate components, buttons, menus etc and setup event listeners
+    /// </summary>
     private void Start() {
         UserBehaviourProfile.Instance.tutorialLvl = true;
         Defenses.CompController.Instance.canPlaceTutorialStruct = false;
@@ -99,10 +104,8 @@ public class TutorialManager : MonoBehaviour {
 
         // Init restricted access event trigger
         this.modifyPathBtn.GetComponent<Button>().onClick.AddListener(NextStep);
-
         this.firewallSlot.GetComponent<Button>().onClick.AddListener(FireFirewallEventTrigger);
         this.addBackupBtn.GetComponent<Button>().onClick.AddListener(NextStep);
-        //this.backupSlot.GetComponent<Button>().onClick.AddListener(FireBackupEventTrigger);
         this.computer.GetComponent<Button>().onClick.AddListener(FireComputerEventTrigger);
         this.earth.GetComponent<Button>().onClick.AddListener(FireInternetEventTrigger);
         this.predefinedLocationForFirstFirewall.GetComponent<Button>().onClick.AddListener(PlaceFirewallComponentOnSpecifiedLocation);
@@ -117,6 +120,10 @@ public class TutorialManager : MonoBehaviour {
         ChangeComponentClickableState(this.document, false);
     }
 
+    /// <summary>
+    /// Controls the state of the tutorial level. Each state contains
+    /// different tasks.
+    /// </summary>
     private void StateMachine() {
         switch (this.state) {
             case 1:
@@ -185,12 +192,18 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Is triggered by clicking the firewall slot
+    /// </summary>
     private void FireFirewallEventTrigger() {
         if (this.firewallSlotState) {
             NextStep();
         }
     }
 
+    /// <summary>
+    /// Is triggered by clicking the computer component
+    /// </summary>
     private void FireComputerEventTrigger() {
         if (this.computerState && this.inbetweenStructPlacement == false) {
             NextStep();
@@ -202,6 +215,9 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Is triggered by clicking the internet component
+    /// </summary>
     private void FireInternetEventTrigger() {
         Debug.Log("Firing internet event trigger");
         if (this.internetState && this.inbetweenStructPlacement == false) {
@@ -215,17 +231,17 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
-    private void FireBackupEventTrigger() {
-        if (this.backupSlotState) {
-            NextStep();
-        }
-    }
-
+    /// <summary>
+    /// Is triggered by clicking one of the predefined locations for placing a firewall
+    /// </summary>
     public void PlaceFirewallComponentOnSpecifiedLocation() {
         Defenses.CompController.Instance.canPlaceTutorialStruct = true;
         NextStep();
     }
 
+    /// <summary>
+    /// Initial task in the tutorial
+    /// </summary>
     private void TutorialInit() {
         ShowTutorialPanel(true);
         this.tutorialTxt.text = "For starters we can see we have a computer, a document and the internet. All these are connected together via inputs and outputs";
@@ -234,7 +250,6 @@ public class TutorialManager : MonoBehaviour {
     private void FirstTask() {
         ChangeBtnState(this.nextBtn);
         this.firewallSlotState = true;
-        // TODO Add Stop here and wait for firewall panel to be clicked
         this.firewallSlot.SetActive(true);
         HighlightComponent(this.firewallSlot, true);
         this.tutorialTxt.text = "To extend your system with another component, (this is just an example) click the highlighted FirewallSlot in your actionbar";
@@ -245,7 +260,6 @@ public class TutorialManager : MonoBehaviour {
         this.computerState = true;
         ChangeComponentClickableState(this.computer, true);
         HighlightComponent(this.firewallSlot, false);
-        // Highlight computer component
         HighlightComponent(this.computer, true);
         this.tutorialTxt.text = "Now LEFT CLICK on the hightlighted computer";
     }
@@ -276,9 +290,7 @@ public class TutorialManager : MonoBehaviour {
         this.tutorialTxt.text = "Now comes the really important task. To place a defense between to existing components you have to use the RIGHT CLICK mouse button. First RIGHT CLICK on the internet.";
         ChangeComponentClickableState(this.earth, true);
         HighlightComponent(this.earth, true);
-
 		// Waits for component being right clicked before proceeding
-		// TODO Check what component has been pressed before doing next step
 		EventManager.onRightClickComponent += NextStep;
 	}
 
@@ -292,8 +304,6 @@ public class TutorialManager : MonoBehaviour {
         HighlightComponent(this.computer, true);
     }
 
-    // TODO FIX THIS AFTER RIGHT BUTTON LISTEN EVENT IS FIXED!!
-
     private void SeventhTask() {
         this.computerState = false;
         ChangeComponentClickableState(this.computer, false);
@@ -305,8 +315,6 @@ public class TutorialManager : MonoBehaviour {
 		EventManager.onRightClickComponent -= NextStep;
     }
 
-
-    // ARON WORKING ON ATM (06/05)
     private void EightTask() {
         HighlightComponent(this.predefinedLocationForSecondFirewall, false);
         this.predefinedLocationForSecondFirewall.SetActive(false);
@@ -384,6 +392,9 @@ public class TutorialManager : MonoBehaviour {
         this.addPathBtn.GetComponent<Button>().enabled = true;
     }
 
+    /// <summary>
+    /// Go to the next step of the tutorial
+    /// </summary>
     private void NextStep() {
         if (this.state <= 15) {
             Debug.Log("Next step...");
@@ -392,22 +403,11 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
-    public void NextStepOnAction() {
-        if (this.readyToMoveOn) {
-            Debug.Log("Next step...");
-            this.state++;
-            StateMachine();
-        }
-    }
-
-    private void PrevStep() {
-        if (this.state > 0) {
-            Debug.Log("Previous step...");
-            this.state--;
-            StateMachine();
-        }
-    }
-
+    /// <summary>
+    /// Highlights the specified component if state == true and remove highlight if false
+    /// </summary>
+    /// <param name="objectToHighlight">Object to highlight</param>
+    /// <param name="state">true to highlight, false to remove highlight</param>
     private void HighlightComponent(GameObject objectToHighlight, bool state) {
         GameObject borderGO;
         if (state) {
@@ -428,6 +428,12 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Disables or enables the a components clickable state. If false, then the user
+    /// can't interact with the specified component
+    /// </summary>
+    /// <param name="obj">object to modify clickable state</param>
+    /// <param name="clickableState">true to make it clickable and false to make it non-interactable</param>
     private void ChangeComponentClickableState(GameObject obj, bool clickableState) {
         if (clickableState) {
             obj.GetComponent<Button>().enabled = true;
@@ -436,6 +442,12 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Switches the enabled state of the selected button.
+    /// If previous state was enabled then it will be disabled
+    /// and vice versa,
+    /// </summary>
+    /// <param name="btnToChange">button to modify state</param>
     private void ChangeBtnState(Button btnToChange) {
         btnToChange.enabled = !btnToChange.enabled;
         if (btnToChange.enabled) {
@@ -445,6 +457,10 @@ public class TutorialManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Shows or hides the tutorial panel depending on bool state
+    /// </summary>
+    /// <param name="state"></param>
     private void ShowTutorialPanel(bool state) {
         this.tutorialPanel.SetActive(state);
     }

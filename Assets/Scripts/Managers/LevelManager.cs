@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : Singleton<LevelManager> {
+/// <summary>
+/// Class <c>LevelManager</c> handles the level specific text and values 
+/// (Currently not used that much as we only have one level)
+/// </summary>
+public class LevelManager : MonoBehaviour {
 
     /// <summary>
     /// Initializes level 1 related values and information
