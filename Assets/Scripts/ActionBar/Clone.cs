@@ -37,7 +37,6 @@ public class Clone : MonoBehaviour, IPointerDownHandler {
 	/// <param name="eventData"></param>
 	public void OnPointerDown(PointerEventData eventData) {
 		CompController.Instance.FinishPlacement();
-		CompController.Instance.setNewStructureOutput = true;
 	}
 
     /// <summary>

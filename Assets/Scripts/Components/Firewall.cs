@@ -10,16 +10,16 @@ using UnityEngine.EventSystems;
 public class Firewall : Component, IPointerClickHandler {
 
 	[SerializeField]
-	private GameObject firewallPanelRow;
+	private GameObject firewallPanelRow;                // The design of a single firewall port row
 
-    [SerializeField] // Contains the sprites for the different upgrades
-    private Sprite[] firewallSprites;
+    [SerializeField] 
+    private Sprite[] firewallSprites;                   // Contains the sprites for the different upgrades
 
-	[Header("Firewall Port")]
+    [Header("Firewall Port")]
 	[SerializeField]
-	private FirewallPortDummy[] ports;
+	private FirewallPortDummy[] ports;                  // A list of ports and what their statuses (allow / disallow) set in Unity Inspector. Only used for extracting data.
 
-    private List<FirewallPort> listOfFirewallPorts;
+    private List<FirewallPort> listOfFirewallPorts;     // All ports and statuses of set in a firewall
 
     public void Start() {
         if (AlreadyInitialized == false) {
@@ -54,16 +54,20 @@ public class Firewall : Component, IPointerClickHandler {
 	/// </summary>
 	private void CreateGameObjects() {
 		foreach (FirewallPortDummy fpd in ports) {
+            // Instantiate gameobject from the prefab and add the FirewallPort
 			GameObject obj = Instantiate(firewallPanelRow) as GameObject;
 			FirewallPort fp = obj.AddComponent<FirewallPort>();
+
+            // Set port and adjust the size of the gameobject
 			fp.Set(fpd.port, fpd.isActive);
 			((RectTransform) obj.transform).localScale = new Vector3(1, 1, 1);
+
+            // Store the port configuration
             this.listOfFirewallPorts.Add(fp);
+
             fp.transform.SetParent(GameObject.Find("TemporaryLocation").transform);
 		}
 	}
-
-    // TODO Fix methods below to use listOfFirewallPorts instead
 
     /// <summary>
     /// Return the FirewallPort from the port integer.

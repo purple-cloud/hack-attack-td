@@ -1,36 +1,30 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Defenses {
-	/// <summary>
-	/// Global class for managing structures and action bar items.
-	/// </summary>
-	public class CompController : Singleton<CompController> {
+namespace Defenses
+{
+    /// <summary>
+    /// Global class for managing structures and action bar items.
+    /// </summary>
+    public class CompController : Singleton<CompController> {
+		private GameObject targetStructure;             // The structure (that's already placed) that will be connected to the new one
 
-		// The structures the new structure is being placed between
-		private GameObject targetStructure;
+        private GameObject targetStructure2;            // The other structure that will be connected to the new one.
 
-		private GameObject targetStructure2;
-
-		// New structure that is being placed
-		private GameObject newStructure;
-
-		public bool setNewStructureOutput;
+		private GameObject newStructure;                // New structure that is being placed          
 
 		[SerializeField]
-		public GameObject emptyPrefab;
+		public GameObject emptyPrefab;                  // An empty prefab that other classes can use
 
 		[SerializeField]
-		public GameObject highlightBorder;
+		public GameObject highlightBorder;              // A prefab used to highlight components and other objects on the canvas
 
-		[HideInInspector] // A reference to the current clone (created from the item slot)
-        public GameObject clone;
+		[HideInInspector] 
+        public GameObject clone;                        // A reference to the current clone (created from the item slot)
 
-        public bool canPlaceTutorialStruct = true;
+        public bool canPlaceTutorialStruct = true;      // Used to restrict what components can be placed (applies only in tutorial level)
 
 		/// <summary>
 		/// An indication on if a structure is in the progress of being placed.
@@ -38,24 +32,40 @@ namespace Defenses {
 		/// </summary>
 		public bool IsPlacingStructure { get; set; }
 
+        /// <summary>
+        /// When placing new structures, this variable gets altered by other components if there is a 
+        /// collision between them.
+        /// </summary>
 		public bool CollisionDetected { get; set; }
 
+        /// <summary>
+        /// The material used to draw connections between components.
+        /// </summary>
 		[SerializeField]
 		public Material pathLineMaterial;
 
+        /// <summary>
+        /// A prefab (shell) for clone.
+        /// <seealso cref="ActionBarSlot.CreateClone"/>
+        /// </summary>
 		[SerializeField]
 		public GameObject clonePrefab;
 
 		private void Start() {
 			IsPlacingStructure = false;
-			setNewStructureOutput = false;
 			GenerateStructureInputs();
 		}
 
+        /// <summary>
+        /// Collects outputs and creates inputs to all components from them.
+        /// </summary>
 		public void GenerateStructureInputs() {
+            // Fetch all components
 			foreach (Component comp in GameObject.FindObjectsOfType(typeof(Component))) {
 				if (comp.outputs != null) {
+                    // Fetch all outputs of the component
 					foreach (Component outputComp in comp.GetOutputComponents()) {
+                        // Add component at the start as input on the current component
 						if (!outputComp.input.Contains(comp.gameObject)) {
 							outputComp.input.Add(comp.gameObject);
 						}
@@ -71,10 +81,13 @@ namespace Defenses {
 		public void OnStructureClickEvent(GameObject obj) {
 			if (IsPlacingStructure) {
 				if (Input.GetMouseButtonUp(0)) {
-					// Save the game object and enable dragging of the clone
-					targetStructure = obj;
+                    // Left click assumes the player wants to create a single connection from another structure
+
+                    // Save the game object and enable dragging of the clone
+                    targetStructure = obj;
 					EnableCloneDragging();
 				} else {
+                    // Right mouse click assumes the player wants to place new structure between other structures
 					if (targetStructure == null) {
 						// Grab input structure on first call
 						targetStructure = obj;
@@ -124,6 +137,7 @@ namespace Defenses {
                         return;
                     }
 
+                    // Prepare the actual game object of the new structure
                     newStructure = Instantiate(clone.GetComponent<Clone>().defensePrefab) as GameObject;
                     newStructure.name = clone.GetComponent<Clone>().defensePrefab.name;
                     newStructure.transform.position = clone.transform.position;
@@ -160,28 +174,33 @@ namespace Defenses {
 			}
 		}
 
-		/// <summary>
-		/// Connects two structures with each other.
-		/// </summary>
-		/// <param name="input"></param>
-		/// <param name="output"></param>
-		public void SetInputOutput(GameObject input, GameObject output) {
+        /// <summary>
+        /// Connects two structures with each other.
+        /// </summary>
+        /// <param name="input">What object the connection is comming from.</param>
+        /// <param name="output">What object the connection is going to.</param>
+        public void SetInputOutput(GameObject input, GameObject output) {
 			Component inputComp = input.GetComponent(typeof(Component)) as Component;
 			Component outputComp = output.GetComponent(typeof(Component)) as Component;
 
 			SetInputOutput(inputComp, outputComp);
 		}
 
-		/// <summary>
-		/// Connects two structures with each other.
-		/// </summary>
-		/// <param name="input"></param>
-		/// <param name="output"></param>
-		public void SetInputOutput(Component input, Component output) {
+        /// <summary>
+        /// Connects two structures with each other.
+        /// </summary>
+        /// <param name="input">What component object the connection is comming from.</param>
+        /// <param name="output">What component object the connection is going to.</param>
+        public void SetInputOutput(Component input, Component output) {
 			input.AddOutput(output.gameObject);
 			output.AddInput(input.gameObject);
 		}
 
+        /// <summary>
+        /// Sever the connection between two components.
+        /// </summary>
+        /// <param name="input">What component object the connection is comming from.</param>
+        /// <param name="output">What component object the connection is going to.</param>
 		public static void RemoveInputOutput(Component inputComp, Component outputComp) {
 			inputComp.RemoveOutput(outputComp.gameObject);
 			outputComp.RemoveInput(inputComp.gameObject);
@@ -190,7 +209,7 @@ namespace Defenses {
 		/// <summary>
 		/// Highlights all structures on canvas.
 		/// </summary>
-		/// <param name="state"></param>
+		/// <param name="state"><c>True</c> structures it is going be higlighted, else remove the highlight.</param>
 		public void HighlightAllStructures(bool state) {
             try {
                 foreach (Transform child in (GameObject.Find("ObjectsInCanvas").transform)) {
@@ -236,7 +255,7 @@ namespace Defenses {
 		/// <summary>
 		/// Abandons the placement for the new structure.
 		/// </summary>
-		/// <param name="clone"></param>
+		/// <param name="clone">Clone gameobject</param>
 		public void CancelPlacement() {
 			// Removes button highlight on the item when dropping it
 			EventSystem.current.SetSelectedGameObject(null);
@@ -291,7 +310,7 @@ namespace Defenses {
 				outputComp.RemoveInput(comp.gameObject);
 			}
 
-			// Safe to remove 
+			// Safe to destroy object 
 			Destroy(comp.gameObject);
 		}
 	}
