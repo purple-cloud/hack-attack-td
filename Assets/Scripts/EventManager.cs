@@ -33,6 +33,9 @@ public class EventManager : Singleton<EventManager> {
 	/// </summary>
 	public static event RefreshPanel onRefreshPanel;
 
+    /// <summary>
+    /// When a component/structure has been placed successfully.
+    /// </summary>
     public static event ComponentPlaced onComponentPlaced;
 
 	/// <summary>
@@ -60,20 +63,21 @@ public class EventManager : Singleton<EventManager> {
 	}
 
 	void Update() {
-		// Ask classes to update panels 
-		if (Instance.refreshPanelEventIsTriggered) {
+        // Trigger 'onRefreshPanel' event
+        if (Instance.refreshPanelEventIsTriggered) {
             if (GameManager.Instance.modulePanel.activeSelf) {
                 onRefreshPanel?.Invoke();
                 Instance.refreshPanelEventIsTriggered = false;
             }
 		}
 
+        // Trigger 'onComponentPlaced' event
         if (Instance.componentPlacedEventIsTriggered) {
             onComponentPlaced?.Invoke();
             Instance.componentPlacedEventIsTriggered = false;
         }
 
-		// Trigger 'onRightClickComponent' event
+		// Invokes 'onRightClickComponent' event
 		if (Instance.rightClickComponentEventIsTriggered) {
 			onRightClickComponent?.Invoke();
 			Instance.rightClickComponentEventIsTriggered = false;
@@ -88,18 +92,24 @@ public class EventManager : Singleton<EventManager> {
 		Instance.refreshPanelEventIsTriggered = true;
 	}
 
+    /// <summary>
+    /// Once a component has been placed, invoke the event internally.
+    /// </summary>
     public static void TriggerComponentPlacedEvent() {
         Instance.componentPlacedEventIsTriggered = true;
     }
 
-	/// <summary>
-	/// Once a component has been right clicked, trigger the event internally.
-	/// <seealso cref="Component.OnPointerUp(PointerEventData)"/>
-	/// </summary>
-	public static void TriggerRightClickOnComponentEvent() {
+    /// <summary>
+    /// Once a component has been right clicked, invoke the event internally.
+    /// <seealso cref="Component.OnPointerUp(PointerEventData)"/>
+    /// </summary>
+    public static void TriggerRightClickOnComponentEvent() {
 		Instance.rightClickComponentEventIsTriggered = true;
 	}
 
+    /// <summary>
+    /// Removes all subscribed methods to 'onCanvasClick' event.
+    /// </summary>
     public static void ClearOnCanvasClickSubscribers() {
         onCanvasClick = null;
     }
