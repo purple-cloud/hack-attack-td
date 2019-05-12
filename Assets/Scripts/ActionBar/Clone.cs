@@ -4,8 +4,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Defenses;
 
+/// <summary>
+/// Class <c>Clone</c> creates a literal "clone" 
+/// of an selected component when used
+/// </summary>
 public class Clone : MonoBehaviour, IPointerDownHandler {
-	public GameObject defensePrefab;
+
+    public GameObject defensePrefab;
+
 	public bool isDragging;
 
 	/// <summary>
@@ -34,9 +40,12 @@ public class Clone : MonoBehaviour, IPointerDownHandler {
 		CompController.Instance.setNewStructureOutput = true;
 	}
 
+    /// <summary>
+    /// Is called every frame and updates the clone's position in the canvas
+    /// to follow the position of the user's mouse if field isDragging == true
+    /// </summary>
 	void Update() {
 		if (isDragging) {
-			// Snap the clone object to the mouse
 			gameObject.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
 		}
 	}

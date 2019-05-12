@@ -4,7 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ActionBarSlot : ItemSlot, IPointerEnterHandler {
+/// <summary>
+/// Class <c>ActionBarSlot</c> represent each individual item slot in the action-bar
+/// that contains a placable defense prefab.
+/// </summary>
+public class ActionBarSlot : ItemSlot {
 
     [SerializeField] // Checks if the itemslot is placable
     private bool isPlacable = false;
@@ -12,7 +16,8 @@ public class ActionBarSlot : ItemSlot, IPointerEnterHandler {
     private GameObject clone;
 
     /// <summary>
-    /// Creates a clone and displays it. 
+    /// Creates a clone from the stored defense prefab
+    /// and displays it. 
     /// <seealso cref="Clone"/>
     /// </summary>
     private void CreateClone() {
@@ -39,9 +44,11 @@ public class ActionBarSlot : ItemSlot, IPointerEnterHandler {
         }
     }
 
+    /// <summary>
+    /// Is called every frame and updates the border
+    /// around the item slot depending on user currency
+    /// </summary>
     private void Update() {
-        // TODO Change this to switch case???
-        // TODO Fill in more components when added to action-bar
         if (((Component) this.defensePrefab.GetComponent(typeof(Component))).GetType() == typeof(Firewall)) {
             if (GameManager.Instance.GetCurrency() < 100) {
                 this.gameObject.GetComponent<Button>().enabled = false;
@@ -59,7 +66,7 @@ public class ActionBarSlot : ItemSlot, IPointerEnterHandler {
     /// </summary>
     /// <param name="eventData"></param>
     public override void OnPointerUp(PointerEventData eventData) {
-        if (Defenses.CompController.Instance.IsPlacingStructure == true) {
+        if (Defenses.CompController.Instance.IsPlacingStructure) {
             Defenses.CompController.Instance.CancelPlacement();
         }
         if (this.isPlacable) {
