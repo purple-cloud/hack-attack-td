@@ -92,7 +92,6 @@ public class TutorialManager : MonoBehaviour {
         this.readyToMoveOn = false;
         this.state = 0;
         this.nextBtn.onClick.AddListener(NextStep);
-        this.prevBtn.onClick.AddListener(PrevStep);
         this.tutorialInfoBtn.onClick.AddListener(TutorialInit);
         GameManager.Instance.SetCurrency(100000);
 

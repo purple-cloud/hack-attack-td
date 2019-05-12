@@ -117,10 +117,10 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
             if (gameObject.GetComponent<Button>().enabled) {
                 Defenses.CompController.Instance.OnStructureClickEvent(gameObject);
             }
-		} else if (PathConnectionManager.Instance.IsSelectingStructureLink) {
-			PathConnectionManager.Instance.OnSelectingStructureLink(this);
-		} else if (PathConnectionManager.Instance.IsSelectingStructure) {
-			PathConnectionManager.Instance.ShowComponentInputOutput(this);
+		} else if (ConnectionManager.Instance.IsSelectingStructureLink) {
+			ConnectionManager.Instance.OnSelectingStructureLink(this);
+		} else if (ConnectionManager.Instance.IsSelectingStructure) {
+			ConnectionManager.Instance.ShowComponentInputOutput(this);
 		}
 		// If user is choosing to select component to backup
 		else if (BackupManager.Instance.BackupReady && ((Component) gameObject.GetComponent(typeof(Component))).BackupPrice <= GameManager.Instance.GetCurrency()) {
@@ -164,8 +164,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
     /// the specified information from the clicked component and opens up the panel if its not open
     /// </summary>
     public void OnPointerClick(PointerEventData eventData) {
-		if (!PathConnectionManager.Instance.IsSelectingStructure && 
-			!PathConnectionManager.Instance.IsSelectingStructureLink) {
+		if (!ConnectionManager.Instance.IsSelectingStructure && 
+			!ConnectionManager.Instance.IsSelectingStructureLink) {
 			if (GameManager.Instance.GetSelectedGameObject == this.gameObject) {
 				GameManager.Instance.DeselectGameObject();
 			} else {

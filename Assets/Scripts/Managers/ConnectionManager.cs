@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// This is hooked up to the ModifyConnectionPanel.
 /// </summary>
-public class PathConnectionManager : Singleton<PathConnectionManager> {
+public class ConnectionManager : Singleton<ConnectionManager> {
 	private Component targetCompInputTo;
 	private Component targetCompOutputFrom;
 
@@ -27,13 +27,13 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	#region UNITY_DEFINED
 
 	[SerializeField]
-	private GameObject panel;                   // Panel to show the path links
+	private GameObject panel;                   // Panel to show the connection links
 
 	[SerializeField]
-	private GameObject connectionList;          // The gameobject to list all the path link rows
+	private GameObject connectionList;          // The gameobject to list all the connection link rows
 
 	[SerializeField]
-	private GameObject connectionRowPrefab;		// The layout of the path link row
+	private GameObject connectionRowPrefab;		// The layout of the connection link row
 
 	// Panel variables
 	[SerializeField]
@@ -48,7 +48,7 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 
 	/// <summary>
 	/// Notifies components that the user want to show the panel.
-	/// This is used by the 'ModifyPathConnection' prefab.
+	/// This is used by the 'ModifyConnection' prefab.
 	/// </summary>
 	public void OpenPanelEvent() {
         FirewallManager.Instance.ShowFirewallPanel(false);
@@ -60,7 +60,7 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 
 	/// <summary>
 	/// Notifies components that the user is about to link structures.
-	/// This is used by the 'AddPathBtn' prefab.
+	/// This is used by the 'AddConnectionBtn' prefab.
 	/// </summary>
 	public void LinkComponentsEvent() {
 		IsSelectingStructureLink = true;
@@ -95,11 +95,11 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	}
 
 	/// <summary>
-	/// Link components with each other and create a path.
+	/// Link components with each other and create a connection.
 	/// </summary>
 	/// <param name="inputTo">What component the link is going to</param>
 	/// <param name="outputFrom">What component the link is comming from</param>
-	/// <seealso cref="PathConnectionManager.OnSelectingStructureLink(Component)"/>
+	/// <seealso cref="ConnectionManager.OnSelectingStructureLink(Component)"/>
 	public void LinkComponents(Component inputTo, Component outputFrom) {
 		// Input and output cannot point to the same component
 		if (inputTo != outputFrom) {
@@ -113,19 +113,19 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 
 
 	/// <summary>
-	/// Unlinks the path between components if they exist and if <code>inputTo</code> has more than 1 inputs.
+	/// Unlinks the connection between components if they exist and if <code>inputTo</code> has more than 1 inputs.
 	/// </summary>
 	/// <param name="inputTo">What component the link is going to</param>
 	/// <param name="outputFrom">What component the link is comming from</param>
-	public void UnlinkPath(Component inputTo, Component outputFrom) {
+	public void UnlinkConnection(Component inputTo, Component outputFrom) {
 		if (inputTo.input.Count > 1) {
 			inputTo.RemoveInput(outputFrom.gameObject);
 			outputFrom.RemoveOutput(inputTo.gameObject);
 
 			Clear();
 		} else {
-			Debug.Log("Can't unlink path: One of the components doesn't have" +
-				" more than one path.");
+			Debug.Log("Can't unlink connection: One of the components doesn't have" +
+				" more than one connection.");
 		}
 	}
 
@@ -134,10 +134,10 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	#region GUI
 
 	/// <summary>
-	/// Lists all paths going in and out of the selected components on the panel.
-	/// This is used by <code>Component</code>
+	/// Lists all connections going in and out of the selected components on the panel.
+	/// This is used by <code>Component</code>.
 	/// </summary>
-	/// <param name="selectedComponent">Component to show the pats of</param>
+	/// <param name="selectedComponent">Component to show the connections of.</param>
 	/// <seealso cref="Component.OnPointerUp(PointerEventData)"/>
 	public void ShowComponentInputOutput(Component selectedComponent) {
 		Clear();
@@ -157,21 +157,21 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 			AddRowToPanel(selectedComponent, DirectionType.OUTPUT, outputComponent);
 		}
 
-		// User has selected the structure to list the paths of
+		// User has selected the structure to list the connection of
 		IsSelectingStructure = false;
 	}
 
 
 	/// <summary>
-	/// Creates a new path link row and adds to the list after assigning its values.
+	/// Creates a new connection row and adds to the list after assigning its values.
 	/// </summary>
 	/// <param name="comp1">First component</param>
-	/// <param name="direction">Direction of the path from the first component to second</param>
+	/// <param name="direction">Direction of the connection from the first component to second</param>
 	/// <param name="comp2">Second component</param>
 	private void AddRowToPanel(Component comp1, DirectionType direction, Component comp2) {
 		// Instantiate new row for the panel and grab its layout
 		GameObject newConnectionRow = Instantiate(connectionRowPrefab);
-		PathLinkRowLayout rowLayout = newConnectionRow.GetComponent<PathLinkRowLayout>();
+		ConnectionRowLayout rowLayout = newConnectionRow.GetComponent<ConnectionRowLayout>();
 
 		// Assign visuals
 		rowLayout.Assign(comp1, direction, comp2);
@@ -182,7 +182,7 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	}
 
 	/// <summary>
-	/// Shows or hides path link panel.
+	/// Shows or hides connection link panel.
 	/// </summary>
 	/// <param name="state"><code>True</code> to show, else set <code>false</code></param>
 	private void ShowPanel(bool state) {
@@ -192,7 +192,7 @@ public class PathConnectionManager : Singleton<PathConnectionManager> {
 	#endregion
 
 	/// <summary>
-	/// Resets all variables, removes the path links on the list and closes the panel.
+	/// Resets all variables, removes the connections on the list and closes the panel.
 	/// </summary>
 	private void Clear() {
 		IsSelectingStructure = false;
