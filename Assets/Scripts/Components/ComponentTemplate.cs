@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// Simple template for creating a component with upgrade support
+/// Class <c>ComponentTemplate</c> is simple template for creating a component with upgrade support
 /// </summary>
 public class ComponentTemplate : Component, IPointerClickHandler {
 
