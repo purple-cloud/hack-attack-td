@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class <c>ComponentUpgrade</c> represent each upgrade that a component can have.
+/// It updates the values of existing components when they are upgraded
+/// </summary>
 public class ComponentUpgrade {
 
     /// <summary>
@@ -27,7 +31,7 @@ public class ComponentUpgrade {
     /// <summary>
     /// Generates getter and private setter for upgrade durability
     /// </summary>
-    public float Durability { get; private set; }
+    public int Durability { get; private set; }
 
     /// <summary>
     /// Generates getter and private setter for upgrade encryption
@@ -50,10 +54,15 @@ public class ComponentUpgrade {
     public Sprite Sprite { get; private set; }
 
     /// <summary>
-    /// General constructor for regular component upgrades
+    /// constructor for a default upgrade
     /// </summary>
-    /// <param name="price">price of the new component upgrade</param>
-    /// <param name="sprite">sprite of the new component upgrade</param>
+    /// <param name="name">The new name of the component</param>
+    /// <param name="price">The new upgrade price of the component</param>
+    /// <param name="sprite">The new sprite of the component</param>
+    /// <param name="repairPrice">The new repair price of the component</param>
+    /// <param name="sellVal">The new sell value of the component</param>
+    /// <param name="backupPrice">The new backup price of the component</param>
+    /// <param name="backupRestorePrice">The new restore price for the component</param>
     public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal, int backupPrice, int backupRestorePrice) {
         this.Name = name;
         this.Price = price;
@@ -65,12 +74,17 @@ public class ComponentUpgrade {
     }
 
     /// <summary>
-    /// Constructor for Computer Component upgrade
+    /// constructor for upgrades in use of durability
     /// </summary>
-    /// <param name="price">price of the new computer upgrade</param>
-    /// <param name="durability">durability of the new computer upgrade</param>
-    /// <param name="sprite">sprite of the new computer upgrade</param>
-    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal, float durability, int backupPrice, int backupRestorePrice) {
+    /// <param name="name">The new name of the component</param>
+    /// <param name="price">The new upgrade price of the component</param>
+    /// <param name="sprite">The new sprite of the component</param>
+    /// <param name="repairPrice">The new repair price of the component</param>
+    /// <param name="sellVal">The new sell value of the component</param>
+    /// <param name="durability">The new durability of the component</param>
+    /// <param name="backupPrice">The new backup price of the component</param>
+    /// <param name="backupRestorePrice">The new restore price for the component</param>
+    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal, int durability, int backupPrice, int backupRestorePrice) {
         this.Name = name;
         this.Price = price;
         this.Sprite = sprite;
@@ -82,15 +96,22 @@ public class ComponentUpgrade {
     }
 
     /// <summary>
-    /// Constructor for encryption upgrade
+    /// Constructor for upgrades in use of encryption
     /// </summary>
-    /// <param name="price">price of the new computer upgrade</param>
-    /// <param name="encryption">encryption of the new computer upgrade</param>
-    /// <param name="sprite">sprite of the new computer upgrade</param>
-    public ComponentUpgrade(string name, int price, Sprite sprite, float encryption, int backupPrice, int backupRestorePrice) {
+    /// <param name="name">The new name of the component</param>
+    /// <param name="price">The new upgrade price of the component</param>
+    /// <param name="sprite">The new sprite of the component</param>
+    /// <param name="repairPrice">The new repair price of the component</param>
+    /// <param name="sellVal">The new sell value of the component</param>
+    /// <param name="encryption">The new encryption of the component</param>
+    /// <param name="backupPrice">The new backup price of the component</param>
+    /// <param name="backupRestorePrice">The new restore price for the component</param>
+    public ComponentUpgrade(string name, int price, Sprite sprite, int repairPrice, int sellVal, float encryption, int backupPrice, int backupRestorePrice) {
         this.Name = name;
         this.Price = price;
         this.Sprite = sprite;
+        this.RepairPrice = repairPrice;
+        this.SellValue = sellVal;
         this.Encryption = encryption;
         this.BackupPrice = backupPrice;
         this.BackupRestorePrice = backupRestorePrice;

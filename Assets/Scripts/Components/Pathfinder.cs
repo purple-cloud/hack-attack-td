@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
 public class Pathfinder : MonoBehaviour {
 
-    // TODO Maybe extract these lists to another script
-
+    // Contains a list of all attack names
     private string[] listOfAttackNames;
 
-    // TODO maybe make ports accessable and retrieved instead of adding manually here
+    // List of ports that attacks can use
     private int[] listOfFirewallPorts;
 
     private string name;
@@ -27,9 +29,12 @@ public class Pathfinder : MonoBehaviour {
     /// </summary>
     public Component SelectedComponent { get; private set; }
 
+    /// <summary>
+    /// Constructor for class Pathfinder. Sets the initial start position of the attack
+    /// </summary>
+    /// <param name="initialComponent"></param>
     public Pathfinder(Component initialComponent) {
         this.initialComponent = initialComponent;
-        
     }
 
     /// <summary>
@@ -48,22 +53,21 @@ public class Pathfinder : MonoBehaviour {
 
     /// <summary>
     /// Returns the next output from currently selected game object.
-    /// If output.size > 1 then return a random output.
+    /// If output.size > 1 then return a random output or input
     /// </summary>
     /// <returns>
-    /// the next output from currently selected game object.
-    /// If output.size > 1 then return a random output.
+    /// The next output from currently selected game object.
+    /// If output.size > 1 then return a random output or input
     /// </returns>
     public Component GetNextOutput() {
         Component selectedOutput = null;
         this.listOfAdjacentGameObjects.Clear();
         Debug.Log("Current Place: " + this.SelectedComponent.Name);
-        // TODO Inputs & Outputs = [0] FIX THIS SHIT
         this.listOfAdjacentGameObjects.AddRange(SelectedComponent.GetInputComponents());
         foreach (Component comp in SelectedComponent.GetOutputComponents()) {
             this.listOfAdjacentGameObjects.Add(comp);
         }
-        // See if list containing all outputs is bigger then 1
+        // See if list containing all outputs & inputs is bigger then 1
         if (this.listOfAdjacentGameObjects.Count > 1) {
             selectedOutput = this.listOfAdjacentGameObjects[UnityEngine.Random.Range(0, this.listOfAdjacentGameObjects.Count)];
         } else if (this.listOfAdjacentGameObjects.Count == 0) {
@@ -75,15 +79,17 @@ public class Pathfinder : MonoBehaviour {
     }
 
     /// <summary>
-    /// Moves the "attack" object to the specified game object
+    /// Moves the "attack" object to the object returned from GetNextOutput()
     /// </summary>
-    /// <param name="targetGameObject">the game object to move to</param>
     public void MoveToNextOutput() {
         this.SelectedComponent = GetNextOutput();
         Debug.Log("New Place: " + this.SelectedComponent.name);
     }
 
-    // TODO Flyttes til GenericAttack sammens med name og ports lists init
+    /// <summary>
+    /// Returns the name of the attack
+    /// </summary>
+    /// <returns>the name of the attack</returns>
     public string GetAttackName() {
         return this.name;
     }
