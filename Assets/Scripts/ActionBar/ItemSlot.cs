@@ -5,8 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// This class is for the item slots on the action bar. Its job is to handle mouse events (such as border coloring when mouse is hovering over it)
-/// and create a visible clone.
+/// Class <c>ItemSlot</c> is an abstract parent class for <c>ActionBarSlot</c> and <c>BackupBarItemSlot</c>
+/// and handles "hover" events and chooses correct colour format depending on user currency, price of component etc.
 /// </summary>
 public abstract class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler {
 
@@ -31,7 +31,8 @@ public abstract class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
     internal bool insufficientCurrency = false;
 
     /// <summary>
-	/// Set border color when mouse pointer is on the object.
+	/// Set border color when mouse pointer is on the object depending on user currency
+    /// and display price panel above the hovered item slot.
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerEnter(PointerEventData eventData) {
@@ -52,7 +53,7 @@ public abstract class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
     }
 
     /// <summary>
-	/// Remove border color when mouse pointer hovers away from object.
+	/// Remove border color and price panel when mouse pointer hovers away from object.
 	/// </summary>
 	/// <param name="eventData"></param>
 	public void OnPointerExit(PointerEventData eventData) {

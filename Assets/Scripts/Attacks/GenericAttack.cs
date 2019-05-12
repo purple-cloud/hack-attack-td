@@ -2,10 +2,16 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Abstract class <c>GenericAttack</c> is the parent of all attacks that wants to find
+/// a specific component in the system and do something with it
+/// </summary>
 public abstract class GenericAttack : Pathfinder {
 
+    // Condition for checking if selected component is attackable
     private bool isAttackable;
 
+    // Condition for exiting script
     protected bool shouldDestroy;
 
     public GenericAttack(Component initialComponent) : base(initialComponent) {
@@ -13,7 +19,9 @@ public abstract class GenericAttack : Pathfinder {
     }
 
     /// <summary>
-    /// Finds a game object to attack
+    /// While loop that continously scans the selected component and compares it 
+    /// with the component to find. If the component is found, return this component.
+    /// if not, set shouldDestroy == true and exit loop
     /// </summary>
     public Component FindAttackableGameObject(System.Type component) {
         Component foundComponent = null;
@@ -42,11 +50,19 @@ public abstract class GenericAttack : Pathfinder {
     }
 
     /// <summary>
-    /// Scans the specified component and returns true if computer component
-    /// is found and false if not
+    /// Scans the specified component and returns true if componentToScan == componentToFind
+    /// and false if not. 
+    /// 
+    /// If the selected component is a firewall, the status of the firewall is checked. 
+    /// If the firewall is active, the port of the attack and the port status of the firewall is compared. 
+    /// If they are the same, and the firewall port is open, the attack will pass. If not, the attack gets blocked. 
     /// </summary>
-    /// <param name="componentToScan"></param>
-    /// <returns>true if computer component is found and false if not</returns>
+    /// 
+    /// <param name="componentToScan">The selected component</param>
+    /// <param name="componentToFind">The component to find</param>
+    /// 
+    /// <returns>true if componentToScan == componentToFind
+    ///          and false if not. </returns>
     private bool ScanComponent(Component componentToScan, System.Type componentToFind) {
         bool componentFound = false;
         try {

@@ -4,8 +4,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class <c>BackupBarItemSlot</c> represent each individual item slot in 
+/// the backup selection panel that contains all backups
+/// </summary>
 public class BackupBarItemSlot : ItemSlot {
 
+    /// <summary>
+    /// Is called every frame and updates the border
+    /// around the item slot depending on user currency
+    /// </summary>
     private void Update() {
         if (((Component) this.backuppedComponent.GetComponent(typeof(Component))).BackupRestorePrice > GameManager.Instance.GetCurrency()) {
             this.gameObject.GetComponent<Button>().enabled = false;
@@ -17,6 +25,12 @@ public class BackupBarItemSlot : ItemSlot {
         }
     }
 
+    /// <summary>
+    /// When a BackupBarItemSlot is clicked it will highlight all
+    /// appropriate components in the system and store the selected backup
+    /// so it can be replaced by the later selected component in the system.
+    /// </summary>
+    /// <param name="eventData"></param>
     public override void OnPointerUp(PointerEventData eventData) {
         PricePanel.Instance.HidePricePanel();
         BackupManager.Instance.HighlightReplacableComponents(((Component) this.backuppedComponent.GetComponent(typeof(Component))), true);
