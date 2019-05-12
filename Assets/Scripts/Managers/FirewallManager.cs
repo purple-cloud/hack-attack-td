@@ -3,13 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class <c>FirewallManager</c> handles the visual parts of the firewall system
+/// </summary>
 public class FirewallManager : Singleton<FirewallManager> {
 
-    [SerializeField]
+    [SerializeField] // Reference to the firewall management panel
     private GameObject firewallPanel;
 
     private bool updateGUI = true;
 
+    /// <summary>
+    /// Generates ports from the specified firewall and adds them to the
+    /// firewall management panel
+    /// </summary>
+    /// <param name="firewall">The firewall to get the ports from</param>
     public void GenerateFirewallPorts(Firewall firewall) {
         foreach (FirewallPort firewallPort in firewall.GetFirewallPorts()) {
             Button portStatusBtn = firewallPort.GetBtn();
@@ -44,6 +52,10 @@ public class FirewallManager : Singleton<FirewallManager> {
         this.firewallPanel.SetActive(condition);
     }
 
+    /// <summary>
+    /// Updates the firewall port enable/disable status
+    /// </summary>
+    /// <param name="firewallPort"></param>
     public void UpdateStatus(FirewallPort firewallPort) {
         firewallPort.GetBtn().gameObject.transform.Find("Text").GetComponent<Text>().text = (firewallPort.IsActive) ? "Active" : "Disabled";
         firewallPort.GetBtn().gameObject.GetComponent<Image>().color = (firewallPort.IsActive) ? Color.green : Color.red;

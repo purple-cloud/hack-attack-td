@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// This script holds on state values that can be used
 /// to "analyze" user behaviour and determine attack patterns
+/// TODO Change name of class
 /// </summary>
 public class UserBehaviourProfile : Singleton<UserBehaviourProfile> {
 
@@ -34,6 +35,9 @@ public class UserBehaviourProfile : Singleton<UserBehaviourProfile> {
 
     #endregion
 
+    /// <summary>
+    /// Sets the initial values
+    /// </summary>
     private void Awake() {
         this.documentHacked = false;
         this.PlayerWillingToPay = 0;
