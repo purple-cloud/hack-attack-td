@@ -13,10 +13,8 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
 	[SerializeField] // A reference to the image displayed in canvas
     private Image canvasImage;
 
-	//[HideInInspector]
 	public List<GameObject> input;
 
-	//[HideInInspector]
 	public List<GameObject> outputs;
 
 	#region PROPERTIES
@@ -235,11 +233,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
         }
     }
 
-	public void SetLineRendererMaterial(Material m) {
-		// Set the material for the line
-		gameObject.GetComponent<LineRenderer>().material = m;
-	}
-
     /// <summary>
     /// Is called by the GameManager when pressing Repair on the stats panel
     /// after selecting a component
@@ -290,7 +283,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
         }
     }
 
-    // TODO Currently not in use?????
+    // TODO Currently not in use, WIP
 	public void Buy() {
         Debug.Log("Buying " + this.Name + " component...");
         // TODO This needs to be fixed where method is called 
@@ -299,14 +292,9 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
         }
     }
 
-    /*
-    public virtual string GetStats() {
-
-    }*/
-
     /// <summary>
     /// Takes in the status boolean and returns a text
-    /// depending on if boolean is true or false
+    /// depending on if boolean is true or falseabcdabcd
     /// </summary>
     /// <returns>
     /// Return either "Active" or "Disabled" depending on status boolean
@@ -343,15 +331,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
 		}
 	}
 
-	/// <summary>
-	/// Sets the component's canvas image
-	/// </summary>
-	/// <param name="sprite">the sprite to set to the canvas image</param>
-	public void SetCanvasSprite(Sprite sprite) {
-        this.canvasImage.sprite = sprite;
-    }
-
-
 	#region OUTPUT
 	/// <summary>
 	/// Finds all outputs that has a defined component type.
@@ -361,29 +340,6 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
 	public GameObject[] GetOutputs(System.Type type) {
 		return outputs.FindAll(obj => obj.GetComponent(typeof(Component)).GetType() == type).ToArray();
 	}
-
-
-    /// <summary>
-    /// Adds a new input to the specified structure
-    /// </summary>
-    /// <param name="obj"></param>
-    public void AddInput(GameObject obj) {
-        if (!this.input.Contains(obj)) {
-            this.input.Add(obj);
-        }
-    }
-
-    /// <summary>
-    /// Removes the input object from this structure if it exists.
-    /// </summary>
-    /// <param name="obj">Input object</param>
-    /// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
-    public bool RemoveInput(GameObject obj) {
-        if (this.input.Contains(obj)) {
-            this.input.Remove(obj);
-        }
-		return !input.Contains(obj);
-    }
 
     /// <summary>
     /// Adds a new output to this structure.
@@ -438,6 +394,33 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
 
     #endregion
 
+    #region INPUT
+    /// <summary>
+    /// Adds a new input to the specified structure
+    /// </summary>
+    /// <param name="obj"></param>
+    public void AddInput(GameObject obj)
+    {
+        if (!this.input.Contains(obj))
+        {
+            this.input.Add(obj);
+        }
+    }
+
+    /// <summary>
+    /// Removes the input object from this structure if it exists.
+    /// </summary>
+    /// <param name="obj">Input object</param>
+    /// <returns>If the object was removed without errors, return<code>true</code>, else <code>false</code></returns>
+    public bool RemoveInput(GameObject obj)
+    {
+        if (this.input.Contains(obj))
+        {
+            this.input.Remove(obj);
+        }
+        return !input.Contains(obj);
+    }
+
     public Component[] GetInputComponents() {
         List<Component> inputComps = new List<Component>();
         foreach (GameObject obj in input) {
@@ -445,6 +428,7 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
         }
         return inputComps.ToArray();
     }
+    #endregion
 
     public Image GetCanvasImage() {
         return this.canvasImage;
@@ -452,5 +436,13 @@ public abstract class Component : MonoBehaviour, IPointerUpHandler, IPointerEnte
 
     public void SetCanvasImage(Image image) {
         this.canvasImage = image;
+    }
+
+    /// <summary>
+	/// Sets the component's canvas image
+	/// </summary>
+	/// <param name="sprite">the sprite to set to the canvas image</param>
+	public void SetCanvasSprite(Sprite sprite) {
+        this.canvasImage.sprite = sprite;
     }
 }
